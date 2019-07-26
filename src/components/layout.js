@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './style.scss';
+import '../style/style.scss';
 import Helmet from './helmet';
 import Header from './header';
 import Midsection from './midsection';

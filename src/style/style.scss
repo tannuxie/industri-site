@@ -2,7 +2,13 @@
 @import './variables.scss';
 
 // Importing Bulma from node_modules
-@import '~bulma/bulma.sass';
+//@import '~bulma/bulma.sass';
+@import "~bulma/sass/utilities/_all.sass";
+@import "~bulma/sass/components/_all.sass";
+@import "~bulma/sass/elements/_all.sass";
+@import "~bulma/sass/form/_all.sass";
+@import "~bulma/sass/grid/_all.sass";
+@import "~bulma/sass/layout/_all.sass";
 
 .gradientBg {
 	display: flex;

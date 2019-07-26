@@ -1,19 +1,13 @@
 module.exports = {
 	siteMetadata: {
-		title: 'Gatsby Bulma Quickstart',
-		author: 'Aman Mittal',
-		imageUrl: 'https://i.imgur.com/Vz81GEl.png',
-		description: 'A Project to bootstrap your next Gatsby + Bulma site.',
-		keywords: `Web developer, Web, Developer, CSS, HTML, JS, Javascript, Gatsby, Bulma Developer, CSS3, HTML5, Seo, Starter`,
-		twitter: 'https://twitter.com/amanhimself',
-		github: `https://github.com/amandeepmittal`,
-		medium: 'https://medium.com/@amanhimself',
-		gatsby: 'https://www.gatsbyjs.org/',
-		bulma: 'https://bulma.io/',
-		siteUrl: `https://www.example.com`
+		title: `Sävsjö Industrihistoria`,
+		author: `Folk i Sävsjö`,
+		description: `Ett projekt för att sammanställa berättelser om lokala företag, deras ursprung och historia.`,
+		keywords: `Sävsjö, Industri, Industrihistoria, Historia`,
+		siteUrl: `https://www.example.com`,
 	},
 	plugins: [
-		'gatsby-plugin-react-helmet',
+		`gatsby-plugin-react-helmet`,
 		{
 			resolve: `gatsby-source-filesystem`,
 			options: {
@@ -21,22 +15,35 @@ module.exports = {
 				path: `${__dirname}/src/images`
 			}
 		},
-		'gatsby-transformer-sharp',
-		'gatsby-plugin-sharp',
 		{
-			resolve: `gatsby-plugin-manifest`,
+			resolve: `gatsby-source-strapi`,
 			options: {
-				name: 'Makefolio',
-				short_name: 'Makefolio',
-				start_url: '/',
-				background_color: '#2980b9',
-				theme_color: '#2980b9',
-				display: 'standalone',
-				icon: 'src/images/gatsby-icon.png',
-				orientation: 'portrait'
+				apiURL: 'http://localhost:1337',
+				contentTypes: [
+					'user',
+					'article',
+					'image'
+				],
+				queryLimit: 1000,
+			}
+		},
+		`gatsby-transformer-sharp`,		
+		{
+			resolve: `gatsby-plugin-sharp`,
+			options: {
+				useMozJpeg: false,
+				stripMetadata: true,
+				defaultQuality: 75,
 			}
 		},
 		`gatsby-plugin-sass`,
+		`gatsby-plugin-emotion`,
+		{
+			resolve: `gatsby-plugin-typography`,
+			options: {
+				pathToConfigModule: `src/style/typography`
+			}
+		},
 		{
 			resolve: `gatsby-plugin-google-analytics`,
 			options: {
@@ -48,6 +55,6 @@ module.exports = {
 		`gatsby-plugin-sitemap`
 		// this (optional) plugin enables Progressive Web App + Offline functionality
 		// To learn more, visit: https://gatsby.app/offline
-		// 'gatsby-plugin-offline',
-	]
+		//`gatsby-plugin-offline`
+	],
 };

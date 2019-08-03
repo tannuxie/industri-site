@@ -1,7 +1,9 @@
+const lost = require('lost')
+
 module.exports = {
 	siteMetadata: {
 		title: `Sävsjö Industrihistoria`,
-		author: `Folk i Sävsjö`,
+		author: `J.C. Henriksson`,
 		description: `Ett projekt för att sammanställa berättelser om lokala företag, deras ursprung och historia.`,
 		keywords: `Sävsjö, Industri, Industrihistoria, Historia`,
 		siteUrl: `https://www.example.com`,
@@ -13,6 +15,16 @@ module.exports = {
 			options: {
 				name: `images`,
 				path: `${__dirname}/src/images`
+			}
+		},
+		{
+			resolve: `gatsby-plugin-alias-imports`,
+			options: {
+				alias: {
+					'~components': 'src/components',
+					'~style': 'src/style',
+				},
+				extensions: [],
 			}
 		},
 		{
@@ -36,13 +48,21 @@ module.exports = {
 				defaultQuality: 75,
 			}
 		},
-		`gatsby-plugin-sass`,
 		`gatsby-plugin-emotion`,
 		{
 			resolve: `gatsby-plugin-typography`,
 			options: {
 				pathToConfigModule: `src/style/typography`
 			}
+		},
+		{
+			resolve: `gatsby-plugin-sass`,
+			options: {
+				postCssPlugins: [
+				  lost(),
+				],
+				precision: 8,
+			},
 		},
 		{
 			resolve: `gatsby-plugin-google-analytics`,

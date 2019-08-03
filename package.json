@@ -1,14 +1,15 @@
 {
-	"name": "gatsby-bulma-quickstart",
-	"description": "A Project to bootstrap your next Gatsby + Bulma site.",
-	"version": "1.5.2",
-	"author": "Aman Mittal <amandeepmittal@live.com>",
+	"name": "Industri-site",
+	"description": "A project to gather and present the history of many local Sävsjö businesses.",
+	"version": "0.1",
+	"author": "J.C. Henriksson <x94234@gmail.com>",
 	"dependencies": {
 		"@emotion/core": "^10.0.14",
 		"@emotion/styled": "^10.0.14",
 		"bulma": "^0.7.4",
 		"gatsby": "^2.3.25",
 		"gatsby-image": "^2.0.39",
+		"gatsby-plugin-alias-imports": "^1.0.5",
 		"gatsby-plugin-emotion": "^4.1.2",
 		"gatsby-plugin-google-analytics": "^2.0.18",
 		"gatsby-plugin-offline": "^2.0.25",
@@ -20,7 +21,8 @@
 		"gatsby-source-filesystem": "^2.0.29",
 		"gatsby-source-strapi": "^0.0.9",
 		"gatsby-transformer-sharp": "^2.1.18",
-		"node-sass": "^4.11.0",
+		"lost": "^8.3.1",
+		"node-sass": "^4.12.0",
 		"react": "^16.8.6",
 		"react-dom": "^16.8.6",
 		"react-helmet": "^5.2.0",
@@ -30,11 +32,9 @@
 		"typography-theme-twin-peaks": "^0.16.19"
 	},
 	"keywords": [
-		"gatsby",
-		"bulma",
-		"starter",
-		"kit",
-		"template"
+		"sweden",
+		"rural",
+		"storytelling"
 	],
 	"license": "MIT",
 	"scripts": {
@@ -45,10 +45,11 @@
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"devDependencies": {
+		"eslint-import-resolver-alias": "^1.1.2",
 		"prettier": "^1.14.2"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/amandeepmittal/gatsby-bulma-quickstart"
+		"url": "https://github.com/tannuxie/industri-site"
 	}
 }

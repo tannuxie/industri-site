@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from "@emotion/core"
 import { StaticQuery, graphql } from "gatsby"
 import Img from "gatsby-image"
-import '../style/style.scss';
+import '~style/style.scss';
 
 const Mid = ({ data }) => (
 	<div>
@@ -27,11 +27,12 @@ const Mid = ({ data }) => (
 				</div>
 			</div>
 			<div className="container">
-				//IMG
 				{data.allStrapiImage.edges.map((items, i) => (
 					<>
-						<Img key={i} fluid={items.node.imagecontent.childImageSharp.fluid} />
-						<span>{items.node.title}</span>
+						<div className="lostimg">
+							<Img key={i} fluid={items.node.imagecontent.childImageSharp.fluid} />
+							<span>{items.node.title}</span>
+						</div>
 					</>
 				))}
 			</div>

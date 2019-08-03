@@ -1,5 +1,5 @@
 import React from 'react';
-import '../style/style.scss';
+import '~style/style.scss';
 import { css } from "@emotion/core"
 
 const Navbar = () => (

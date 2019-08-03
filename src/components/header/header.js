@@ -1,6 +1,6 @@
 import React from 'react';
-import '../style/style.scss';
-import Navbar from './navbar';
+import '~style/style.scss';
+import Navbar from '../navbar/navbar';
 
 const Header = ({ siteTitle }) => (
 	<section className="hero gradientBg">

@@ -1,8 +1,7 @@
 import React from 'react';
-import { FaTwitter, FaGithub, FaMedium } from 'react-icons/fa';
+import { css } from "@emotion/core"
 import { StaticQuery, graphql } from 'gatsby';
-import '../style/style.scss';
-import Emoji from './emoji';
+import '~style/style.scss';
 
 const Footer = () => (
 	<StaticQuery
@@ -17,7 +16,7 @@ const Footer = () => (
 			}
 		`}
 		render={data => (
-			<footer className="footer center has-background-light">
+			<footer className="footer center gradientBg">
 				<div className="content has-text-centered">
 					<p className="is-size-4">
 					{data.site.siteMetadata.description}

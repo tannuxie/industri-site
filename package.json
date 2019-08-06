@@ -27,6 +27,7 @@
 		"react-dom": "^16.8.6",
 		"react-helmet": "^5.2.0",
 		"react-icons": "^3.6.1",
+		"react-markdown": "^4.1.0",
 		"react-typography": "^0.16.19",
 		"typography": "^0.16.19",
 		"typography-theme-twin-peaks": "^0.16.19"

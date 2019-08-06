@@ -10,8 +10,7 @@
 @import "~bulma/sass/grid/_all.sass";
 @import "~bulma/sass/layout/_all.sass";
 
-
-.lostimg {
+.gatsby-image-wrapper, .lostimg {
 	lost-column: 1/2;
 	padding: 1rem;
 }

@@ -31,11 +31,12 @@ exports.createPages = ({ actions, graphql }) => {
     `).then(result => {
     // Create pages for each article.
     result.data.allStrapiArticle.edges.forEach(({ node }) => {
+      const tempvar = Number(node.id.match(/\d+/)[0])
       createPage({
-        path: `/${node.id}`,
+        path: `/artikel/${tempvar}`,
         component: path.resolve(`src/templates/article.js`),
         context: {
-          id: node.id,
+          id: tempvar,
         },
       })
     })

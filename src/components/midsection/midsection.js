@@ -48,7 +48,7 @@ export default Midsection => (
 							title
 							imagecontent {
 								childImageSharp {
-									fluid(maxHeight: 500, maxWidth: 500) {
+									fluid(maxHeight: 900, maxWidth: 900) {
 										...GatsbyImageSharpFluid
 									}
 								}

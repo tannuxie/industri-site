@@ -10,9 +10,13 @@
 @import "~bulma/sass/grid/_all.sass";
 @import "~bulma/sass/layout/_all.sass";
 
+.image {
+	display: flex;
+    margin: 1rem 0rem;
+}
+
 .gatsby-image-wrapper {
 	lost-column: 1/2;
-	padding: 1rem;
 }
 
 .gradientBg {

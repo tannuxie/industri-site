@@ -1,16 +1,46 @@
 import React from 'react'
 import { Link, graphql } from 'gatsby'
+import { css } from "@emotion/core"
 import Img from 'gatsby-image'
 import Layout from '~components/layout/layout'
 import ReactMarkdown from "react-markdown"  
 
 const ArticleTemplate = ({ data }) => (
     <Layout>
-        <h1>{data.strapiArticle.title}</h1>
+        <div>
+            <h1 className="title is-1"
+                css={css`
+                text-align: center;
+                `}
+            >
+                {data.strapiArticle.title}
+            </h1>
+            <div
+                css={css`
+                width: 100%;
+                margin: 2rem 0;
+                `}
+            >
+                <div>
+                   <Img 
+                    fluid={data.strapiImage.imagecontent.childImageSharp.fluid} 
+                    alt={data.strapiImage.articlecoverimage.title} 
+                   />
+                </div>
+            </div>
+        </div>
 
-        <Img fluid={data.strapiImage.imagecontent.childImageSharp.fluid}/>
+        <div
+            css={css`
+            @media (min-width: 1024px) {
+                margin: 0 30%;                
+              }
+              clear: both;
+            `}
+        >
+            <ReactMarkdown source={data.strapiArticle.content} />
+        </div>
 
-        <ReactMarkdown source={data.strapiArticle.content} />
     </Layout>
 )
 

@@ -15,22 +15,29 @@ const ArticleTemplate = ({ data }) => (
             >
                 {data.strapiArticle.title}
             </h1>
-            <div
+            <div 
+                className="articleImageBox"
                 css={css`
                 width: 100%;
                 margin: 2rem 0;
                 `}
             >
-                <div>
+                <div
+                    css={css`
+                    display: flex;
+                    justify-content: center;
+                    `}
+                >
                    <Img 
                     fluid={data.strapiImage.imagecontent.childImageSharp.fluid} 
-                    alt={data.strapiImage.articlecoverimage.title} 
+                    alt={data.strapiImage.title} 
                    />
                 </div>
             </div>
         </div>
 
-        <div
+        <div 
+            className="articleContent"
             css={css`
             @media (min-width: 1024px) {
                 margin: 0 30%;                
@@ -59,13 +66,15 @@ export const query = graphql`
             }
         }
         strapiImage(articlecoverimage: {id: {eq: $id}}) {
+            title
+            id
             articlecoverimage {
               title
               id
             }
             imagecontent {
               childImageSharp {
-                fluid(maxWidth: 960) {
+                fluid(maxWidth: 1920) {
                     ...GatsbyImageSharpFluid
                 }
               }

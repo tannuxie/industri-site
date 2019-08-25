@@ -34,7 +34,13 @@ module.exports = {
 				contentTypes: [
 					'user',
 					'article',
-					'image'
+					'image',
+					'address',
+					'city',
+					'company',
+					'street',
+					'tag',
+					'usedaddress'
 				],
 				queryLimit: 1000,
 			}

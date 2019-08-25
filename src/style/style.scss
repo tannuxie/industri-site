@@ -10,13 +10,8 @@
 @import "~bulma/sass/grid/_all.sass";
 @import "~bulma/sass/layout/_all.sass";
 
-.image {
-	display: flex;
-    margin: 1rem 0rem;
-}
-
 .gatsby-image-wrapper {
-	lost-column: 1/2;
+	//lost-column: 1/2;
 }
 
 .gradientBg {
@@ -33,3 +28,16 @@
 .footer {
 	width: 100%;
 }
+
+// Articles
+.articleImageBox .gatsby-image-wrapper {
+	width: 100%;
+}
+
+.articleContent img {
+    max-height: 25rem;
+    display: block;
+    margin: 0 auto;
+}
+
+

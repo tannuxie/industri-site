@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactTable from 'react-table'
 import { Link, graphql } from 'gatsby'
+import Img from 'gatsby-image'
 import { css } from "@emotion/core"
 import 'react-table/react-table.css'
 import Layout from '~components/layout/layout';
@@ -45,59 +46,153 @@ import Layout from '~components/layout/layout';
 //     }
 // }]
 
-// const columns = [{
-//     Header: 'Name',
-//     accessor: 'name' // String-based value accessors!
-//     }, {
-//     Header: 'Age',
-//     accessor: 'age',
-//     Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
-// }] 
+// class TableImage extends Component {
+
+
+
+//     render() {
+//       return (
+//         <Fragment>
+//             {this.props.render()}
+//         </Fragment>
+//       )
+//     }
+// }
 
 
 const CompanyPage = ({ data }) => { 
-    {let array = new Map();
-        
-        array = data.company.edges.map((items, i, data) => {
+    {const array = data.company.edges.map((items, i, data) => {
         let cObj = {
             id: 'id',
             companyquality: 'companyquality',
-            bransch: 'bransch',
+            type: 'type',
             name: 'name',
             strapiId: 'strapiId',
             summary: 'summary',
+            imageId: 'imageId',
             used: [{
                 id: 'id',
                 address: 'address',
                 startdate: 'startdate',
-                enddate: 'enddate'
+                enddate: 'enddate',
+                addressstring1: 'addressstring1',
+                addressstring1: 'addressstring1',
+                cityId: 'cityId'
                 }]
         };
         cObj.id = items.node.id;
         cObj.companyquality = items.node.companyquality;
-        cObj.bransch = items.node.bransch;
+        cObj.type = items.node.type;
         cObj.name = items.node.name;
+        cObj.strapiId = items.node.strapiId;
+        cObj.summary = items.node.summary;
+        cObj.imageId = items.node.coverimage.imagecontent.id;
+        cObj.used = items.node.usedaddresses.map((items, i) => {
+            let cUsed = {
+                id: 'id',
+                address: 'address',
+                startdate: 'startdate',
+                enddate: 'enddate',
+                addressstring1: 'addressstring1',
+                addressstring1: 'addressstring1',
+                cityId: 'cityId'
+            }
+            cUsed.id = items.id;
+            cUsed.address = items.address;
+            cUsed.startdate = items.startdate;
+            cUsed.enddate = items.enddate;
+
+            return cUsed;
+        })
     
-        console.log(cObj);
+        // console.log(cObj);
         return {
-            value: cObj,
-            index: i
+            value: cObj
         };
     })
-    console.log(array[0]);
-    console.log(array[1]);
-    console.log(array.size);
+
+    data.address.edges.forEach(function(item) {
+        array.forEach(function(arrayitem) {
+            arrayitem.value.used.forEach(function(useditem) {
+                if(item.node.strapiId === useditem.address) {
+                    useditem.addressstring1 = item.node.addressstring1;
+                    useditem.addressstring2 = item.node.addressstring2;
+                    useditem.cityId = item.node.city.id;
+                }
+            })
+        })
+    });
+
+    console.log(array);
+    // console.log(array[1]);
+    // console.log(array.size);
+
+    const columns = [{
+        Header: 'Image',
+        accessor: 'value.imageId',
+        Cell: row => {
+            
+            {data.image.edges.forEach(function(item) {
+                // console.log(item.node);
+                console.log(item.node.strapiId)
+                console.log(row.value)
+                if(item.node.strapiId === row.value) {
+                    console.log("YES!");
+                    console.log(item.node);
+
+                    return (
+                        <Img 
+                        fluid={item.node.imagecontent.childImageSharp.fluid} 
+                        alt={item.node.title} 
+                        />
+                    )
+                };
+            })}
+            
+        }
+    }, {
+        Header: 'ID',
+        accessor: 'value.id'
+    }, {
+        Header: 'Quality',
+        accessor: 'value.companyquality',
+    }, {
+        Header: 'type',
+        accessor: 'value.type',
+    }, {
+        Header: 'name',
+        accessor: 'value.name',
+    }, {
+        Header: 'strapiId',
+        accessor: 'value.strapiId',
+    }, {
+        Header: 'summary',
+        accessor: 'value.summary',
+    // }, {
+    //     Header: 'Used',
+    //     accessor: 'value.used'
+        // used: [{
+        //     id: 'id',
+        //     address: 'address',
+        //     startdate: 'startdate',
+        //     enddate: 'enddate',
+        //     addressstring1: 'addressstring1',
+        //     addressstring1: 'addressstring1',
+        //     cityId: 'cityId'
+        //     }]
+
+    }] 
+
+
     return (
         <Layout>
-        {/* <ReactTable
-            data={data}
-            columns={columns}
-        /> */}
-        {/* {console.log(array)} */}
-        <h1>{array[1].value.name} test</h1>
-    </Layout>
-    )
-    }
+            <ReactTable
+                data={array}
+                columns={columns}
+                defaultPageSize={10}
+            />
+        </Layout>
+    )}
 };
 
 export default CompanyPage;
@@ -109,15 +204,21 @@ export const query = graphql`
                 node {
                     id
                     companyquality
-                    bransch
+                    type
                     name
                     strapiId
                     summary
                     usedaddresses {
+                        id
                         address
                         startdate
-                        id
                         enddate
+                    }
+                    coverimage {
+                        imagecontent {
+                            id
+                        }
+                        
                     }
                 }
             }
@@ -137,10 +238,26 @@ export const query = graphql`
                     }
                     usedaddresses {
                         id
-                        company
+                        companyaddress
                         address
                         startdate
                         enddate
+                    }
+                }
+            }
+        }
+        image: allStrapiImage {
+            edges {
+                node {
+                    id
+                    title
+                    strapiId
+                    imagecontent {
+                        childImageSharp {
+                            fluid(maxWidth: 970) {
+                                ...GatsbyImageSharpFluid
+                            }
+                        }
                     }
                 }
             }

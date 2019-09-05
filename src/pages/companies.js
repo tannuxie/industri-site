@@ -132,23 +132,30 @@ const CompanyPage = ({ data }) => {
         accessor: 'value.imageId',
         Cell: row => {
             
-            {data.image.edges.forEach(function(item) {
+            {const foundItem = {} = data.image.edges.forEach(function(item) {
                 // console.log(item.node);
+                let foundObj = item.node;
                 console.log(item.node.strapiId)
                 console.log(row.value)
                 if(item.node.strapiId === row.value) {
                     console.log("YES!");
                     console.log(item.node);
 
-                    return (
-                        <Img 
-                        fluid={item.node.imagecontent.childImageSharp.fluid} 
-                        alt={item.node.title} 
-                        />
-                    )
+                    // return (
+                    //     <Img 
+                    //     fluid={item.node.imagecontent.childImageSharp.fluid} 
+                    //     alt={item.node.title} 
+                    //     />
+                    // )
+
                 };
+                return foundObj;
             })}
-            
+            <Img 
+                fluid={foundItem.imagecontent.childImageSharp.fluid} 
+                alt={foundItem.title} 
+            />
+                        
         }
     }, {
         Header: 'ID',

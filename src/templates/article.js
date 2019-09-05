@@ -3,7 +3,7 @@ import { Link, graphql } from 'gatsby'
 import { css } from "@emotion/core"
 import Img from 'gatsby-image'
 import Layout from '~components/layout/layout'
-import ReactMarkdown from "react-markdown"  
+import ReactMarkdown from "react-markdown/with-html"  
 
 const ArticleTemplate = ({ data }) => (
     <Layout>
@@ -39,13 +39,19 @@ const ArticleTemplate = ({ data }) => (
         <div 
             className="articleContent"
             css={css`
+            @media (min-width: 768px) {
+                margin: 0 15%;
+            }
             @media (min-width: 1024px) {
                 margin: 0 30%;                
               }
               clear: both;
             `}
         >
-            <ReactMarkdown source={data.strapiArticle.content} />
+            <ReactMarkdown 
+                source={data.strapiArticle.content} 
+                escapeHtml={false}  
+            />
         </div>
 
     </Layout>

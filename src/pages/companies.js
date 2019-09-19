@@ -131,48 +131,47 @@ const CompanyPage = ({ data }) => {
         Header: 'Image',
         accessor: 'value.imageId',
         Cell: row => {
-            
-            {const foundItem = {} = data.image.edges.forEach(function(item) {
+            let foundObject = {};
+            {data.image.edges.forEach(function(item) {
                 // console.log(item.node);
-                let foundObj = item.node;
-                console.log(item.node.strapiId)
-                console.log(row.value)
+                // console.log(item.node.strapiId)
+                // console.log(row.value)
                 if(item.node.strapiId === row.value) {
-                    console.log("YES!");
-                    console.log(item.node);
-
-                    // return (
-                    //     <Img 
-                    //     fluid={item.node.imagecontent.childImageSharp.fluid} 
-                    //     alt={item.node.title} 
-                    //     />
-                    // )
-
+                    //console.log("YES!");
+                    //console.log(item.node);
+                    foundObject = item.node;
                 };
-                return foundObj;
             })}
-            <Img 
-                fluid={foundItem.imagecontent.childImageSharp.fluid} 
-                alt={foundItem.title} 
-            />
-                        
+            return (
+                <div>
+                    <Img 
+                        fluid={foundObject.imagecontent.childImageSharp.fluid} 
+                        alt={foundObject.title} 
+                        title={foundObject.companycoverimage.name}
+                    />
+                </div>
+            );                        
         }
     }, {
-        Header: 'ID',
-        accessor: 'value.id'
-    }, {
+        Header: 'name',
+        accessor: 'value.name',
+    }, 
+    // {
+    //     Header: 'ID',
+    //     accessor: 'value.id'
+    // }, 
+    {
         Header: 'Quality',
         accessor: 'value.companyquality',
     }, {
         Header: 'type',
         accessor: 'value.type',
-    }, {
-        Header: 'name',
-        accessor: 'value.name',
-    }, {
-        Header: 'strapiId',
-        accessor: 'value.strapiId',
-    }, {
+    }, 
+    // {
+    //     Header: 'strapiId',
+    //     accessor: 'value.strapiId',
+    // }, 
+    {
         Header: 'summary',
         accessor: 'value.summary',
     // }, {
@@ -266,6 +265,11 @@ export const query = graphql`
                             }
                         }
                     }
+                    companycoverimage {
+                        name
+                        id
+                        summary
+                      }
                 }
             }
         }

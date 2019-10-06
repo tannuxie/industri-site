@@ -42,7 +42,7 @@ module.exports = {
 					'tag',
 					'usedaddress'
 				],
-				queryLimit: 1000,
+				queryLimit: 2000,
 			}
 		},
 		`gatsby-transformer-sharp`,		

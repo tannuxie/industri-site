@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactTable from 'react-table'
+import { ReactTableDefaults } from 'react-table'
 import { Link, graphql } from 'gatsby'
 import Img from 'gatsby-image'
 import { css } from "@emotion/core"
@@ -128,7 +129,13 @@ const CompanyPage = ({ data }) => {
     // console.log(array.size);
 
     const columns = [{
-        Header: 'Image',
+        id: 'compImage',
+        Header: '',
+        style: {
+            flexGrow: '50'
+        },
+        sortable: false,
+        filterable: false,
         accessor: 'value.imageId',
         Cell: row => {
             let foundObject = {};
@@ -153,27 +160,100 @@ const CompanyPage = ({ data }) => {
             );                        
         }
     }, {
-        Header: 'name',
-        accessor: 'value.name',
+        id: 'compMain',
+        Header: '',
+        style: {
+            flexGrow: '200'
+        },
+        sortable: false,
+        filterable: false,
+        accessor: 'value',
+        Cell: row => {
+            let usedObj = new Array();
+            row.value.used.forEach(element => {
+                if(typeof element !== "undefined") {
+                    console.log('map: ' + element.addressstring1)
+                    var obj = {
+                        addressstring1:element.addressstring1, 
+                        addressstring2:element.addressstring2, 
+                        startdate:element.startdate, 
+                        enddate:element.enddate,
+                        cityId: element.cityId
+                    };
+                    usedObj.push(obj);
+/*                     const address = element.address
+                    const addressstring1 = element.addressstring1
+                    const addressstring2 = element.addressstring2
+                    const cityId = element.cityId
+                    const enddate = element.enddate
+                    const usedId = element.id
+                    const startdate = element.startdate */
+                }
+            })
+            return (
+                <div>
+                    <h3>{row.value.name}</h3>
+                    <p style={{textTransform: 'capitalize'}}>{row.value.type}</p>
+                    {usedObj.map(element => {
+                        let end = 'Nutid';
+                        console.log('ele: ' + JSON.stringify(element.addressstring1));
+                        if(typeof element.enddate == "string") {
+                            console.log(typeof element.enddate)
+                            console.log(JSON.stringify(element.enddate) + ' är inte null')
+
+                            end = element.enddate;
+                        } 
+                        return (
+                            <div className='aUsed'>
+                                <span css={css`display: flex;`} className='aUsedAdd1'>{element.addressstring1}</span>
+                                <span css={css`display: flex;`} className='aUsedAdd2'>{element.addressstring2}</span>
+                                <span css={css`display: flex;`} className='aUsedStart'>{element.startdate}</span>
+                                <span css={css`display: flex;`} className='aUsedEnd'>{end}</span>
+                            </div>
+                        )
+                    })}
+                    <p css={css`white-space: pre-wrap;`}>{row.value.summary}</p>
+                </div>
+            )
+        }
     }, 
     // {
     //     Header: 'ID',
     //     accessor: 'value.id'
     // }, 
     {
+        id: 'compName',
+        Header: 'Sök på namn',
+        accessor: 'value.name',
+        className: 'nameClass',
+        style: {
+            display: 'none'
+        },
+        Cell: row => {
+            return null
+        }
+        /* show: false, */
+    },
+    {
+        id: 'compQual',
         Header: 'Quality',
         accessor: 'value.companyquality',
+        show: false,
     }, {
+        id: 'compType',
         Header: 'type',
         accessor: 'value.type',
+        show: false,
     }, 
     // {
     //     Header: 'strapiId',
     //     accessor: 'value.strapiId',
     // }, 
     {
+        id: 'compSummary',
         Header: 'summary',
         accessor: 'value.summary',
+        show: false,
     // }, {
     //     Header: 'Used',
     //     accessor: 'value.used'
@@ -196,10 +276,42 @@ const CompanyPage = ({ data }) => {
                 data={array}
                 columns={columns}
                 defaultPageSize={10}
+                className={'table'}
+                /* column={colDefaults} */
+                /* defaultSorted={[]} */
+                sorted={[{ // the sorting model for the table
+                    id: 'compQual',
+                    desc: true
+                  }, {
+                    id: 'compName',
+                    desc: true
+                }]}
+                filterable={true}
+                previousText={'Föregående'}
+                nextText={'Nästa'}
+                loadingText={'Laddar...'}
+                noDataText={'Här fanns det inget!'}
+                pageText={'Sida'}
+                ofText={'av'}
+                rowsText={'rader'}
             />
         </Layout>
     )}
 };
+
+/* const colDefaults = (
+    {...ReactTableDefaults.column, 
+        className:'td', 
+        headerClassName:'thead',
+        previousText: 'Föregående',
+        nextText: 'Nästa',
+        loadingText: 'Laddar...',
+        noDataText: 'Här fanns det inget!',
+        pageText: 'Sida',
+        ofText: 'av',
+        rowsText: 'rader'
+    }
+); */
 
 export default CompanyPage;
 

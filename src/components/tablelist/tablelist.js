@@ -15,6 +15,7 @@ const TableList = ({ data }) => {
             companyquality: 'companyquality',
             type: 'type',
             name: 'name',
+            slug: 'slug',
             strapiId: 'strapiId',
             summary: 'summary',
             imageId: 'imageId',
@@ -32,6 +33,7 @@ const TableList = ({ data }) => {
         cObj.companyquality = items.node.companyquality;
         cObj.type = items.node.type;
         cObj.name = items.node.name;
+        cObj.slug = items.node.fields.slug;
         cObj.strapiId = items.node.strapiId;
         cObj.summary = items.node.summary;
         cObj.imageId = items.node.coverimage.imagecontent.id;
@@ -82,18 +84,24 @@ const TableList = ({ data }) => {
         Cell: row => {
             let foundObject = {};
             {data.image.edges.forEach(function(item) {
+                console.log(row);                
                 if(item.node.strapiId === row.value) {
                     foundObject = item.node;
                 };
             })}
             return (
-                <div css={css`max-height:500px;overflow:hidden;`}>
-                    <Img 
-                        fluid={foundObject.imagecontent.childImageSharp.fluid} 
-                        alt={foundObject.title} 
-                        title={foundObject.companycoverimage.name}
-                    />
-                </div>
+                <Link 
+                    to={`/industri/${row.original.value.slug}`}
+                    css={css`height: 100%;display: block;`}
+                >
+                    <div css={css`max-height:500px;overflow:hidden;`}>
+                        <Img 
+                            fluid={foundObject.imagecontent.childImageSharp.fluid} 
+                            alt={foundObject.title} 
+                            title={foundObject.companycoverimage.name}
+                        />
+                    </div>
+                </Link>
             );                        
         }
     }, {
@@ -107,11 +115,13 @@ const TableList = ({ data }) => {
         accessor: 'value',
         Cell: row => {
             return (
-                <div>
-                    <h3>{row.value.name}</h3>
-                    <p style={{textTransform: 'capitalize'}}>{row.value.type}</p>
-                    <p css={css`white-space: pre-wrap;`}>{row.value.summary}</p>
-                </div>
+                <Link to={`/industri/${row.original.value.slug}`}>
+                    <div>
+                        <h3>{row.value.name}</h3>
+                        <p style={{textTransform: 'capitalize'}}>{row.value.type}</p>
+                        <p css={css`white-space: pre-wrap;`}>{row.value.summary}</p>
+                    </div>
+                </Link>
             )
         }
     }, 

@@ -5,9 +5,9 @@ import { css } from "@emotion/core"
 import 'react-table/react-table.css'
 import CompanyList from '~components/companylist/companylist'
 
-const CITYCONST = 'Sävsjö'
+const CITYCONST = 'Vrigstad'
 
-const SavsjoPage = ({ data }) => {
+const VrigstadPage = ({ data }) => {
 
     return (
         <CompanyList 
@@ -17,10 +17,10 @@ const SavsjoPage = ({ data }) => {
     );
 };
 
-export default SavsjoPage;
+export default VrigstadPage;
 
 export const query = graphql`
-    query SavsjoQuery {
+    query VrigstadQuery {
         company: allStrapiCompany {
             edges {
                 node {

@@ -1,6 +1,7 @@
 import React from 'react';
 import '~style/style.scss';
 import { css } from "@emotion/core"
+import { Link } from 'gatsby'
 
 const Navbar = () => (
 	<div className="hero-foot is-hidden-mobile">
@@ -27,15 +28,21 @@ const Navbar = () => (
 			`}
 		>
 			<div className="navbar-start">
-			<a className="navbar-item">
+			<Link className="navbar-item"
+				to="/"
+			>
 				Hem
-			</a>
-			<a className="navbar-item">
+			</Link>
+			<Link className="navbar-item"
+				to="/savsjo"
+			>
 				Sävsjö
-			</a>
-			<a className="navbar-item">
+			</Link>
+			<Link className="navbar-item"
+				to="/vrigstad"
+			>
 				Vrigstad
-			</a>
+			</Link>
 			<a className="navbar-item">
 				Stockaryd
 			</a>

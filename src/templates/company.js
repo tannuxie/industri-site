@@ -5,7 +5,7 @@ import Img from 'gatsby-image'
 import Layout from '~components/layout/layout'
 import ReactMarkdown from "react-markdown/with-html"  
 
-const ArticleTemplate = ({ data }) => (
+const CompanyTemplate = ({ data }) => (
     <Layout>
         <div>
             <h1 className="title is-1"
@@ -13,7 +13,7 @@ const ArticleTemplate = ({ data }) => (
                 text-align: center;
                 `}
             >
-                {data.strapiArticle.title}
+                {data.strapiCompany.name}
             </h1>
             <div 
                 className="articleImageBox"
@@ -49,7 +49,7 @@ const ArticleTemplate = ({ data }) => (
             `}
         >
             <ReactMarkdown 
-                source={data.strapiArticle.content} 
+                source={data.strapiCompany.longtext} 
                 escapeHtml={false}  
             />
         </div>
@@ -57,34 +57,41 @@ const ArticleTemplate = ({ data }) => (
     </Layout>
 )
 
-export default ArticleTemplate
+export default CompanyTemplate
 
-export const articleQuery = graphql`
-    query ArticleTemplate($id: Int!) {
-        strapiArticle(strapiId: {eq: $id}) {
-            title
-            content
+export const companyQuery = graphql`
+    query CompanyTemplate($id: Int!) {
+        strapiCompany(strapiId: {eq: $id}) {
             strapiId
             id
             coverimage {
                 id
                 title
             }
+            fields {
+                slug
+            }
+            longtext
+            name
+            summary
+            type
+            updated_at
+            created_at
         }
-        strapiImage(articlecoverimage: {id: {eq: $id}}) {
+        strapiImage(companycoverimage: {id: {eq: $id}}) {
             title
             id
-            articlecoverimage {
-              title
-              id
-            }
-            imagecontent {
-              childImageSharp {
-                fluid(maxWidth: 1920) {
-                    ...GatsbyImageSharpFluid
-                }
+            companycoverimage {
+                id
+                name
               }
+            imagecontent {
+                childImageSharp {
+                    fluid(maxWidth: 1920) {
+                        ...GatsbyImageSharpFluid
+                    }
+                }
             }
         }
-    }  
+    }
 `

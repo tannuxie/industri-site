@@ -162,6 +162,17 @@ const TableList = ({ data }) => {
                     desc: true
                 }]}
                 filterable={true}
+                defaultFilterMethod={(filter, row, column) => {
+                    //console.log(row); 
+                    //console.log(filter);                                       
+                    const id = filter.pivotId || filter.id
+                    if(String(row.compName.toLowerCase()).startsWith(filter.value.toLowerCase())) {
+                        return row;
+                    } else {
+                        return undefined;
+                    }
+                }}
+                // Text
                 previousText={'Föregående'}
                 nextText={'Nästa'}
                 loadingText={'Laddar...'}
@@ -169,6 +180,9 @@ const TableList = ({ data }) => {
                 pageText={'Sida'}
                 ofText={'av'}
                 rowsText={'rader'}
+                  // Accessibility Labels
+                pageJumpText= {'hoppa till sida'}
+                rowsSelectorText= {'rader per sida'}
             />
         </Layout>
     )}

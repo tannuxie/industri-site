@@ -11,11 +11,17 @@ module.exports = {
 	plugins: [
 		`gatsby-plugin-react-helmet`,
 		{
+		  resolve: `gatsby-plugin-react-helmet-canonical-urls`,
+		  options: {
+			siteUrl: `https://www.example.com`,
+		  },
+		},
+		{
 			resolve: `gatsby-source-filesystem`,
 			options: {
 				name: `images`,
 				path: `${__dirname}/src/images`
-			}
+			},
 		},
 		{
 			resolve: `gatsby-plugin-alias-imports`,
@@ -25,7 +31,7 @@ module.exports = {
 					'~style': 'src/style',
 				},
 				extensions: [],
-			}
+			},
 		},
 		{
 			resolve: `gatsby-source-strapi`,
@@ -43,7 +49,7 @@ module.exports = {
 					'usedaddress'
 				],
 				queryLimit: 2000,
-			}
+			},
 		},
 		`gatsby-transformer-sharp`,		
 		{
@@ -52,14 +58,14 @@ module.exports = {
 				useMozJpeg: false,
 				stripMetadata: true,
 				defaultQuality: 75,
-			}
+			},
 		},
 		`gatsby-plugin-emotion`,
 		{
 			resolve: `gatsby-plugin-typography`,
 			options: {
-				pathToConfigModule: `src/style/typography`
-			}
+				pathToConfigModule: `src/style/typography`,
+			},
 		},
 		{
 			resolve: `gatsby-plugin-sass`,
@@ -71,12 +77,18 @@ module.exports = {
 			},
 		},
 		{
+			resolve: 'gatsby-plugin-react-leaflet',
+			options: {
+			  linkStyles: true // (default: true) Enable/disable loading stylesheets via CDN
+			}
+		},
+		{
 			resolve: `gatsby-plugin-google-analytics`,
 			options: {
 				trackingId: 'UA-XXXXXXXX-X',
 				// Setting this parameter is optional (requried for some countries such as Germany)
-				anonymize: true
-			}
+				anonymize: true,
+			},
 		},
 		`gatsby-plugin-sitemap`
 		// this (optional) plugin enables Progressive Web App + Offline functionality

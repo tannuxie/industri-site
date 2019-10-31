@@ -5,10 +5,11 @@ import ReactTable from 'react-table'
 import { ReactTableDefaults } from 'react-table'
 import { Link, graphql } from 'gatsby'
 import Img from 'gatsby-image'
-import 'react-table/react-table.css'
+//import 'react-table/react-table.css'
+import '~style/table.css'
 import Layout from '~components/layout/layout';
 
-const TableList = ({ data }) => { 
+const TableList = ({ data, city }) => { 
     {const array = data.company.edges.map((items, i, data) => {
         let cObj = {
             id: 'id',
@@ -74,9 +75,11 @@ const TableList = ({ data }) => {
 
     const columns = [{
         id: 'compImage',
-        Header: '',
-        style: {
-            flexGrow: '50'
+        Header: header => {
+            return null
+        },
+        headerStyle: {
+            display: 'none'
         },
         sortable: false,
         filterable: false,
@@ -84,44 +87,53 @@ const TableList = ({ data }) => {
         Cell: row => {
             let foundObject = {};
             {data.image.edges.forEach(function(item) {
-                console.log(row);                
+                //console.log(row);                
                 if(item.node.strapiId === row.value) {
                     foundObject = item.node;
                 };
             })}
             return (
-                <Link 
-                    to={`/industri/${row.original.value.slug}`}
-                    css={css`height: 100%;display: block;`}
-                >
-                    <div css={css`max-height:500px;overflow:hidden;`}>
+
+                    <div css={css`max-height:500px;overflow:hidden;display:flex;`}>
                         <Img 
+                            style={{
+                                flex:'1 1 auto',
+                                alignSelf:'flex-end'
+                            }}
                             fluid={foundObject.imagecontent.childImageSharp.fluid} 
                             alt={foundObject.title} 
                             title={foundObject.companycoverimage.name}
                         />
                     </div>
-                </Link>
             );                        
         }
     }, {
         id: 'compMain',
-        Header: '',
-        style: {
-            flexGrow: '200'
+        Header: header => {
+            return null
         },
+        headerStyle: {
+            display: 'none'
+        },
+        style: {
+            flexGrow: '200',
+            flex: '200 0 auto'
+        },
+        width: 800,
         sortable: false,
         filterable: false,
         accessor: 'value',
         Cell: row => {
             return (
-                <Link to={`/industri/${row.original.value.slug}`}>
+                
                     <div>
-                        <h3>{row.value.name}</h3>
+                        <Link to={`/industri/${row.original.value.slug}`}>
+                            <h3>{row.value.name}</h3>
+                        </Link>
                         <p style={{textTransform: 'capitalize'}}>{row.value.type}</p>
                         <p css={css`white-space: pre-wrap;`}>{row.value.summary}</p>
                     </div>
-                </Link>
+                
             )
         }
     }, 
@@ -132,6 +144,13 @@ const TableList = ({ data }) => {
         className: 'nameClass',
         style: {
             display: 'none'
+        },
+        filterMethod: (filter, row) => {
+            if(String(row.compName.toLowerCase()).startsWith(filter.value.toLowerCase())) {
+                return row;
+            } else {
+                return undefined;
+            }
         },
         Cell: row => {
             return null
@@ -144,9 +163,57 @@ const TableList = ({ data }) => {
         show: false,
     }, {
         id: 'compType',
-        Header: 'type',
+        Header: 'Filtrera på typ',
         accessor: 'value.type',
-        show: false,
+        show: true,
+        filterMethod: (filter, row) => {
+            //console.log(filter);
+            //console.log(row);
+            if (filter.value === "alla") {
+                return true;
+            }
+            if (filter.value === "tra") {
+                return row[filter.id] == 'trä'
+            }
+            if (filter.value === "metall") {
+                return row[filter.id] == 'metall'
+            }
+            if (filter.value === "mobler") {
+                return row[filter.id] == 'möbler / träförädling'
+            }
+            if (filter.value === "livsmedel") {
+                return row[filter.id] == 'livsmedel'
+            }
+            if (filter.value === "skor") {
+                return row[filter.id] == 'skor & kläder'
+            }
+            if (filter.value === "plast") {
+                return row[filter.id] == 'plast / gummi'
+            }
+            return row[filter.id] == 'övrigt / diverse';            
+        },
+        Filter: ({ filter, onChange }) => (
+          <select
+            onChange={event => onChange(event.target.value)}
+            style={{ width: "100%" }}
+            value={filter ? filter.value : "all"}
+          >
+            <option value="alla">Visa alla</option>
+            <option value="tra">Trä</option>
+            <option value="metall">Metall</option>
+            <option value="mobler">Möbler / Träförädling</option>
+            <option value="livsmedel">Livsmedel</option>
+            <option value="skor">Skor & Kläder</option>
+            <option value="plast">Plast / Gummi</option>
+            <option value="ovrigt">Övrigt / Diverse</option>
+          </select>
+        ),
+        style: {
+            display: 'none'
+        },
+        Cell: row => {
+            return null
+        }
     }, 
     {
         id: 'compSummary',
@@ -158,7 +225,8 @@ const TableList = ({ data }) => {
 
 
     return (
-        <Layout>
+        <Layout childTitle={city}>
+            <h1 css={css`text-align: center;`}>Företag i {`${city}`}</h1>
             <ReactTable
                 data={array}
                 columns={columns}
@@ -167,21 +235,8 @@ const TableList = ({ data }) => {
                 sorted={[{ // the sorting model for the table
                     id: 'compQual',
                     desc: true
-                  }, {
-                    id: 'compName',
-                    desc: true
                 }]}
                 filterable={true}
-                defaultFilterMethod={(filter, row, column) => {
-                    //console.log(row); 
-                    //console.log(filter);                                       
-                    const id = filter.pivotId || filter.id
-                    if(String(row.compName.toLowerCase()).startsWith(filter.value.toLowerCase())) {
-                        return row;
-                    } else {
-                        return undefined;
-                    }
-                }}
                 // Text
                 previousText={'Föregående'}
                 nextText={'Nästa'}

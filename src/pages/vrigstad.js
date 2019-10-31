@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, graphql } from 'gatsby'
 import Img from 'gatsby-image'
 import { css } from "@emotion/core"
-import 'react-table/react-table.css'
 import CompanyList from '~components/companylist/companylist'
 
 const CITYCONST = 'Vrigstad'

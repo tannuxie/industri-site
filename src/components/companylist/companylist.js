@@ -8,8 +8,7 @@ import Img from 'gatsby-image'
 import TableList from '~components/tablelist/tablelist'
 
 const CompanyList = ({ data , CITYCONST}) => {
-    console.log('CITYCONST is' + CITYCONST);
-    
+    console.log('CITYCONST is' + ' ' + CITYCONST);    
     console.log(data)
     let thisCity = {};
     data.city.edges.forEach(element => {
@@ -83,7 +82,7 @@ const CompanyList = ({ data , CITYCONST}) => {
         console.log('finished array length: ' + data.company.edges.length);
     }
     return (
-        <TableList data={data} />
+        <TableList data={data} city={CITYCONST} />
     )
 };
 

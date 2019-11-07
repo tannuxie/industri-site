@@ -9,7 +9,7 @@ import Img from 'gatsby-image'
 import '~style/table.css'
 import Layout from '~components/layout/layout';
 
-const TableList = ({ data, city }) => { 
+const TableList = ({ data }) => {
     {const array = data.company.edges.map((items, i, data) => {
         let cObj = {
             id: 'id',
@@ -20,14 +20,13 @@ const TableList = ({ data, city }) => {
             strapiId: 'strapiId',
             summary: 'summary',
             imageId: 'imageId',
-            used: [{
+            city: 'city',
+            addresses: [{
                 id: 'id',
-                address: 'address',
                 startdate: 'startdate',
                 enddate: 'enddate',
                 addressstring1: 'addressstring1',
-                addressstring1: 'addressstring1',
-                cityId: 'cityId'
+                addressstring2: 'addressstring2',
                 }]
         };
         cObj.id = items.node.id;
@@ -37,41 +36,29 @@ const TableList = ({ data, city }) => {
         cObj.slug = items.node.fields.slug;
         cObj.strapiId = items.node.strapiId;
         cObj.summary = items.node.summary;
-        cObj.imageId = items.node.coverimage.imagecontent.id;
-        cObj.used = items.node.usedaddresses.map((items, i) => {
-            let cUsed = {
+        cObj.imageId = items.node.mainimage.id;
+        cObj.city = items.node.city;
+        cObj.addresses = items.node.addresses.map((addrs, i) => {
+            let cAddr = {
                 id: 'id',
-                address: 'address',
                 startdate: 'startdate',
                 enddate: 'enddate',
                 addressstring1: 'addressstring1',
-                addressstring1: 'addressstring1',
-                cityId: 'cityId'
+                addressstring2: 'addressstring2',
             }
-            cUsed.id = items.id;
-            cUsed.address = items.address;
-            cUsed.startdate = items.startdate;
-            cUsed.enddate = items.enddate;
+            cAddr.id = addrs.id;
+            cAddr.startdate = addrs.startdate;
+            cAddr.enddate = addrs.enddate;
+            cAddr.addressstring1 = addrs.addressstring1;
+            cAddr.addressstring2 = addrs.addressstring2;
 
-            return cUsed;
+            return cAddr;
         })
     
         return {
             value: cObj
         };
     })
-
-    data.address.edges.forEach(function(item) {
-        array.forEach(function(arrayitem) {
-            arrayitem.value.used.forEach(function(useditem) {
-                if(item.node.strapiId === useditem.address) {
-                    useditem.addressstring1 = item.node.addressstring1;
-                    useditem.addressstring2 = item.node.addressstring2;
-                    useditem.cityId = item.node.city.id;
-                }
-            })
-        })
-    });
 
     const columns = [{
         id: 'compImage',
@@ -86,15 +73,18 @@ const TableList = ({ data, city }) => {
         accessor: 'value.imageId',
         Cell: row => {
             let foundObject = {};
-            {data.image.edges.forEach(function(item) {
-                //console.log(row);                
+            {data.image.edges.forEach(function(item) {                
                 if(item.node.strapiId === row.value) {
                     foundObject = item.node;
                 };
             })}
             return (
 
-                    <div css={css`max-height:500px;overflow:hidden;display:flex;`}>
+                    <div css={css`
+                        max-height:500px;
+                        overflow:hidden;
+                        display:flex;`
+                    }>
                         <Img 
                             style={{
                                 flex:'1 1 auto',
@@ -102,7 +92,7 @@ const TableList = ({ data, city }) => {
                             }}
                             fluid={foundObject.imagecontent.childImageSharp.fluid} 
                             alt={foundObject.title} 
-                            title={foundObject.companycoverimage.name}
+                            title={foundObject.companyimage.name}
                         />
                     </div>
             );                        
@@ -225,8 +215,7 @@ const TableList = ({ data, city }) => {
 
 
     return (
-        <Layout childTitle={city}>
-            <h1 css={css`text-align: center;`}>Företag i {`${city}`}</h1>
+        <>            
             <ReactTable
                 data={array}
                 columns={columns}
@@ -249,7 +238,7 @@ const TableList = ({ data, city }) => {
                 pageJumpText= {'hoppa till sida'}
                 rowsSelectorText= {'rader per sida'}
             />
-        </Layout>
+        </>
     )}
 };
 

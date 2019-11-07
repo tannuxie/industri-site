@@ -55,27 +55,23 @@ export class MyMap extends Component {
 }
 
 const CompanyTemplate = ({ data }) => {
-    //console.log('start: ' + Date.parse(data.strapiAddress.usedaddresses[0].startdate));
-    //console.log('end: ' + data.strapiAddress.usedaddresses[0].enddate);
-    
     let pos = []
-    data.allStrapiAddress.edges.forEach(element => {
+    data.strapiCompany.addresses.forEach(element => {
         let address = {
-            'addressstring1': element.node.addressstring1,
-            'addressstring2': element.node.addressstring2,
+            'addressstring1': element.addressstring1,
+            'addressstring2': element.addressstring2,
             'position': [],
-            'startdate': element.node.usedaddresses[0].startdate,
-            'enddate': element.node.usedaddresses[0].enddate !== null ? 
-            element.node.usedaddresses[0].enddate : 'Nutid'            
+            'startdate': element.startdate,
+            'enddate': element.enddate !== null ? 
+            element.node.enddate : 'Nutid'            
         }
-        address.position.push(Number(element.node.latitude), Number(element.node.longitude))
+        address.position.push(Number(element.latitude), Number(element.longitude))
         pos.push(address)
     });
-
-    /*pos.push(Number(data.strapiAddress.latitude), Number(data.strapiAddress.longitude));
-    let lastDate = data.strapiAddress.usedaddresses[0].enddate !== null ? 
-    data.strapiAddress.usedaddresses[0].enddate : 'Nutid'; */
-
+    console.log(pos);
+    console.log(pos[0]);
+    console.log(typeof(pos));
+    console.log(typeof(pos[0]));
     return (
     <Layout childTitle={`${data.strapiCompany.name}`}>
         <div>
@@ -106,12 +102,15 @@ const CompanyTemplate = ({ data }) => {
                 </div>
             </div>
         </div>
-        <div>
+        {pos[0] !== undefined ?
+        (<div>
             <MyMap 
                 name={data.strapiCompany.name} 
                 addresses={pos}
             />
-        </div>
+        </div>)
+        : (null)
+        }
         <div 
             className="articleContent"
             css={css`
@@ -137,79 +136,48 @@ const CompanyTemplate = ({ data }) => {
 export default CompanyTemplate
 
 export const companyQuery = graphql`
-    query CompanyTemplate($id: Int!) {
-        strapiCompany(strapiId: {eq: $id}) {
-            strapiId
-            id
-            coverimage {
-                id
-                title
-            }
-            fields {
-                slug
-            }
-            longtext
-            name
-            summary
-            type
-            updated_at
-            created_at
-            usedaddresses {
-                address
-                companyaddress
-                enddate(formatString: "YYYY")
-                id
-                startdate(formatString: "YYYY")
-            }
-        }
-        strapiImage(companycoverimage: {id: {eq: $id}}) {
-            title
-            id
-            companycoverimage {
-                id
-                name
-            }
-            imagecontent {
-                childImageSharp {
-                    fluid(maxWidth: 1920) {
-                        ...GatsbyImageSharpFluid
-                    }
-                }
-            }
-        }
-        allStrapiAddress(filter: {usedaddresses: {elemMatch: {companyaddress: {eq: $id}}}}) {
-            edges {
-                node {
-                    addressstring1
-                    addressstring2
-                    id
-                    latitude
-                    longitude
-                    strapiId
-                    city {
-                        id
-                        name
-                        zoom
-                        longitude
-                        latitude
-                    }
-                    street {
-                        city
-                        id
-                        latitude
-                        longitude
-                        zoom
-                        name
-                    }
-                    usedaddresses {
-                        address
-                        companyaddress
-                        enddate(formatString: "YYYY")
-                        id
-                        startdate(formatString: "YYYY")
-                    }
-                }
-            }
-        }
+query CompanyTemplate($id: Int!) {
+    strapiCompany(strapiId: {eq: $id}) {
+      strapiId
+      id
+      mainimage {
+        id
+        title
+      }
+      fields {
+        slug
+      }
+      longtext
+      name
+      summary
+      type
+      updated_at
+      created_at
+      addresses {
+        addressstring1
+        addressstring2
+        company
+        enddate(formatString: "YYYY")
+        id
+        latitude
+        longitude
+        startdate(formatString: "YYYY")
+      }
     }
+    strapiImage(companyimage: {id: {eq: $id}}) {
+      title
+      id
+      companyimage {
+        id
+      }
+      imagecontent {
+        childImageSharp {
+          fluid(maxWidth: 1920) {
+            ...GatsbyImageSharpFluid
+          }
+        }
+      }
+    }
+  }
+  
 `

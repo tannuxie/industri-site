@@ -1,6 +1,15 @@
 const path = require(`path`);
 const { createFilePath } = require(`gatsby-source-filesystem`)
 
+const CITYCONST = [
+  "sävsjö", 
+  "vrigstad", 
+  "stockaryd", 
+  "rörvik", 
+  "hultagård", 
+  "hylletofta"
+]
+
 const makeRequest = (graphql, request) => new Promise((resolve, reject) => {
   // Query for nodes to use in creating pages.
   resolve(
@@ -13,19 +22,19 @@ const makeRequest = (graphql, request) => new Promise((resolve, reject) => {
   )
 });
 
+function convertToSlug(Text) {
+    return Text
+        .toLowerCase()
+        .replace(/å/g,'a')
+        .replace(/ä/g,'a')
+        .replace(/ö/g,'o')
+        .replace(/[^\w ]+/g,'')
+        .replace(/ +/g,'-')
+        ;
+};
 
 exports.onCreateNode = ({ node, getNode, actions }) => {
   const { createNodeField } = actions
-  function convertToSlug(Text) {
-      return Text
-          .toLowerCase()
-          .replace(/å/g,'a')
-          .replace(/ä/g,'a')
-          .replace(/ö/g,'o')
-          .replace(/[^\w ]+/g,'')
-          .replace(/ +/g,'-')
-          ;
-  };
 
   if (node.internal.type === `StrapiCompany`) {
     //console.log(`\n`, node.name)
@@ -55,7 +64,7 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
 exports.createPages = ({ actions, graphql }) => {
   const { createPage } = actions;
   
-  const getArticles = makeRequest(graphql, `
+  const getEntities = makeRequest(graphql, `
     {
       article: allStrapiArticle {
         edges {
@@ -100,8 +109,17 @@ exports.createPages = ({ actions, graphql }) => {
         },
       })
     })
+    CITYCONST.forEach(element => {
+      createPage({
+        path: `${convertToSlug(element)}`,
+        component: path.resolve(`src/templates/citylist.js`),
+        context: {
+          string: element,
+        },
+      })
+    })
   });
   
   // Query for articles nodes to use in creating pages.
-  return getArticles;
+  return getEntities;
 };

@@ -6,7 +6,7 @@ import Layout from '~components/layout/layout'
 import ReactMarkdown from "react-markdown/with-html" 
 import TableList from '~components/tablelist/tablelist'
 
-const ListAllTemplate = ({ data }) => {
+const ListAll = ({ data, search }) => {
     return (
         <Layout childTitle={"Alla företag"}>
             <h1 css={css`text-align: center;`}>Alla företag</h1>
@@ -17,11 +17,11 @@ const ListAllTemplate = ({ data }) => {
     );
 };
 
-export default ListAllTemplate
+export default ListAll
 
 export const allCompsQuery = graphql`
     query listallQuery {
-        company: allStrapiCompany {
+        company: allStrapiCompany(filter: {published: {eq: true}, mainimage: {id: {ne: null}}}) {
         edges {
             node {
             id

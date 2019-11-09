@@ -66,7 +66,7 @@ exports.createPages = ({ actions, graphql }) => {
   
   const getEntities = makeRequest(graphql, `
     {
-      article: allStrapiArticle {
+      article: allStrapiArticle(filter: {published: {eq: true}, coverimage: {id: {ne: null}}}) {
         edges {
           node {
             id
@@ -76,7 +76,7 @@ exports.createPages = ({ actions, graphql }) => {
           }
         }
       }
-      company: allStrapiCompany {
+      company: allStrapiCompany(filter: {published: {eq: true}, mainimage: {id: {ne: null}}}) {
         edges {
           node {
             id

@@ -9,7 +9,7 @@ import Img from 'gatsby-image'
 import '~style/table.css'
 import Layout from '~components/layout/layout';
 
-const TableList = ({ data }) => {
+const TableList = ({ data, search }) => {
     {const array = data.company.edges.map((items, i, data) => {
         let cObj = {
             id: 'id',
@@ -142,6 +142,17 @@ const TableList = ({ data }) => {
                 return undefined;
             }
         },
+        Filter: ({ filter, onChange }) => { 
+            //this.props.search
+            console.log(filter)
+            return (
+                <select
+                    onChange={event => onFiltersChange(event.target.value)} 
+                    value={filter ? filter.value : ''}
+                >
+                </select>
+            )
+        },
         Cell: row => {
             return null
         }
@@ -186,7 +197,7 @@ const TableList = ({ data }) => {
           <select
             onChange={event => onChange(event.target.value)}
             style={{ width: "100%" }}
-            value={filter ? filter.value : "all"}
+            value={filter ? filter.value : "alla"}
           >
             <option value="alla">Visa alla</option>
             <option value="tra">Trä</option>
@@ -220,6 +231,43 @@ const TableList = ({ data }) => {
                 data={array}
                 columns={columns}
                 defaultPageSize={10}
+                getTheadGroupProps={(state, rowInfo, column) => {
+                    return {
+                      style: {
+                        minWidth: '100%'
+                      }
+                    }
+                }}
+                getTheadGroupTrProps={(state, rowInfo, column) => {
+                    return {
+                        style: {
+                            minWidth: '100%'
+                        }
+                    }
+                }}
+                    
+                getTheadGroupThProps={(state, rowInfo, column) => {
+                    return {
+                        style: {
+                            minWidth: '100%'
+                        }
+                    }
+                }}
+                getTheadProps={(state, rowInfo, column) => {
+                    return {
+                        style: {
+                        minWidth: '100%'
+                        }
+                    }
+                }}
+                getTheadTrProps={(state, rowInfo, column) => {
+                    return {
+                      style: {
+                        minWidth: '100%'
+                      }
+                    }
+                }}
+
                 className={'table'}
                 sorted={[{ // the sorting model for the table
                     id: 'compQual',

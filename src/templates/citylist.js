@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import { Link, graphql } from 'gatsby'
-import { css } from "@emotion/core"
+import { css } from '@emotion/core'
 import Img from 'gatsby-image'
 import Layout from '~components/layout/layout'
 import FilterCompanyList from '~components/filtercompanylist/filtercompanylist'
-import ReactMarkdown from "react-markdown/with-html" 
-
+import ReactMarkdown from 'react-markdown/with-html'
 
 const CityListTemplate = ({ data, pageContext }) => {
     function capitalizeFirstLetter(string) {
@@ -26,7 +25,7 @@ export default CityListTemplate
 
 export const citylistQuery = graphql`
     query citylistQuery($string: String!) {
-        company: allStrapiCompany(filter: {city: {eq: $string}}) {
+        company: allStrapiCompany(filter: {city: {eq: $string}, published: {eq: true}, mainimage: {id: {ne: null}}}) {
         edges {
             node {
             id

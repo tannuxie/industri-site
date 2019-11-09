@@ -2,6 +2,7 @@ import React from 'react';
 import '~style/style.scss';
 import { css } from "@emotion/core"
 import { Link } from 'gatsby'
+import Searchfield from '~components/searchfield/searchfield'
 
 const Navbar = () => (
 	<div className="hero-foot is-hidden-mobile">
@@ -43,15 +44,21 @@ const Navbar = () => (
 				>
 					Vrigstad
 				</Link>
-				<a className="navbar-item">
+				<Link className="navbar-item"
+					to="/stockaryd"
+				>
 					Stockaryd
-				</a>
-				<a className="navbar-item">
+				</Link>
+				<Link className="navbar-item"
+					to="/rorvik"
+				>
 					Rörvik
-				</a>
-				<a className="navbar-item">
+				</Link>
+				<Link className="navbar-item"
+					to="/hylletofta"
+				>
 					Hylletofta
-				</a>
+				</Link>
 
 				<div className="navbar-item has-dropdown is-hoverable">
 					<a className="navbar-link">
@@ -76,22 +83,10 @@ const Navbar = () => (
 					<div
 						css={css`
 							box-shadow: 0 0 6px 0px rgba(0, 0, 0, 0.1);
+							display: flex;
 						`}
 					>
-						<input 
-							type="text" 
-							name="searchComp" 
-							placeholder="Sök här..." 
-							css={css`
-								border: 1px solid rgba(0, 0, 0, 0.1);
-								background: #fff;
-								padding: 5px 7px;
-								font-size: inherit;
-								border-radius: 3px;
-								font-weight: normal;
-								outline: none;
-							`}
-						/>
+						<Searchfield />
 					</div>
 				</div>
 			</div>

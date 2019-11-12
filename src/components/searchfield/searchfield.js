@@ -2,16 +2,16 @@ import React, { Component } from 'react'
 import Suggestions from '~components/searchfield/suggestions'
 import { StaticQuery, graphql } from "gatsby"
 import { css } from "@emotion/core"
-import { Link } from 'gatsby'
+import { Link, navigate } from 'gatsby'
 
 class Search extends Component { 
     state = {
         data: {} = this.props.data,
         query: '',
         results: []
-      }
+    }
     
-      getInfo = () => {
+    getInfo = () => {
         console.log(this.state.query);
         this.state.results = [];
        
@@ -37,12 +37,11 @@ class Search extends Component {
                 }
                 this.state.results.push(newObj)
             }
-            console.log(element.node);
         }
         console.log(this.state.results);
-      }
+    }
     
-      handleInputChange = () => {
+    handleInputChange = () => {
         this.setState({
           query: this.search.value
         }, () => {
@@ -56,14 +55,39 @@ class Search extends Component {
               this.state.results = []
           }
         })
-      }
+    }
 
-      render() {
+    handleSubmit = (event) => {
+            event.preventDefault();
+            console.log('handleSubmit: '+ this.state.query);
+            
+            this.willNavigate(this.state.query);
+    }
+
+    willNavigate = (query) => {
+        console.log('willNavigate: ' + query);
+        if(location.pathname !== "/alla") {
+            navigate(
+                "/alla/",
+                {
+                    state:  {
+                        search: query
+                    },
+                }
+            )
+        } else {
+            location.search = query;
+        }
+                
+    }
+
+    render() {
         return (
             <form
                 css={css`
                     margin-bottom: 0;
                 `}
+                onSubmit={this.handleSubmit}
             >
                 <input
                 placeholder="Sök efter något..."

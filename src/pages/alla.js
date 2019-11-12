@@ -1,25 +1,25 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { Link, graphql } from 'gatsby'
 import { css } from "@emotion/core"
-import Img from 'gatsby-image'
 import Layout from '~components/layout/layout'
 import ReactMarkdown from "react-markdown/with-html" 
 import TableList from '~components/tablelist/tablelist'
 
-const ListAll = ({ data, search }) => {
+const ListAll = ({ data }) => {
+
     return (
         <Layout childTitle={"Alla företag"}>
             <h1 css={css`text-align: center;`}>Alla företag</h1>
             <TableList 
-                data={data} 
+                data={data}
             />
         </Layout>
     );
-};
+}
 
 export default ListAll
 
-export const allCompsQuery = graphql`
+export const listAllQuery = graphql`
     query listallQuery {
         company: allStrapiCompany(filter: {published: {eq: true}, mainimage: {id: {ne: null}}}) {
         edges {

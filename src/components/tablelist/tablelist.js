@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '~style/style.scss';
 import { css } from "@emotion/core"
 import ReactTable from 'react-table'
@@ -9,7 +9,7 @@ import Img from 'gatsby-image'
 import '~style/table.css'
 import Layout from '~components/layout/layout';
 
-const TableList = ({ data, search }) => {
+const TableList = ({ data }) => {
     {const array = data.company.edges.map((items, i, data) => {
         let cObj = {
             id: 'id',
@@ -68,6 +68,12 @@ const TableList = ({ data, search }) => {
         headerStyle: {
             display: 'none'
         },
+        style: {
+            display: 'flex',
+            flexGrow: '50',
+            flexShrink: '0',
+            flexBasis: 'auto'
+        },
         sortable: false,
         filterable: false,
         accessor: 'value.imageId',
@@ -83,12 +89,13 @@ const TableList = ({ data, search }) => {
                     <div css={css`
                         max-height:500px;
                         overflow:hidden;
-                        display:flex;`
-                    }>
+                        display:flex;
+                        flex-grow:1;
+                    `}>
                         <Img 
                             style={{
                                 flex:'1 1 auto',
-                                alignSelf:'flex-end'
+                                alignSelf:'center'
                             }}
                             fluid={foundObject.imagecontent.childImageSharp.fluid} 
                             alt={foundObject.title} 
@@ -106,10 +113,9 @@ const TableList = ({ data, search }) => {
             display: 'none'
         },
         style: {
-            flexGrow: '200',
-            flex: '200 0 auto'
+            display: 'flex',
+            flex: '100 0 auto'
         },
-        width: 800,
         sortable: false,
         filterable: false,
         accessor: 'value',
@@ -120,7 +126,7 @@ const TableList = ({ data, search }) => {
                         <Link to={`/industri/${row.original.value.slug}`}>
                             <h3>{row.value.name}</h3>
                         </Link>
-                        <p style={{textTransform: 'capitalize'}}>{row.value.type}</p>
+                        <p style={{textTransform: 'capitalize', fontStyle: 'italic'}}>{row.value.type}</p>
                         <p css={css`white-space: pre-wrap;`}>{row.value.summary}</p>
                     </div>
                 
@@ -133,7 +139,11 @@ const TableList = ({ data, search }) => {
         accessor: 'value.name',
         className: 'nameClass',
         style: {
-            display: 'none'
+            display: 'none',
+            flexGrow: 0,
+            flexShrink: 1,
+            flexBasis: 0,
+            width: '0px'
         },
         filterMethod: (filter, row) => {
             if(String(row.compName.toLowerCase()).startsWith(filter.value.toLowerCase())) {
@@ -142,15 +152,16 @@ const TableList = ({ data, search }) => {
                 return undefined;
             }
         },
-        Filter: ({ filter, onChange }) => { 
-            //this.props.search
-            console.log(filter)
+        Filter: ({ filter, onChange }) => {
+
             return (
-                <select
-                    onChange={event => onFiltersChange(event.target.value)} 
+                <input
+                    type="text"
+                    style={{ width: "100%" }}
+                    onChange={event => onChange(event.target.value)}
                     value={filter ? filter.value : ''}
                 >
-                </select>
+                </input>
             )
         },
         Cell: row => {
@@ -167,6 +178,13 @@ const TableList = ({ data, search }) => {
         Header: 'Filtrera på typ',
         accessor: 'value.type',
         show: true,
+        style: {
+            display: 'none',
+            flexGrow: 0,
+            flexShrink: 1,
+            flexBasis: 0,
+            width: '0px'
+        },
         filterMethod: (filter, row) => {
             //console.log(filter);
             //console.log(row);
@@ -209,19 +227,62 @@ const TableList = ({ data, search }) => {
             <option value="ovrigt">Övrigt / Diverse</option>
           </select>
         ),
-        style: {
-            display: 'none'
-        },
         Cell: row => {
             return null
         }
     }, 
     {
         id: 'compSummary',
-        Header: 'summary',
-        accessor: 'value.summary',
-        show: false,
-
+        Header: 'Filtrera på stad',
+        accessor: 'value.city',
+        show: true,
+        className: 'cityClass',
+        style: {
+            display: 'none',
+            flexGrow: 0,
+            flexShrink: 1,
+            flexBasis: 0,
+            width: '0px'
+        },
+        filterMethod: (filter, row) => {
+            //console.log(filter);
+            //console.log(row);
+            if (filter.value === "alla") {
+                return true;
+            }
+            if (filter.value === "savsjo") {
+                return row[filter.id] == 'sävsjö'
+            }
+            if (filter.value === "vrigstad") {
+                return row[filter.id] == 'vrigstad'
+            }
+            if (filter.value === "stockaryd") {
+                return row[filter.id] == 'stockaryd'
+            }
+            if (filter.value === "rorvik") {
+                return row[filter.id] == 'rörvik'
+            }
+            if (filter.value === "hylletofta") {
+                return row[filter.id] == 'hylletofta'
+            }         
+        },
+        Filter: ({ filter, onChange }) => (
+          <select
+            onChange={event => onChange(event.target.value)}
+            style={{ width: "100%" }}
+            value={filter ? filter.value : "alla"}
+          >
+            <option value="alla">Visa alla</option>
+            <option value="savsjo">Sävsjo</option>
+            <option value="vrigstad">Vrigstad</option>
+            <option value="stockaryd">Stockaryd</option>
+            <option value="rorvik">Rörvik</option>
+            <option value="hylletofta">Hylletofta</option>
+          </select>
+        ),
+        Cell: row => {
+            return null
+        }
     }] 
 
 
@@ -231,49 +292,18 @@ const TableList = ({ data, search }) => {
                 data={array}
                 columns={columns}
                 defaultPageSize={10}
-                getTheadGroupProps={(state, rowInfo, column) => {
-                    return {
-                      style: {
-                        minWidth: '100%'
-                      }
-                    }
-                }}
-                getTheadGroupTrProps={(state, rowInfo, column) => {
-                    return {
-                        style: {
-                            minWidth: '100%'
-                        }
-                    }
-                }}
-                    
-                getTheadGroupThProps={(state, rowInfo, column) => {
-                    return {
-                        style: {
-                            minWidth: '100%'
-                        }
-                    }
-                }}
-                getTheadProps={(state, rowInfo, column) => {
-                    return {
-                        style: {
-                        minWidth: '100%'
-                        }
-                    }
-                }}
-                getTheadTrProps={(state, rowInfo, column) => {
-                    return {
-                      style: {
-                        minWidth: '100%'
-                      }
-                    }
-                }}
-
                 className={'table'}
+                getTdProps={() => ({         
+                    style: {
+                        flex: '50 0 auto'
+                    }
+                })}
                 sorted={[{ // the sorting model for the table
                     id: 'compQual',
                     desc: true
                 }]}
                 filterable={true}
+                resizable={true}
                 // Text
                 previousText={'Föregående'}
                 nextText={'Nästa'}

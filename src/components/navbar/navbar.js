@@ -77,18 +77,6 @@ const Navbar = () => (
 						</a>
 					</div>
 				</div>
-				<div 
-					className="navbar-item" 
-				>
-					<div
-						css={css`
-							box-shadow: 0 0 6px 0px rgba(0, 0, 0, 0.1);
-							display: flex;
-						`}
-					>
-						<Searchfield />
-					</div>
-				</div>
 			</div>
 
 			<div className="navbar-end">

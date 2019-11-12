@@ -6,6 +6,7 @@
 	"dependencies": {
 		"@emotion/core": "^10.0.14",
 		"@emotion/styled": "^10.0.14",
+		"@mdx-js/react": "^1.5.1",
 		"bulma": "^0.7.4",
 		"gatsby": "^2.3.25",
 		"gatsby-image": "^2.0.39",
@@ -25,6 +26,7 @@
 		"gatsby-transformer-sharp": "^2.1.18",
 		"leaflet": "^1.5.1",
 		"lost": "^8.3.1",
+		"mdx": "^0.3.1",
 		"node-sass": "^4.12.0",
 		"react": "^16.8.6",
 		"react-dom": "^16.8.6",

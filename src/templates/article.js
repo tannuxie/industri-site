@@ -4,6 +4,7 @@ import { css } from "@emotion/core"
 import Img from 'gatsby-image'
 import Layout from '~components/layout/layout'
 import ReactMarkdown from "react-markdown/with-html"  
+import { MDXProvider } from '@mdx-js/react'
 
 const ArticleTemplate = ({ data }) => (
     <Layout>
@@ -48,10 +49,13 @@ const ArticleTemplate = ({ data }) => (
               clear: both;
             `}
         >
-            <ReactMarkdown 
+            <MDXProvider>
+                {data.strapiArticle.content}
+            </MDXProvider>
+{/*             <ReactMarkdown 
                 source={data.strapiArticle.content} 
                 escapeHtml={false}  
-            />
+            /> */}
         </div>
 
     </Layout>

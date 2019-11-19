@@ -4,16 +4,19 @@ import { css } from "@emotion/core"
 import Img from 'gatsby-image'
 import Layout from '~components/layout/layout'
 import ReactMarkdown from "react-markdown/with-html"  
-import { MDXProvider } from '@mdx-js/react'
+import { MDXProvider, mdx } from '@mdx-js/react'
+import { MDXRenderer } from "gatsby-plugin-mdx"
 
-const ArticleTemplate = ({ data }) => (
-    <Layout>
+const ArticleTemplate = ({ data }) => {
+
+    return (
+        <Layout>
         <div>
             <h1 className="title is-1"
                 css={css`
                 text-align: center;
                 `}
-            >
+                >
                 {data.strapiArticle.title}
             </h1>
             <div 
@@ -49,17 +52,19 @@ const ArticleTemplate = ({ data }) => (
               clear: both;
             `}
         >
-            <MDXProvider>
-                {data.strapiArticle.content}
-            </MDXProvider>
+        <MDXRenderer>
+            {data.strapiArticle.children[0].body}
+        </MDXRenderer>
+                
 {/*             <ReactMarkdown 
                 source={data.strapiArticle.content} 
                 escapeHtml={false}  
-            /> */}
+            />  */}
         </div>
 
     </Layout>
-)
+    )
+}
 
 export default ArticleTemplate
 
@@ -70,9 +75,18 @@ export const articleQuery = graphql`
             content
             strapiId
             id
+            fields {
+                slug
+            }
             coverimage {
                 id
                 title
+            }
+            children {
+                ... on Mdx {
+                    id
+                    body
+                }
             }
         }
         strapiImage(articlecoverimage: {id: {eq: $id}}) {

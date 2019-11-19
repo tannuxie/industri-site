@@ -15,18 +15,6 @@ class Search extends Component {
         console.log(this.state.query);
         this.state.results = [];
        
-        // this.state.data.company.edges.forEach(function (element, index) {
-        //     if (element.node.name.startsWith(this.state.query)) {
-        //         const newObj = {
-        //             id: index,
-        //             name: element.node.name,
-        //             slug: element.node.fields.slug
-        //         }
-        //         this.state.results.push(newObj)
-        //     }
-        //     console.log(element.node);            
-        // });
-
         for (let index = 0; index < this.state.data.company.edges.length; index++) {
             const element = this.state.data.company.edges[index];
             if (element.node.name.toUpperCase().startsWith(this.state.query.toUpperCase())) {

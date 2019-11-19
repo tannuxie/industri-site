@@ -1,5 +1,7 @@
 const path = require(`path`);
 const { createFilePath } = require(`gatsby-source-filesystem`)
+const createMDXNode = require("gatsby-plugin-mdx/utils/create-mdx-node");
+const crypto = require(`crypto`)
 
 const CITYCONST = [
   "sävsjö", 
@@ -33,8 +35,16 @@ function convertToSlug(Text) {
         ;
 };
 
-exports.onCreateNode = ({ node, getNode, actions }) => {
-  const { createNodeField } = actions
+exports.onCreateNode = async ({ 
+  node, 
+  getNode, 
+  actions,
+  createNodeId
+}) => {
+  const { 
+    createNodeField, 
+    createNode, 
+    createParentChildLink } = actions
 
   if (node.internal.type === `StrapiCompany`) {
     //console.log(`\n`, node.name)
@@ -55,6 +65,41 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
         name: `slug`,
         value: slug,
       })
+    //const content = await loadNodeContent(node);
+    
+    const content = `${node.content}`;
+
+    // createNodeField({
+    //     node,
+    //     name: `mdx`,
+    //     value: content,
+    //  })
+    // createNode({
+    //   // Data for the node.
+    //   content: content,
+    
+    //   // Required fields.
+    //   id: createNodeId(`${node.id} >>> Mdx`),
+    //   parent: node.id, // or null if it's a source node without a parent
+    //   children: [],
+    //   internal: {
+    //     type: `Mdx`,
+    //     contentDigest: crypto
+    //       .createHash(`md5`)
+    //       .update(JSON.stringify(content))
+    //       .digest(`hex`),
+    //     mediaType: `text/markdown`, // optional
+    //     content: content, // optional
+    //   }
+    // })
+
+    const mdxNode = await createMDXNode({
+      id: createNodeId(`${node.id} >>> Mdx`),
+      node,
+      content
+    });
+    createNode(mdxNode);
+    createParentChildLink({ parent: node, child: mdxNode });
   }
 
 }

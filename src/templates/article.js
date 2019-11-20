@@ -6,11 +6,20 @@ import Layout from '~components/layout/layout'
 import ReactMarkdown from "react-markdown/with-html"  
 import { MDXProvider, mdx } from '@mdx-js/react'
 import { MDXRenderer } from "gatsby-plugin-mdx"
+import MyMap from '~components/map/map'
+import ImgBox from '~components/image/image'
+
+const shortcodes = {
+    MyMap, 
+    ImgBox,
+    Layout
+}
 
 const ArticleTemplate = ({ data }) => {
-
+    console.log(data);
+    
     return (
-        <Layout>
+        <Layout childTitle={`${data.strapiArticle.title}`}>
         <div>
             <h1 className="title is-1"
                 css={css`
@@ -52,9 +61,11 @@ const ArticleTemplate = ({ data }) => {
               clear: both;
             `}
         >
-        <MDXRenderer>
-            {data.strapiArticle.children[0].body}
-        </MDXRenderer>
+        <MDXProvider components={shortcodes}>
+            <MDXRenderer>
+                {data.strapiArticle.childMdx.body}
+            </MDXRenderer>
+        </MDXProvider>
                 
 {/*             <ReactMarkdown 
                 source={data.strapiArticle.content} 
@@ -82,12 +93,9 @@ export const articleQuery = graphql`
                 id
                 title
             }
-            children {
-                ... on Mdx {
-                    id
-                    body
-                }
-            }
+            childMdx {
+                body
+              }
         }
         strapiImage(articlecoverimage: {id: {eq: $id}}) {
             title

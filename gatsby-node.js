@@ -1,7 +1,6 @@
 const path = require(`path`);
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const createMDXNode = require("gatsby-plugin-mdx/utils/create-mdx-node");
-const crypto = require(`crypto`)
 
 const CITYCONST = [
   "sävsjö", 
@@ -68,31 +67,6 @@ exports.onCreateNode = async ({
     //const content = await loadNodeContent(node);
     
     const content = `${node.content}`;
-
-    // createNodeField({
-    //     node,
-    //     name: `mdx`,
-    //     value: content,
-    //  })
-    // createNode({
-    //   // Data for the node.
-    //   content: content,
-    
-    //   // Required fields.
-    //   id: createNodeId(`${node.id} >>> Mdx`),
-    //   parent: node.id, // or null if it's a source node without a parent
-    //   children: [],
-    //   internal: {
-    //     type: `Mdx`,
-    //     contentDigest: crypto
-    //       .createHash(`md5`)
-    //       .update(JSON.stringify(content))
-    //       .digest(`hex`),
-    //     mediaType: `text/markdown`, // optional
-    //     content: content, // optional
-    //   }
-    // })
-
     const mdxNode = await createMDXNode({
       id: createNodeId(`${node.id} >>> Mdx`),
       node,

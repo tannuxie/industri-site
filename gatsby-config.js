@@ -19,16 +19,17 @@ module.exports = {
 		{
 			resolve: `gatsby-plugin-mdx`,
 			options: {
-			  extensions: [`.mdx`, `.md`],
-			//  defaultLayout: require.resolve(`${__dirname}/src/templates/article.js`),
-			//   gatsbyRemarkPlugins: [
-			// 	  {
-			// 		  resolve: `gatsby-remark-images`,
-			// 		  options: {
-			// 			  maxWidth: 1920,
-			// 			},
-			// 		},
-			// 	],
+				extensions: [`.mdx`, `.md`],
+				gatsbyRemarkPlugins: [
+					{
+					resolve: `gatsby-remark-autolink-headers`,
+						options: {
+								offsetY: `100`,
+								className: `subHeading`,
+								removeAccents: true,
+							},
+					},
+				],
 			},
 		},
 		{

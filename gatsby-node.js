@@ -56,8 +56,6 @@ exports.onCreateNode = async ({
       })
   }
   if (node.internal.type === `StrapiArticle`) {
-    //console.log(`\n`, node.title)
-    //console.log(`\n`, convertToSlug(node.title))
       const slug = convertToSlug(node.title)
       createNodeField({
         node,
@@ -75,7 +73,23 @@ exports.onCreateNode = async ({
     createNode(mdxNode);
     createParentChildLink({ parent: node, child: mdxNode });
   }
-
+  if (node.internal.type === `StrapiStreet`) {
+      const slug = convertToSlug(node.name)
+      createNodeField({
+        node,
+        name: `slug`,
+        value: slug,
+      })
+    
+    const content = `${node.content}`;
+    const mdxNode = await createMDXNode({
+      id: createNodeId(`${node.strapiId} >>> Mdx`),
+      node,
+      content
+    });
+    createNode(mdxNode);
+    createParentChildLink({ parent: node, child: mdxNode });
+  }
 }
 
 // Implement the Gatsby API “createPages”. This is called once the
@@ -84,28 +98,38 @@ exports.createPages = ({ actions, graphql }) => {
   const { createPage } = actions;
   
   const getEntities = makeRequest(graphql, `
-    {
-      article: allStrapiArticle(filter: {published: {eq: true}, coverimage: {id: {ne: null}}}) {
-        edges {
-          node {
-            id
-            fields {
-              slug
-            }
-          }
-        }
-      }
-      company: allStrapiCompany(filter: {published: {eq: true}, mainimage: {id: {ne: null}}}) {
-        edges {
-          node {
-            id
-            fields {
-              slug
-            }
+  {
+    article: allStrapiArticle(filter: {published: {eq: true}, coverimage: {id: {ne: null}}}) {
+      edges {
+        node {
+          id
+          fields {
+            slug
           }
         }
       }
     }
+    company: allStrapiCompany(filter: {published: {eq: true}, mainimage: {id: {ne: null}}}) {
+      edges {
+        node {
+          id
+          fields {
+            slug
+          }
+        }
+      }
+    }
+    street: allStrapiStreet(filter: {published: {eq: true}, imagecontent: {id: {ne: null}}}) {
+      edges {
+        node {
+          id
+          fields {
+            slug
+          }
+        }
+      }
+    }
+  }
     `).then(result => {
     // Create pages for each article.
     result.data.article.edges.forEach(({ node }) => {
@@ -123,6 +147,16 @@ exports.createPages = ({ actions, graphql }) => {
       createPage({
         path: `/industri/${node.fields.slug}`,
         component: path.resolve(`src/templates/company.js`),
+        context: {
+          id: tempvar,
+        },
+      })
+    })
+    result.data.street.edges.forEach(({ node }) => {
+      const tempvar = Number(node.id.match(/\d+/)[0])
+      createPage({
+        path: `/vandra/${node.fields.slug}`,
+        component: path.resolve(`src/templates/street.js`),
         context: {
           id: tempvar,
         },

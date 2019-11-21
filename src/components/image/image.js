@@ -47,19 +47,27 @@ export default (id) => (
             
             const [photoIndex, setPhotoIndex] = useState(0);
             const [isOpen, setIsOpen] = useState(false);
+            const toggle = () => setIsOpen(!isOpen);
 
-            <div>
-                <button type="button" onClick={() => setIsOpen(true)}>
-                    Open Lightbox
-                </button>
+            return (
+            <div onClick={() => setIsOpen(!isOpen)}>
+                <Img 
+                    fluid={image[0].node.imagecontent.childImageSharp.fluid} 
+                    alt={image[0].node.title} 
+                />
+
             
                 {isOpen && (
-/*                     <Lightbox
-                        mainSrc={image[photoIndex]}
-                        onCloseRequest={() => setIsOpen(false)}
-                    /> */
+                    <Dialog isOpen={isOpen} onDismiss={toggle} onClick={() => toggle()}>
+                        <Img 
+                            fluid={image[0].node.imagecontent.childImageSharp.fluid} 
+                            alt={image[0].node.title} 
+                        />
+                        <h2>{image[0].node.title} </h2>
+                    </Dialog>
                 )}
             </div>
+            )
         }}
     />
 )

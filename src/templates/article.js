@@ -44,6 +44,7 @@ const ArticleTemplate = ({ data }) => {
                    <Img 
                     fluid={data.strapiImage.imagecontent.childImageSharp.fluid} 
                     alt={data.strapiImage.title} 
+                    imgStyle={{ objectFit: 'contain' }}
                    />
                 </div>
             </div>

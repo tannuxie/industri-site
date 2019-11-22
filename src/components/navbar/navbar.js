@@ -59,6 +59,11 @@ const Navbar = () => (
 				>
 					Hylletofta
 				</Link>
+				<Link className="navbar-item"
+					to="/vandra"
+				>
+					Vandra
+				</Link>
 
 				<div className="navbar-item has-dropdown is-hoverable">
 					<a className="navbar-link">

@@ -32,6 +32,18 @@ img {
 .footer {
 	width: 100%;
 }
+// ****************
+// *** Navbar ***
+// ****************
+
+.navbarFixed {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 30;
+	background-color:#57b9e5!important;
+	width: 100%;
+}
 
 // ****************
 // *** Articles ***

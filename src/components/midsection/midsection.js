@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from "@emotion/core"
 import { StaticQuery, graphql } from "gatsby"
 import Img from "gatsby-image"
-import '~style/style.scss';
+//import '~style/style.scss';
 
 const Mid = ({ data }) => (
 	<div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '~style/style.scss';
+//import '~style/style.scss';
 import { css } from "@emotion/core"
 import ReactTable from 'react-table'
 import { ReactTableDefaults } from 'react-table'

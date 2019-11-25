@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from "@emotion/core"
 import { StaticQuery, graphql } from 'gatsby';
-import '~style/style.scss';
+//import '~style/style.scss';
 
 const Footer = () => (
 	<StaticQuery

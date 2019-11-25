@@ -15,6 +15,7 @@ const typography = new Typography(twintheme);
 if (process.env.NODE_ENV !== `production`) {
   typography.injectStyles()
 }
+console.log(typography);
 
 export default typography;
 export const rhythm = typography.rhythm

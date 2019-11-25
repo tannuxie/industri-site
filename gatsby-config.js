@@ -7,6 +7,40 @@ module.exports = {
 		description: `Ett projekt för att sammanställa berättelser om lokala företag, deras ursprung och historia.`,
 		keywords: `Sävsjö, Industri, Industrihistoria, Historia`,
 		siteUrl: `https://www.example.com`,
+		menuLinks: [
+			{
+				"name": `Hem`,
+				"link": `/`
+			},
+			{
+				"name": `Sävsjö`,
+				"link": `/savsjo`
+			},
+			{
+				"name": `Vrigstad`,
+				"link": `/vrigstad`
+			},
+			{
+				"name": `Stockaryd`,
+				"link": `/stockaryd`
+			},
+			{
+				"name": `Rörvik`,
+				"link": `/rorvik`
+			},
+			{
+				"name": `Hylletofta`,
+				"link": `/hylletofta`
+			},
+			{
+				"name": `Vandra`,
+				"link": `/vandra`
+			},
+			{
+				"name": `Om oss`,
+				"link": `/omoss`
+			}
+		]
 	},
 	plugins: [
 		`gatsby-plugin-react-helmet`,
@@ -24,11 +58,17 @@ module.exports = {
 					{
 					resolve: `gatsby-remark-autolink-headers`,
 						options: {
-								//offsetY: `100`,
 								className: `subHeading`,
-								//removeAccents: true,
 								icon: false,
 							},
+					},
+					`gatsby-remark-smartypants`,
+					{
+						resolve: "gatsby-remark-external-links",
+						options: {
+						  target: "_blank",
+						  rel: "noopener"
+						}
 					},
 				],
 			},
@@ -69,8 +109,7 @@ module.exports = {
 					password: "_GGkq.RU@CG9!_i",
 				},
 			},
-		},
-		`gatsby-transformer-sharp`,		
+		},	
 		{
 			resolve: `gatsby-plugin-sharp`,
 			options: {
@@ -79,13 +118,15 @@ module.exports = {
 				defaultQuality: 75,
 			},
 		},
-		`gatsby-plugin-emotion`,
+		`gatsby-transformer-sharp`,
 		{
 			resolve: `gatsby-plugin-typography`,
 			options: {
-				pathToConfigModule: `src/style/typography`,
+			  pathToConfigModule: `src/style/typography`,
 			},
-		},
+		  },
+		// `gatsby-plugin-theme-ui`,
+		`gatsby-plugin-emotion`,
 		{
 			resolve: `gatsby-plugin-sass`,
 			options: {

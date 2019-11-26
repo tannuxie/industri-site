@@ -6,7 +6,14 @@ export default props => {
 	};
 
 	return (
-		<span style={styles} role="img" aria-label="emoji">
+		<span 
+			id={'emoji-' + props.label}
+			style={styles} 
+			className="emoji"
+			role="img"
+			aria-label={props.label ? props.label : ""}
+			aria-hidden={props.label ? "false" : "true"}
+		>
 			{props.emoji}
 		</span>
 	);

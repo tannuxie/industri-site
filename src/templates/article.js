@@ -16,8 +16,6 @@ import MdxRender from '~components/mdxrender/mdxrender'
 // }
 
 const ArticleTemplate = ({ data }) => {
-    console.log(data);
-    
     return (
         <Layout childTitle={`${data.strapiArticle.title}`}>
             <div>
@@ -63,11 +61,7 @@ const ArticleTemplate = ({ data }) => {
                 clear: both;
                 `}
             >
-{/*             <MDXProvider components={shortcodes}>
-                <MDXRenderer> */}
                 <MdxRender mdxBody={data.strapiArticle.childMdx.body} />
-{/*                 </MDXRenderer>
-            </MDXProvider> */}
             </div>
         </Layout>
     )

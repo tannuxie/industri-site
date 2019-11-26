@@ -91,12 +91,15 @@ const TableList = ({ data }) => {
                         overflow:hidden;
                         display:flex;
                         flex-grow:1;
+                        @media (max-width: 769px) {
+                            max-height:300px;
+                          }
                     `}>
                         <Img 
-                            style={{
-                                flex:'1 1 auto',
-                                alignSelf:'center'
-                            }}
+                            css={css`
+                                flex: 1 1 auto;
+                                align-self: flex-start;
+                            `}
                             fluid={foundObject.imagecontent.childImageSharp.fluid} 
                             alt={foundObject.title} 
                             title={foundObject.companyimage.name}
@@ -124,9 +127,14 @@ const TableList = ({ data }) => {
                 
                     <div>
                         <Link to={`/industri/${row.original.value.slug}`}>
-                            <h3>{row.value.name}</h3>
+                            <h3 css={css`
+                                white-space: normal;
+                                @media (max-width: 769px) {
+                                    margin-top:0px; 
+                                }
+                            `}>{row.value.name}</h3>
                         </Link>
-                        <p style={{textTransform: 'capitalize', fontStyle: 'italic'}}>{row.value.type}</p>
+                        <p css={css`text-transform: capitalize; font-style: italic;`}>{row.value.type}</p>
                         <p css={css`white-space: pre-wrap;`}>{row.value.summary}</p>
                     </div>
                 
@@ -146,7 +154,7 @@ const TableList = ({ data }) => {
             width: '0px'
         },
         filterMethod: (filter, row) => {
-            if(String(row.compName.toLowerCase()).startsWith(filter.value.toLowerCase())) {
+            if(String(row.compName.toLowerCase()).includes(filter.value.toLowerCase())) {
                 return row;
             } else {
                 return undefined;
@@ -178,6 +186,9 @@ const TableList = ({ data }) => {
         Header: 'Filtrera på typ',
         accessor: 'value.type',
         show: true,
+        headerStyle: {
+            marginRight: `${location.pathname ==! '/alla' && '0px'}`
+        },
         style: {
             display: 'none',
             flexGrow: 0,
@@ -237,6 +248,9 @@ const TableList = ({ data }) => {
         accessor: 'value.city',
         show: true,
         className: 'cityClass',
+        headerStyle: {
+            display: `${location.pathname == '/alla' ? 'block' : 'none'}`
+        },
         style: {
             display: 'none',
             flexGrow: 0,
@@ -297,6 +311,13 @@ const TableList = ({ data }) => {
                     style: {
                         flex: '50 0 auto'
                     }
+                })}
+                getTheadThProps={() => ({         
+                    className: 'filterHeading'
+                })}
+
+                getTheadFilterThProps={() => ({         
+                    className: 'filterField'
                 })}
                 sorted={[{ // the sorting model for the table
                     id: 'compQual',

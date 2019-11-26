@@ -4,6 +4,7 @@ import { css } from "@emotion/core"
 import { Link } from 'gatsby'
 import { StaticQuery, graphql } from 'gatsby'
 import { Helmet } from 'react-helmet';
+import Emoji from '~components/emoji'
 
 class Navbar extends React.Component {
 	constructor(props) {
@@ -11,10 +12,12 @@ class Navbar extends React.Component {
 		this.state = { 
 			showMenu: false,
 			fixMenu: false,
+			sizeUpMode: false,
 		}
 		this.buttonRef = React.createRef()
 		this.menuRef = React.createRef()
 		this.toggleMenu = this.toggleMenu.bind(this)
+		this.toggleSize = this.toggleSize.bind(this)
 		this.getParentRef = this.getParentRef.bind(this)
 	}
 
@@ -59,11 +62,17 @@ class Navbar extends React.Component {
 		}))
 	}
 
+	toggleSize() {
+		this.setState(state => ({
+			sizeUpMode: !state.sizeUpMode
+		}))
+	}
+
 	render() {		
 		return (
 			<>
 			<Helmet>
-				 <body className={this.state.fixMenu ? "has-navbar-fixed-top" : ''} />
+				 <body className={this.state.fixMenu && this.state.sizeUpMode ? "has-navbar-fixed-top sizeUp" : this.state.fixMenu ? "has-navbar-fixed-top" : this.state.sizeUpMode ? "sizeUp" : ''} />
 			</Helmet>
 			<div className="hero-foot is-hidden-mobile">
 				<nav className={this.state.fixMenu ? "navbar navbarFixed" : "navbar"} role="navigation" aria-label="main navigation"
@@ -94,6 +103,35 @@ class Navbar extends React.Component {
 									</Link>
 								)
 							})}
+							<a 
+								id={"sizeButton"}
+								className="navbar-item"
+								role="button"
+								onClick={this.toggleSize}
+								css={css`
+								color: transparent;
+								text-shadow: 0 0 0 #4e4e4e;
+								display: flex;
+    							align-items: flex-start;
+							`}
+							>
+								<span 
+									css={css`display: flex;
+    										height: 2rem;
+											align-items: center;
+									`}
+								>
+									<Emoji size={1} label={'small-a'} emoji={`🇦`} />
+								</span>
+								<span 
+									css={css` display: flex;
+    									height: 2rem;
+										align-items: center;
+									`}
+								>
+									<Emoji size={2} label={'big-a'} emoji={`🇦`} />
+								</span>
+							</a>
 						</div>
 
 						<div className="navbar-end">		

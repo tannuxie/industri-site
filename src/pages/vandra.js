@@ -92,7 +92,7 @@ const Vandra = ({ data }) => {
                 )
             })}
         </Layout>
-    );
+    )
 }
 
 export default Vandra

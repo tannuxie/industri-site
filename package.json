@@ -36,6 +36,7 @@
 		"lost": "^8.3.1",
 		"mdx": "^0.3.1",
 		"node-sass": "^4.12.0",
+		"prop-types": "^15.7.2",
 		"react": "^16.8.6",
 		"react-dom": "^16.8.6",
 		"react-helmet": "^5.2.0",
@@ -62,6 +63,8 @@
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"devDependencies": {
+		"@babel/types": "^7.7.4",
+		"eslint-config-airbnb": "^18.0.1",
 		"eslint-import-resolver-alias": "^1.1.2",
 		"prettier": "^1.14.2"
 	},

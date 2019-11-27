@@ -11,11 +11,10 @@ twintheme.overrideThemeStyles = ({ rhythm }, options, styles) => ({
 
 const typography = new Typography(twintheme);
 
-// Hot reload typography in development.
+// Hot reload typography in development
 if (process.env.NODE_ENV !== `production`) {
   typography.injectStyles()
 }
-console.log(typography);
 
 export default typography;
 export const rhythm = typography.rhythm

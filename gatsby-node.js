@@ -1,15 +1,9 @@
 const path = require(`path`);
 const { createFilePath } = require(`gatsby-source-filesystem`)
-const createMDXNode = require("gatsby-plugin-mdx/utils/create-mdx-node");
+const createMDXNode = require(`gatsby-plugin-mdx/utils/create-mdx-node`);
+const text =  require(`./src/components/text.json`)
 
-const CITYCONST = [
-  "sävsjö", 
-  "vrigstad", 
-  "stockaryd", 
-  "rörvik", 
-  "hultagård", 
-  "hylletofta"
-]
+const CITYCONST = text.cities
 
 const makeRequest = (graphql, request) => new Promise((resolve, reject) => {
   // Query for nodes to use in creating pages.

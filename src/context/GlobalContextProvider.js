@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react'
 
-const GlobalStateContext  = React.createContext()
-const GlobalDispatchContext  = React.createContext()
+export const GlobalStateContext  = React.createContext()
+export const GlobalDispatchContext  = React.createContext()
 
 const initialState = {
     theme: 'light',

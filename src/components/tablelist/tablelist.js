@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 //import '~style/style.scss';
 import { css } from "@emotion/core"
 import ReactTable from 'react-table'

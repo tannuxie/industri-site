@@ -1,49 +1,54 @@
-import React, { Component } from 'react'
+/* eslint-disable no-undef */
+import React, { useContext, Component } from 'react'
+import PropTypes from 'prop-types';
 //import '~style/style.scss';
 import { css } from "@emotion/core"
 import { Link } from 'gatsby'
 import { StaticQuery, graphql } from 'gatsby'
 import { Helmet } from 'react-helmet';
 import Emoji from '~components/emoji'
+import { GlobalDispatchContext } from '../../context/GlobalContextProvider'
 
 class Navbar extends React.Component {
 	constructor(props) {
-		super(props)
-		this.state = { 
+		super(props);
+		this.state = {
 			showMenu: false,
 			fixMenu: false,
 			sizeUpMode: false,
-		}
-		this.buttonRef = React.createRef()
-		this.menuRef = React.createRef()
-		this.toggleMenu = this.toggleMenu.bind(this)
-		this.toggleSize = this.toggleSize.bind(this)
-		this.getParentRef = this.getParentRef.bind(this)
-	}
-
-	getParentRef = () => {
-		const elem = this.props.getParentElem()
-		return elem.current.clientHeight
+		};
+		this.buttonRef = React.createRef();
+		this.menuRef = React.createRef();
+		this.toggleMenu = this.toggleMenu.bind(this);
+		this.toggleSize = this.toggleSize.bind(this);
+		this.getParentRef = this.getParentRef.bind(this);
+		const dispatch = useContext(GlobalDispatchContext);
+		console.log(dispatch);
 	}
 
 	componentDidMount() {
 		window.addEventListener('scroll', this.listenToScroll)
 	}
-	  
+
 	componentWillUnmount() {
 		window.removeEventListener('scroll', this.listenToScroll)
 	}
-	  
-	listenToScroll = () => {
+
+	getParentRef() {
+		const elem = this.props.getParentElem()
+		return elem.current.clientHeight
+	}
+
+	listenToScroll() {
 		const winScroll =
-		  document.body.scrollTop || document.documentElement.scrollTop
-		
+			document.body.scrollTop || document.documentElement.scrollTop
+
 		if (this.state.fixMenu == false && 
 			winScroll > (this.getParentRef() - this.menuRef.current.clientHeight)
 		) {
 			this.setState({
 				fixMenu: true,
-			  })
+			})
 		} 
 
 		if (
@@ -52,7 +57,7 @@ class Navbar extends React.Component {
 		) {
 			this.setState({
 				fixMenu: false,
-			  })
+			})
 		}
 	}
 
@@ -72,7 +77,7 @@ class Navbar extends React.Component {
 		return (
 			<>
 			<Helmet>
-				 <body className={this.state.fixMenu && this.state.sizeUpMode ? "has-navbar-fixed-top sizeUp" : this.state.fixMenu ? "has-navbar-fixed-top" : this.state.sizeUpMode ? "sizeUp" : ''} />
+				<body className={this.state.fixMenu && this.state.sizeUpMode ? "has-navbar-fixed-top sizeUp" : this.state.fixMenu ? "has-navbar-fixed-top" : this.state.sizeUpMode ? "sizeUp" : ''} />
 			</Helmet>
 			<div className="hero-foot is-hidden-mobile">
 				<nav className={this.state.fixMenu ? "navbar navbarFixed" : "navbar"} role="navigation" aria-label="main navigation"
@@ -142,6 +147,21 @@ class Navbar extends React.Component {
 			</>
 		)
 	}
+}
+
+Navbar.PropTypes = {
+	data: PropTypes.object.shape({
+		site: PropTypes.object.shape({
+			siteMetadata: PropTypes.object.shape({
+				title: PropTypes.string,
+				menuLinks: PropTypes.array.shape({
+					name: PropTypes.string,
+					link: PropTypes.string
+				})
+			})
+		})
+	}),
+	getParentElem: PropTypes.function
 }
 
 export default props => (

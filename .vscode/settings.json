@@ -6,5 +6,8 @@
     },
     "files.associations": {
         "*.js": "javascriptreact"
-      }
+    },
+    "eslint.packageManager": "yarn",
+    "eslint.lintTask.enable": true,
+    "eslint.alwaysShowStatus": true
 }

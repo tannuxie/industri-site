@@ -1,5 +1,14 @@
 {
-  "parser": "babel-eslint",
+  "plugins": [
+    "react-hooks",
+    "react"
+  ],
+  //"parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
   "settings": {
     "import/resolver": {
       "alias": [
@@ -7,5 +16,23 @@
 	["~style", "./src/style"]
       ]
     }
-  }
+  },
+  "rules": {
+    "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
+    "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "react/display-name": 0,
+    "react/jsx-fragments": 1,
+    "react/jsx-curly-newline": 1,
+    "react/state-in-constructor": 1,
+    "react/static-property-placement": 1,
+    "react/jsx-props-no-spreading": 1,
+    "jsx-a11y/control-has-associated-label": 1,
+    "no-unused-vars": 1,
+    "no-console": 1,
+    "indent": [1, "tab"],
+    "no-tabs": 0
+  },
+    "extends": ["eslint:recommended", "plugin:react/recommended", "airbnb", "airbnb/hooks"]
 }

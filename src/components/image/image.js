@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { StaticQuery, graphql } from 'gatsby'
 import Img from 'gatsby-image'
+import { css } from "@emotion/core"
+import { Helmet } from 'react-helmet';
 import { Dialog, DialogOverlay, DialogContent } from '@reach/dialog';
 import '@reach/dialog/styles.css';
 import {zeroRightClassName,fullWidthClassName, noScrollbarsClassName} from 'react-remove-scroll-bar';
@@ -59,77 +61,51 @@ export default (id, caption) => (
             const open = () => {
                 setIsOpen(true);
                 //document.getElementsByTagName("body")[0].style = 'margin-right:0px!important';
-                var element = document.getElementsByTagName("body")[0];
+                //var element = document.getElementsByTagName("body")[0];
                 //element.style.marginRight = 'margin-right:0px!important';
-                element.style.marginLeft = 'calc(100vw - 100%)';
+                //element.style.marginLeft = 'calc(100vw - 100%)';
                 //margin-left: calc(100vw - 100%);
             }
             const close = () => {
                 setIsOpen(false);
-                var element = document.getElementsByTagName("body")[0];
+                //var element = document.getElementsByTagName("body")[0];
 
-                element.style.marginLeft = null;
+                //element.style.marginLeft = null;
             }
 
             return (
-            <div onClick={() => setIsOpen(!isOpen)}>
-                <Img 
-                    fluid={image[0].node.imagecontent.childImageSharp.fluid} 
-                    alt={image[0].node.title} 
-                    imgStyle={{ objectFit: 'contain' }}
-                />
-                {aCaption.length > 0 && (
-                    <p style={{ fontStyle: 'italic',
-                    textAlign: 'center',
-                    fontSize: '1.1rem'}}>{aCaption}</p>
-                )}
-            
-                {isOpen && (
-                    <DialogOverlay className={zeroRightClassName} isOpen={isOpen} onDismiss={close} onClick={() => open()}>
-                        <DialogContent>
-                            <Img 
-                                fluid={image[0].node.imagecontent.childImageSharp.fluid} 
-                                alt={image[0].node.title}
-                            />
-                            <h2>
-                                {aCaption.length > 0 ? aCaption : image[0].node.title}
-                            </h2>
-                        </DialogContent>
-                    </DialogOverlay>
-                )}
-            </div>
+                <>
+                    <Helmet>
+                        <body className={isOpen && 'right-scroll-bar-position'} />
+                    </Helmet>
+                    <div onClick={() => setIsOpen(!isOpen)}>
+                        <Img 
+                            fluid={image[0].node.imagecontent.childImageSharp.fluid} 
+                            alt={image[0].node.title} 
+                            imgStyle={{ objectFit: 'contain' }}
+                        />
+                        {aCaption.length > 0 && (
+                            <p style={{ fontStyle: 'italic',
+                            textAlign: 'center',
+                            fontSize: '1.1rem'}}>{aCaption}</p>
+                        )}
+                    
+                        {isOpen && (
+                            <DialogOverlay css={css`z-index: 9999;`} isOpen={isOpen} onDismiss={close} onClick={() => open()}>
+                                <DialogContent aria-label={image[0].node.title}>
+                                    <Img 
+                                        fluid={image[0].node.imagecontent.childImageSharp.fluid} 
+                                        alt={image[0].node.title}
+                                    />
+                                    <h2>
+                                        {aCaption.length > 0 ? aCaption : image[0].node.title}
+                                    </h2>
+                                </DialogContent>
+                            </DialogOverlay>
+                        )}
+                    </div>
+                </>
             )
         }}
     />
 )
-
-
-
-/*   constructor(props) {
-    super(props);
- 
-    this.state = {
-      photoIndex: 0,
-      isOpen: false,
-    };
-  }
- 
-  render() {
-    const { photoIndex, isOpen } = this.state;
- 
-    return (
-      <div>
-        <button type="button" onClick={() => this.setState({ isOpen: true })}>
-          Open Lightbox
-        </button>
- 
-        {isOpen && (
-          <Lightbox
-            mainSrc={images[photoIndex]}
-            onCloseRequest={() => this.setState({ isOpen: false })}
-          />
-        )}
-      </div>
-    );
-  }
-} */

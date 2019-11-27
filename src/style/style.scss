@@ -34,8 +34,11 @@ img {
 	width: 100%;
 }
 
-body.sizeUp section:nth-of-type(2) {
+body.sizeUp > div > div > div > section:nth-of-type(2) {
     font-size: 150%;
+}
+.right-scroll-bar-position {
+	right: 17px !important;
 }
 
 // ****************
@@ -50,6 +53,7 @@ body.sizeUp section:nth-of-type(2) {
 	//background-color:#57b9e5!important;
 	background: linear-gradient(to right, #2980b9, #6dd5fa)!important;
 	width: 100%;
+	z-index: 9998;
 }
 
 // ****************

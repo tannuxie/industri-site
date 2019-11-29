@@ -1,186 +1,204 @@
-/* eslint-disable no-undef */
-import React, { useContext, Component } from 'react'
+import React, { useContext, useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-//import '~style/style.scss';
-import { css } from "@emotion/core"
-import { Link } from 'gatsby'
-import { StaticQuery, graphql } from 'gatsby'
+// import '~style/style.scss';
+import { css } from '@emotion/core';
+import { Link, StaticQuery, graphql } from 'gatsby';
 import { Helmet } from 'react-helmet';
-import Emoji from '~components/emoji'
-import { GlobalDispatchContext } from '../../context/GlobalContextProvider'
+import Emoji from '~components/emoji';
+import { GlobalDispatchContext, GlobalStateContext } from '../../context/GlobalContextProvider';
 
-class Navbar extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			showMenu: false,
-			fixMenu: false,
-			sizeUpMode: false,
-		};
-		this.buttonRef = React.createRef();
-		this.menuRef = React.createRef();
-		this.toggleMenu = this.toggleMenu.bind(this);
-		this.toggleSize = this.toggleSize.bind(this);
-		this.getParentRef = this.getParentRef.bind(this);
-		const dispatch = useContext(GlobalDispatchContext);
-		console.log(dispatch);
-	}
+const Navbar = ({ data, getParentElem }) => {
+	const dispatch = useContext(GlobalDispatchContext);
+	const state = useContext(GlobalStateContext);
+	console.log(dispatch);
+	console.log(state);
 
-	componentDidMount() {
-		window.addEventListener('scroll', this.listenToScroll)
-	}
+	// Menuref, to be able to get height of menu
+	const menuRef = useRef();
 
-	componentWillUnmount() {
-		window.removeEventListener('scroll', this.listenToScroll)
-	}
+	// State
+	const [showMenu, setShowMenu] = useState(false);
+	const [fixMenu, setFixMenu] = useState(false);
 
-	getParentRef() {
-		const elem = this.props.getParentElem()
-		return elem.current.clientHeight
-	}
+	// 	sizeUpMode: false,
 
-	listenToScroll() {
-		const winScroll =
-			document.body.scrollTop || document.documentElement.scrollTop
+	// this.buttonRef = React.createRef();
+	// this.menuRef = React.createRef();
+	// this.toggleMenu = this.toggleMenu.bind(this);
+	// this.toggleSize = this.toggleSize.bind(this);
+	// this.getParentRef = this.getParentRef.bind(this);
 
-		if (this.state.fixMenu == false && 
-			winScroll > (this.getParentRef() - this.menuRef.current.clientHeight)
-		) {
-			this.setState({
-				fixMenu: true,
-			})
-		} 
+	const addListen = () => {
+		window.addEventListener('scroll', this.listenToScroll);
+	};
+
+	const removeListen = () => {
+		window.removeEventListener('scroll', this.listenToScroll);
+	};
+
+
+	const getParentRefHeight = () => {
+		const elem = getParentElem();
+		return elem.current.clientHeight;
+	};
+
+	// const getMenuHeight = () => {
+	// 	useEffect(() => { return menuRef.current.clientHeight;
+	// 	}
+	// 	)
+	// }
+
+	const listenToScroll = () => {
+		const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+		if (fixMenu === false
+			&& winScroll > (getParentRefHeight() - menuRef.current.clientHeight)) {
+			setFixMenu(true);
+		}
 
 		if (
-			this.state.fixMenu == true && 
-			winScroll < (this.getParentRef())
+			fixMenu === true
+			&& winScroll < (this.getParentRef())
 		) {
-			this.setState({
-				fixMenu: false,
-			})
+			setFixMenu(false);
 		}
-	}
+	};
 
-	toggleMenu() {
-		this.setState(state => ({
-			showMenu: !state.showMenu
-		}))
-	}
+	const toggleMenu = () => {
+		setShowMenu(!showMenu);
+	};
 
-	toggleSize() {
-		this.setState(state => ({
-			sizeUpMode: !state.sizeUpMode
-		}))
-	}
+	// const toggleSize = () => {
+	// 	sizeUpMode.setState(!sizeUpMode);
+	// };
 
-	render() {		
-		return (
-			<>
+	// const { fixMenu, sizeUpMode, showMenu } = this.state;
+	// const { data } = this.props;
+
+	const bodyClass = () => {
+		if (fixMenu && state.size) {
+			return 'has-navbar-fixed-top sizeUp';
+		}
+		if (fixMenu) {
+			return 'has-navbar-fixed-top'; // else if
+		}
+		if (state.size) {
+			return 'sizeUp'; // else if
+		}
+		return '';
+	};
+
+	return (
+		<>
 			<Helmet>
-				<body className={this.state.fixMenu && this.state.sizeUpMode ? "has-navbar-fixed-top sizeUp" : this.state.fixMenu ? "has-navbar-fixed-top" : this.state.sizeUpMode ? "sizeUp" : ''} />
+				<body className={bodyClass()} />
 			</Helmet>
 			<div className="hero-foot is-hidden-mobile">
-				<nav className={this.state.fixMenu ? "navbar navbarFixed" : "navbar"} role="navigation" aria-label="main navigation"
-				css={css`
+				<nav
+					className={fixMenu ? 'navbar navbarFixed' : 'navbar'}
+					role="navigation"
+					aria-label="main navigation"
+					css={css`
 					justify-content: center;
-				`}
+					`}
 				>
 					<div className="navbar-brand">
-						<a id="navButton" ref={this.buttonRef} onClick={this.toggleMenu} role="button" className="navbar-burger burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
-							<span aria-hidden="true"></span>
-							<span aria-hidden="true"></span>
-							<span aria-hidden="true"></span>
-						</a>
+					<button
+						id="navButton"
+						// ref={this.buttonRef}
+						onClick={toggleMenu()}
+						onKeyDown={(event) => { if (event.keycode === 13) toggleMenu(); }}
+						className="navbar-burger burger"
+						data-target="navMenu"
+						aria-label="menu"
+						aria-expanded="false"
+						tabIndex={0}
+					>
+						<span aria-hidden="true" />
+						<span aria-hidden="true" />
+						<span aria-hidden="true" />
+					</button>
 					</div>
 
-					<div id="navMenu" ref={this.menuRef} className={this.state.showMenu ? "navbar-menu is-active" : "navbar-menu"}
-						css={css`
-							flex-grow: 0;
-						`}
+					<div
+					id="navMenu"
+					ref={menuRef}
+					className={showMenu ? 'navbar-menu is-active' : 'navbar-menu'}
+					css={css`
+						flex-grow: 0;
+					`}
 					>
 						<div className="navbar-start">
-							{this.props.data.site.siteMetadata.menuLinks.map((item, index) => {
-								return (
-									<Link key={index} className="navbar-item"
-									to={item.link}
-									>
-									{item.name}
-									</Link>
-								)
-							})}
-							<a 
-								id={"sizeButton"}
+							{data.site.siteMetadata.menuLinks.map((item, index) => (
+								<Link
+								key={item.name}
 								className="navbar-item"
-								role="button"
-								onClick={this.toggleSize}
-								css={css`
-								color: transparent;
-								text-shadow: 0 0 0 #4e4e4e;
-								display: flex;
-    							align-items: flex-start;
+								to={item.link}
+								>
+								{item.name}
+								</Link>
+							))}
+							<button
+							id="sizeButton"
+							className="navbar-item"
+							onClick={() => {
+								dispatch({ type: 'TOGGLE_SIZE' });
+							}}
+							css={css`
+							color: transparent;
+							text-shadow: 0 0 0 #4e4e4e;
+							display: flex;
+							align-items: flex-start;
 							`}
 							>
-								<span 
-									css={css`display: flex;
-    										height: 2rem;
-											align-items: center;
-									`}
-								>
-									<Emoji size={1} label={'small-a'} emoji={`🇦`} />
-								</span>
-								<span 
-									css={css` display: flex;
-    									height: 2rem;
-										align-items: center;
-									`}
-								>
-									<Emoji size={2} label={'big-a'} emoji={`🇦`} />
-								</span>
-							</a>
+							<span
+								css={css`display: flex;
+									height: 2rem;
+									align-items: center;
+								`}
+							>
+								<Emoji size={1} label="small-a" emoji="🇦" />
+							</span>
+							<span
+								css={css` display: flex;
+								height: 2rem;
+								align-items: center;
+								`}
+							>
+								<Emoji size={2} label="big-a" emoji="🇦" />
+							</span>
+							</button>
 						</div>
 
-						<div className="navbar-end">		
-						</div>
+						<div className="navbar-end" />
 					</div>
 				</nav>
 			</div>
-			</>
-		)
-	}
-}
+		</>
+	);
+};
 
-Navbar.PropTypes = {
-	data: PropTypes.object.shape({
-		site: PropTypes.object.shape({
-			siteMetadata: PropTypes.object.shape({
-				title: PropTypes.string,
-				menuLinks: PropTypes.array.shape({
-					name: PropTypes.string,
-					link: PropTypes.string
-				})
-			})
-		})
-	}),
-	getParentElem: PropTypes.function
-}
+Navbar.propTypes = {
+	data: PropTypes.object.isRequired,
+	getParentElem: PropTypes.func.isRequired,
+};
 
-export default props => (
+export default () => (
 	<StaticQuery
 		query={graphql`
 			query SiteMetaQuery {
-		  		site {
+				site {
 					siteMetadata {
-			  			title
-              			menuLinks {
-                			name
-                			link
-              			}
+						title
+						menuLinks {
+							name
+							link
+						}
 					}
-		  		}
+				}
 			}
-	  	`}
-		render={data => (
+		`}
+		render={(data, props) => (
 			<Navbar data={data} {...props} />
-	  	)}
+		)}
 	/>
-)
+);

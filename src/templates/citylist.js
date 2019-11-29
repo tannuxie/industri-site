@@ -1,27 +1,31 @@
-import React, { Component } from 'react'
-import { Link, graphql } from 'gatsby'
-import { css } from '@emotion/core'
-import Img from 'gatsby-image'
-import Layout from '~components/layout/layout'
-import FilterCompanyList from '~components/filtercompanylist/filtercompanylist'
-import ReactMarkdown from 'react-markdown/with-html'
+import React, { Component } from 'react';
+import { Link, graphql } from 'gatsby';
+import { css } from '@emotion/core';
+import Img from 'gatsby-image';
+import Layout from '~components/layout/layout';
+import FilterCompanyList from '~components/filtercompanylist/filtercompanylist';
+import ReactMarkdown from 'react-markdown/with-html';
 
 const CityListTemplate = ({ data, pageContext }) => {
-    function capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-    return (
+	function capitalizeFirstLetter(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+	return (
         <Layout childTitle={capitalizeFirstLetter(pageContext.string)}>
-            <h1 css={css`text-align: center;`}>Företag i {`${capitalizeFirstLetter(pageContext.string)}`}</h1>
-            <FilterCompanyList 
+            <h1 css={css`text-align: center;`}>
+                Företag i
+                {' '}
+                {`${capitalizeFirstLetter(pageContext.string)}`}
+            </h1>
+            <FilterCompanyList
                 data={data}
                 city={capitalizeFirstLetter(pageContext.string)}
             />
         </Layout>
-    );
+	);
 };
 
-export default CityListTemplate
+export default CityListTemplate;
 
 export const citylistQuery = graphql`
     query citylistQuery($string: String!) {
@@ -80,4 +84,4 @@ export const citylistQuery = graphql`
         }
         }
     }  
-`
+`;

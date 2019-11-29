@@ -16,7 +16,7 @@ export default ({ childTitle }) => (
 				}
 			}
 		`}
-		render={data => (
+		render={(data) => (
 			<Helmet>
 				<meta
 					name="viewport"
@@ -28,11 +28,12 @@ export default ({ childTitle }) => (
 				<title>{childTitle}</title>
 				<html lang="sv" />
 				{/* Google / Search Engine Meta Tags */}
-				<meta itemprop="name" content={data.site.siteMetadata.author} /> />
-				<meta
-					itemprop="description"
+				<meta itemProp="name" content={data.site.siteMetadata.author} />
+                {' '}
+                <meta
+					itemProp="description"
 					content={data.site.siteMetadata.description}
-				/>
+                />
 			</Helmet>
 		)}
 	/>

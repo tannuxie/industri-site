@@ -1,23 +1,20 @@
-import React from 'react'
-import { Link, graphql } from 'gatsby'
-import { css } from "@emotion/core"
-import Layout from '~components/layout/layout'
-import ReactMarkdown from "react-markdown/with-html" 
-import TableList from '~components/tablelist/tablelist'
+import React from 'react';
+import { Link, graphql } from 'gatsby';
+import { css } from '@emotion/core';
+import Layout from '~components/layout/layout';
+import ReactMarkdown from 'react-markdown/with-html';
+import TableList from '~components/tablelist/tablelist';
 
-const ListAll = ({ data }) => {
-
-    return (
-        <Layout childTitle={"Alla företag"}>
+const ListAll = ({ data }) => (
+        <Layout childTitle="Alla företag">
             <h1 css={css`text-align: center;`}>Alla företag</h1>
-            <TableList 
+            <TableList
                 data={data}
             />
         </Layout>
-    );
-}
+);
 
-export default ListAll
+export default ListAll;
 
 export const listAllQuery = graphql`
     query listallQuery {
@@ -76,4 +73,4 @@ export const listAllQuery = graphql`
         }
         }
     }  
-`
+`;

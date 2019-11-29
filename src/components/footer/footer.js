@@ -1,7 +1,7 @@
 import React from 'react';
-import { css } from "@emotion/core"
+import { css } from '@emotion/core';
 import { StaticQuery, graphql } from 'gatsby';
-//import '~style/style.scss';
+// import '~style/style.scss';
 
 const Footer = () => (
 	<StaticQuery
@@ -15,14 +15,16 @@ const Footer = () => (
 				}
 			}
 		`}
-		render={data => (
+		render={(data) => (
 			<footer className="footer center gradientBg">
 				<div className="content has-text-centered">
 					<p className="is-size-4">
 					{data.site.siteMetadata.description}
 					</p>
 					<p className="is-size-4">
-						Hemmagjord av {data.site.siteMetadata.author}
+						Hemmagjord av
+                        {' '}
+                        {data.site.siteMetadata.author}
 					</p>
 				</div>
 			</footer>

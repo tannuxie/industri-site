@@ -1,16 +1,13 @@
 import React from 'react';
-
 import '~style/style.scss';
 import Helmet from '~components/helmet/helmet';
 import Header from '~components/header/header';
 import Footer from '~components/footer/footer';
-import typography, { rhythm, scale } from '~style/typography'
 
 const Layout = ({ children, childTitle }) => {
-	let thisTitle = 
-	childTitle !== undefined 
-		? childTitle + ' — Sävsjö Industrihistoria'
-		: `Sävsjö Industrihistoria`;
+	const thisTitle = childTitle !== undefined
+		? `${childTitle} — Sävsjö Industrihistoria`
+		: 'Sävsjö Industrihistoria';
 
 	return (
 		<div>

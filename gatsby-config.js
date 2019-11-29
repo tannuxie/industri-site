@@ -1,87 +1,87 @@
-const lost = require('lost')
+const lost = require('lost');
 
 module.exports = {
 	siteMetadata: {
-		title: `Sävsjö Industrihistoria`,
-		author: `J.C. Henriksson`,
-		description: `Ett projekt för att sammanställa berättelser om lokala företag, deras ursprung och historia.`,
-		keywords: `Sävsjö, Industri, Industrihistoria, Historia`,
-		siteUrl: `https://www.example.com`,
+		title: 'Sävsjö Industrihistoria',
+		author: 'J.C. Henriksson',
+		description: 'Ett projekt för att sammanställa berättelser om lokala företag, deras ursprung och historia.',
+		keywords: 'Sävsjö, Industri, Industrihistoria, Historia',
+		siteUrl: 'https://www.example.com',
 		menuLinks: [
 			{
-				"name": `Hem`,
-				"link": `/`
+				name: 'Hem',
+				link: '/',
 			},
 			{
-				"name": `Sävsjö`,
-				"link": `/savsjo`
+				name: 'Sävsjö',
+				link: '/savsjo',
 			},
 			{
-				"name": `Vrigstad`,
-				"link": `/vrigstad`
+				name: 'Vrigstad',
+				link: '/vrigstad',
 			},
 			{
-				"name": `Stockaryd`,
-				"link": `/stockaryd`
+				name: 'Stockaryd',
+				link: '/stockaryd',
 			},
 			{
-				"name": `Rörvik`,
-				"link": `/rorvik`
+				name: 'Rörvik',
+				link: '/rorvik',
 			},
 			{
-				"name": `Hylletofta`,
-				"link": `/hylletofta`
+				name: 'Hylletofta',
+				link: '/hylletofta',
 			},
 			{
-				"name": `Vandra`,
-				"link": `/vandra`
+				name: 'Vandra',
+				link: '/vandra',
 			},
 			{
-				"name": `Om oss`,
-				"link": `/omoss`
-			}
-		]
+				name: 'Om oss',
+				link: '/omoss',
+			},
+		],
 	},
 	plugins: [
-		`gatsby-plugin-react-helmet`,
+		'gatsby-plugin-react-helmet',
 		{
-		  resolve: `gatsby-plugin-react-helmet-canonical-urls`,
-		  options: {
-			siteUrl: `https://www.example.com`,
-		  },
+			resolve: 'gatsby-plugin-react-helmet-canonical-urls',
+			options: {
+				siteUrl: 'https://www.example.com',
+			},
 		},
 		{
-			resolve: `gatsby-plugin-mdx`,
+			resolve: 'gatsby-plugin-mdx',
 			options: {
-				extensions: [`.mdx`, `.md`],
+				extensions: ['.mdx', '.md'],
 				gatsbyRemarkPlugins: [
 					{
-					resolve: `gatsby-remark-autolink-headers`,
+						resolve: 'gatsby-remark-autolink-headers',
 						options: {
-								className: `subHeading`,
-								icon: false,
-							},
+							className: 'subHeading',
+							icon: false,
+						},
 					},
-					`gatsby-remark-smartypants`,
+					'gatsby-remark-smartypants',
 					{
-						resolve: "gatsby-remark-external-links",
+						resolve: 'gatsby-remark-external-links',
 						options: {
-						  target: "_blank",
-						  rel: "noopener"
-						}
+							target: '_blank',
+							rel: 'noopener',
+						},
 					},
 				],
 			},
 		},
 		{
-			resolve: `gatsby-source-filesystem`,
+			resolve: 'gatsby-source-filesystem',
 			options: {
-				name: `images`,
-				path: `${__dirname}/src/images`
+				name: 'images',
+				path: `${__dirname}/src/images`,
 			},
 		},
 		{
-			resolve: `gatsby-plugin-alias-imports`,
+			resolve: 'gatsby-plugin-alias-imports',
 			options: {
 				alias: {
 					'~components': 'src/components',
@@ -91,7 +91,7 @@ module.exports = {
 			},
 		},
 		{
-			resolve: `gatsby-source-strapi`,
+			resolve: 'gatsby-source-strapi',
 			options: {
 				apiURL: 'http://localhost:1337',
 				contentTypes: [
@@ -105,33 +105,33 @@ module.exports = {
 				],
 				queryLimit: 2000,
 				loginData: {
-					identifier: "industrisite",
-					password: "_GGkq.RU@CG9!_i",
+					identifier: 'industrisite',
+					password: '_GGkq.RU@CG9!_i',
 				},
 			},
-		},	
+		},
 		{
-			resolve: `gatsby-plugin-sharp`,
+			resolve: 'gatsby-plugin-sharp',
 			options: {
 				useMozJpeg: false,
 				stripMetadata: true,
 				defaultQuality: 75,
 			},
 		},
-		`gatsby-transformer-sharp`,
+		'gatsby-transformer-sharp',
 		{
-			resolve: `gatsby-plugin-typography`,
+			resolve: 'gatsby-plugin-typography',
 			options: {
-			  pathToConfigModule: `src/style/typography`,
+				pathToConfigModule: 'src/style/typography',
 			},
-		  },
+		},
 		// `gatsby-plugin-theme-ui`,
-		`gatsby-plugin-emotion`,
+		'gatsby-plugin-emotion',
 		{
-			resolve: `gatsby-plugin-sass`,
+			resolve: 'gatsby-plugin-sass',
 			options: {
 				postCssPlugins: [
-				  lost(),
+					lost(),
 				],
 				precision: 8,
 			},
@@ -139,20 +139,20 @@ module.exports = {
 		{
 			resolve: 'gatsby-plugin-react-leaflet',
 			options: {
-			  linkStyles: true // (default: true) Enable/disable loading stylesheets via CDN
-			}
+				linkStyles: true, // (default: true) Enable/disable loading stylesheets via CDN
+			},
 		},
 		{
-			resolve: `gatsby-plugin-google-analytics`,
+			resolve: 'gatsby-plugin-google-analytics',
 			options: {
 				trackingId: 'UA-XXXXXXXX-X',
 				// Setting this parameter is optional (requried for some countries such as Germany)
 				anonymize: true,
 			},
 		},
-		`gatsby-plugin-sitemap`
+		'gatsby-plugin-sitemap',
 		// this (optional) plugin enables Progressive Web App + Offline functionality
 		// To learn more, visit: https://gatsby.app/offline
-		//`gatsby-plugin-offline`
+		// `gatsby-plugin-offline`
 	],
 };

@@ -1,10 +1,10 @@
-import React from 'react'
-import GlobalContextProvider from './src/context/GlobalContextProvider'
+import React from 'react';
+import GlobalContextProvider from './src/context/GlobalContextProvider';
 
-export const wrapRootElement = ({ element }) => {
-    return (
+export const wrapRootElement = ({ element }) => (
         <GlobalContextProvider>
             {element}
         </GlobalContextProvider>
-    )
-}
+);
+
+export default wrapRootElement;

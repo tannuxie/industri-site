@@ -1,20 +1,21 @@
 import React from 'react';
 
-export default props => {
+export default (props) => {
+	const { size, label, emoji } = props;
 	const styles = {
-		fontSize: props.size + 'rem'
+		fontSize: `${size}rem`,
 	};
 
 	return (
-		<span 
-			id={'emoji-' + props.label}
-			style={styles} 
+		<span
+			id={`emoji-${label}`}
+			style={styles}
 			className="emoji"
 			role="img"
-			aria-label={props.label ? props.label : ""}
-			aria-hidden={props.label ? "false" : "true"}
+			aria-label={label || ''}
+			aria-hidden={label ? 'false' : 'true'}
 		>
-			{props.emoji}
+			{emoji}
 		</span>
 	);
 };

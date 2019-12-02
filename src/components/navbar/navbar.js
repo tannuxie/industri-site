@@ -7,87 +7,113 @@ import { Helmet } from 'react-helmet';
 import Emoji from '~components/emoji';
 import { GlobalDispatchContext, GlobalStateContext } from '../../context/GlobalContextProvider';
 
-const Navbar = ({ data, getParentElem }) => {
-	const dispatch = useContext(GlobalDispatchContext);
-	const state = useContext(GlobalStateContext);
-	console.log(dispatch);
-	console.log(state);
+// const addScrollWatcher = () => {
+//     return null;
+// };
 
-	// Menuref, to be able to get height of menu
-	const menuRef = useRef();
+const Navbar = ({ data }, getParentElem) => {
+    const dispatch = useContext(GlobalDispatchContext);
+    const state = useContext(GlobalStateContext);
 
-	// State
-	const [showMenu, setShowMenu] = useState(false);
-	const [fixMenu, setFixMenu] = useState(false);
+    // Menuref, to be able to get height of menu
+    const menuRef = useRef();
+    const headerRef = useRef();
 
-	// 	sizeUpMode: false,
+    // State
+    const [showMenu, setShowMenu] = useState(false);
+    const [fixMenu, setFixMenu] = useState(false);
 
-	// this.buttonRef = React.createRef();
-	// this.menuRef = React.createRef();
-	// this.toggleMenu = this.toggleMenu.bind(this);
-	// this.toggleSize = this.toggleSize.bind(this);
-	// this.getParentRef = this.getParentRef.bind(this);
+    // 	sizeUpMode: false,
 
-	const addListen = () => {
-		window.addEventListener('scroll', this.listenToScroll);
-	};
-
-	const removeListen = () => {
-		window.removeEventListener('scroll', this.listenToScroll);
-	};
+    // this.buttonRef = React.createRef();
+    // this.menuRef = React.createRef();
+    // this.toggleMenu = this.toggleMenu.bind(this);
+    // this.toggleSize = this.toggleSize.bind(this);
+    // this.getParentRef = this.getParentRef.bind(this);
 
 
-	const getParentRefHeight = () => {
-		const elem = getParentElem();
-		return elem.current.clientHeight;
-	};
+    // const removeListen = () => {
+    //     window.removeEventListener('scroll', this.listenToScroll);
+    // };
 
-	// const getMenuHeight = () => {
-	// 	useEffect(() => { return menuRef.current.clientHeight;
-	// 	}
-	// 	)
-	// }
 
-	const listenToScroll = () => {
-		const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-		if (fixMenu === false
-			&& winScroll > (getParentRefHeight() - menuRef.current.clientHeight)) {
-			setFixMenu(true);
-		}
+    // const getMenuHeight = () => {
+    // 	useEffect(() => { return menuRef.current.clientHeight;
+    // 	}
+    // 	)
+    // }
+    let test = false;
+    function getParentRefHeight() {
+        if (test === true) {
+            console.log('in getParentRefHeight');
+            const elem = getParentElem;
+            console.log(elem);
+            //console.log(elem.current);
+            return elem;
+        }
+        return null;
+    }
 
-		if (
-			fixMenu === true
-			&& winScroll < (this.getParentRef())
-		) {
-			setFixMenu(false);
-		}
-	};
+    function listenToScroll() {
+        if (test === true) {
+            console.log('in ListenToScroll');
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            if (fixMenu === false
+            && winScroll > (getParentRefHeight() - menuRef.current.clientHeight)) {
+                setFixMenu(true);
+            }
 
-	const toggleMenu = () => {
-		setShowMenu(!showMenu);
-	};
+            if (
+                fixMenu === true
+            && winScroll < (getParentRefHeight())
+            ) {
+                setFixMenu(false);
+            }
+        }
+    }
 
-	// const toggleSize = () => {
-	// 	sizeUpMode.setState(!sizeUpMode);
-	// };
+    React.useLayoutEffect(() => {
+        console.log('Navbar creating...');
+        // const addListen = () => {
+        test = true;
+        // console.log(headerHeight);
+        window.addEventListener('scroll', listenToScroll());
+        console.log('Navbar created');
+        return () => {
+            console.log('Navbar cleaning up...');
+            test = false;
+            window.removeEventListener('scroll', listenToScroll());
+            console.log('Navbar cleaned up');
+        };
 
-	// const { fixMenu, sizeUpMode, showMenu } = this.state;
-	// const { data } = this.props;
+        // };
+    });
 
-	const bodyClass = () => {
-		if (fixMenu && state.size) {
-			return 'has-navbar-fixed-top sizeUp';
-		}
-		if (fixMenu) {
-			return 'has-navbar-fixed-top'; // else if
-		}
-		if (state.size) {
-			return 'sizeUp'; // else if
-		}
-		return '';
-	};
+    // const toggleMenu = () => {
+    //     setShowMenu(!showMenu);
+    // };
 
-	return (
+    // const toggleSize = () => {
+    // 	sizeUpMode.setState(!sizeUpMode);
+    // };
+
+    // const { fixMenu, sizeUpMode, showMenu } = this.state;
+    // const { data } = this.props;
+
+    const bodyClass = () => {
+        if (fixMenu && state.size) {
+            return 'has-navbar-fixed-top sizeUp';
+        }
+        if (fixMenu) {
+            return 'has-navbar-fixed-top'; // else if
+        }
+        if (state.size) {
+            return 'sizeUp'; // else if
+        }
+        return '';
+    };
+
+    return (
 		<>
 			<Helmet>
 				<body className={bodyClass()} />
@@ -102,30 +128,32 @@ const Navbar = ({ data, getParentElem }) => {
 					`}
 				>
 					<div className="navbar-brand">
-					<button
-						id="navButton"
-						// ref={this.buttonRef}
-						onClick={toggleMenu()}
-						onKeyDown={(event) => { if (event.keycode === 13) toggleMenu(); }}
-						className="navbar-burger burger"
-						data-target="navMenu"
-						aria-label="menu"
-						aria-expanded="false"
-						tabIndex={0}
-					>
-						<span aria-hidden="true" />
-						<span aria-hidden="true" />
-						<span aria-hidden="true" />
-					</button>
+                        <button
+                            id="navButton"
+                            // ref={this.buttonRef}
+                            onClick={() => setShowMenu(!showMenu)}
+                            onKeyDown={(event) => {
+                                if (event.keycode === 13) setShowMenu(!showMenu);
+                            }}
+                            className="navbar-burger burger"
+                            data-target="navMenu"
+                            aria-label="menu"
+                            aria-expanded="false"
+                            tabIndex={0}
+                        >
+                            <span aria-hidden="true" />
+                            <span aria-hidden="true" />
+                            <span aria-hidden="true" />
+                        </button>
 					</div>
 
 					<div
-					id="navMenu"
-					ref={menuRef}
-					className={showMenu ? 'navbar-menu is-active' : 'navbar-menu'}
-					css={css`
-						flex-grow: 0;
-					`}
+                        id="navMenu"
+                        ref={menuRef}
+                        className={showMenu ? 'navbar-menu is-active' : 'navbar-menu'}
+                        css={css`
+                            flex-grow: 0;
+                        `}
 					>
 						<div className="navbar-start">
 							{data.site.siteMetadata.menuLinks.map((item, index) => (
@@ -138,17 +166,17 @@ const Navbar = ({ data, getParentElem }) => {
 								</Link>
 							))}
 							<button
-							id="sizeButton"
-							className="navbar-item"
-							onClick={() => {
-								dispatch({ type: 'TOGGLE_SIZE' });
-							}}
-							css={css`
-							color: transparent;
-							text-shadow: 0 0 0 #4e4e4e;
-							display: flex;
-							align-items: flex-start;
-							`}
+                                id="sizeButton"
+                                className="navbar-item"
+                                onClick={() => {
+                                    dispatch({ type: 'TOGGLE_SIZE' });
+                                }}
+                                css={css`
+                                color: transparent;
+                                text-shadow: 0 0 0 #4e4e4e;
+                                display: flex;
+                                align-items: flex-start;
+                                `}
 							>
 							<span
 								css={css`display: flex;
@@ -174,13 +202,13 @@ const Navbar = ({ data, getParentElem }) => {
 				</nav>
 			</div>
 		</>
-	);
+    );
 };
 
-Navbar.propTypes = {
-	data: PropTypes.object.isRequired,
-	getParentElem: PropTypes.func.isRequired,
-};
+// Navbar.propTypes = {
+//     data: PropTypes.object.isRequired,
+//     getParentElem: PropTypes.func.isRequired,
+// };
 
 export default () => (
 	<StaticQuery

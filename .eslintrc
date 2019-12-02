@@ -42,8 +42,8 @@
     //"indent": [1, "tab"],
     "no-tabs": 0,
     "react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }],
-    "react/jsx-indent": [0, "tab"],
-    "react/jsx-indent-props": [0, "tab"],
+    "react/jsx-indent": [0, 4],
+    "react/jsx-indent-props": [0, 4],
     "react/prop-types": 1,
     "react/button-has-type": 0,
     "no-plusplus": 0,
@@ -168,7 +168,7 @@
 
     // this option sets a specific tab width for your code
     // https://eslint.org/docs/rules/indent
-    indent: ['warn', "tab", {
+    indent: ['warn', 4, {
       SwitchCase: 1,
       VariableDeclarator: 1,
       outerIIFEBody: 1,

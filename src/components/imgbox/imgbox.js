@@ -11,42 +11,47 @@ import '@reach/dialog/styles.css';
 // from 'react-remove-scroll-bar';
 
 class ImgBox extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			photoIndex: 0,
-			isOpen: false,
-		};
-	}
+    constructor(props) {
+        super(props);
+        this.state = {
+            photoIndex: 0,
+            isOpen: false,
+        };
 
-	render() {
-		const { photoIndex } = this.state;
-		let aCaption = '';
-		const { id } = this.props;
-		if (id.caption !== undefined) {
-			aCaption = id.caption;
-		}
+    }
 
-		// const images = data.allStrapiImage.edges
-		const { data } = this.props;
-		const image = data.allStrapiImage.edges.filter((animage) => animage.node.strapiId === id.id);
-		// console.log('finished');
-		// console.log(image);
+    render() {
+        const { photoIndex } = this.state;
+        const { id } = this.props;
+        console.log(id);
 
-		const open = () => {
-			// setIsOpen(true);
-			this.setState({
-				isOpen: true,
-			});
-		};
-		const close = () => {
-			// setIsOpen(false);
-			this.setState({
-				isOpen: false,
-			});
-		};
-		const { isOpen } = this.state;
-		return (
+        let aCaption = '';
+        if (id.caption !== undefined) {
+            aCaption = id.caption;
+        }
+
+        // const images = data.allStrapiImage.edges
+        const { data } = this.props;
+        console.log(data);
+        const image = data.allStrapiImage.edges
+            .filter((animage) => animage.node.strapiId === id);
+        // console.log('finished');
+        // console.log(image);
+
+        const open = () => {
+            // setIsOpen(true);
+            this.setState({
+                isOpen: true,
+            });
+        };
+        const close = () => {
+            // setIsOpen(false);
+            this.setState({
+                isOpen: false,
+            });
+        };
+        const { isOpen } = this.state;
+        return (
 			<>
 				<Helmet>
 					<body className={this.isOpen && 'right-scroll-bar-position'} />
@@ -64,9 +69,9 @@ class ImgBox extends React.Component {
 					/>
 					{aCaption.length > 0 && (
 						<p style={{
-							fontStyle: 'italic',
-							textAlign: 'center',
-							fontSize: '1.1rem',
+						    fontStyle: 'italic',
+						    textAlign: 'center',
+						    fontSize: '1.1rem',
 						}}
 						>
 							{aCaption}
@@ -88,13 +93,13 @@ class ImgBox extends React.Component {
 					)}
 				</div>
 			</>
-		);
-	}
+        );
+    }
 }
 
 ImgBox.propTypes = {
-	id: PropTypes.number.isRequired,
-	data: PropTypes.objectOf(PropTypes.object).isRequired,
+    id: PropTypes.number.isRequired,
+    data: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default (props) => (

@@ -5,28 +5,25 @@ import Navbar from '../navbar/navbar';
 class Header extends Component {
     constructor(props) {
         super(props);
-        // this.state = {
-        //     // headerHeight: 0,
-        //     isMounted: false,
-        // };
-        // this.headerRef = this.headerRef.bind(this);
+        this.state = {
+            isMounted: false,
+        };
         this.headerRef = React.createRef();
         this.getElem = this.getElem.bind(this);
     }
 
-    // componentDidMount() {
-    //     console.log('in Header Created');
-    //     this.setState(() => ({
-    //         isMounted: true,
-    //     }));
-    // }
+    componentDidMount() {
+        this.setState({
+            isMounted: true,
+        });
+    }
 
     getElem() {
         return this.headerRef;
     }
 
     render() {
-        // const { isMounted } = this.state;
+        const { isMounted } = this.state;
         return (
                 <section id="headerContainer" ref={this.headerRef} className="hero gradientBg">
                     <div className="hero-body">
@@ -46,9 +43,10 @@ class Header extends Component {
                             </article>
                         </div>
                     </div>
+                    {isMounted && (
                     <Navbar
                         getParentElem={this.getElem}
-                    />
+                    />)}
                 </section>
         );
     }

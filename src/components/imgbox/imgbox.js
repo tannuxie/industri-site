@@ -17,7 +17,6 @@ class ImgBox extends React.Component {
             photoIndex: 0,
             isOpen: false,
         };
-
     }
 
     render() {
@@ -69,9 +68,9 @@ class ImgBox extends React.Component {
 					/>
 					{aCaption.length > 0 && (
 						<p style={{
-						    fontStyle: 'italic',
-						    textAlign: 'center',
-						    fontSize: '1.1rem',
+                            fontStyle: 'italic',
+                            textAlign: 'center',
+                            fontSize: '1.1rem',
 						}}
 						>
 							{aCaption}

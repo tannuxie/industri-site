@@ -7,68 +7,60 @@ import { Helmet } from 'react-helmet';
 import Emoji from '~components/emoji';
 import GlobalContextProvider, { GlobalDispatchContext, GlobalStateContext } from '../../context/GlobalContextProvider';
 
-// const addScrollWatcher = () => {
-//     return null;
-// };
-
 class Navbar extends Component {
     constructor(props) {
         super(props);
         this.state = {
             showMenu: false,
             fixMenu: false,
+            headerHeight: 0,
         };
 
-        // this.menuRef = this.menuRef.bind(this);
         this.menuRef = React.createRef(this.menuRef);
-        // this.headerRef = this.headerRef.bind(this);
-        this.getParentRefHeight = this.getParentRefHeight.bind(this);
+        this.getParentHeight = this.getParentHeight.bind(this);
         this.listenToScroll = this.listenToScroll.bind(this);
+        this.getParentElem = this.props.getParentElem.bind(this);
     }
 
     // provar med att försöka binda getparentelem vid mount...? kanske kan placera i render?
     componentDidMount() {
         console.log('Navbar creating...');
-        this.getParentElem = this.props.getParentElem.bind(this);
-        // const addListen = () => {
-        // test = true;
-        // console.log(headerHeight);
-        window.addEventListener('scroll', this.listenToScroll, false);
+        const elem = this.getParentElem;
+        this.setState({
+            headerHeight: elem().current.clientHeight,
+        });
+        // this.getParentElem = this.props.getParentElem.bind(this);
+        window.addEventListener('scroll', this.listenToScroll, true);
         console.log('Navbar created');
     }
 
     componentWillUnmount() {
         console.log('Navbar cleaning up...');
-        // test = false;
-        window.removeEventListener('scroll', this.listenToScroll, false);
+        window.removeEventListener('scroll', this.listenToScroll);
         console.log('Navbar cleaned up');
     }
 
-    getParentRefHeight() {
-        const { getParentElem } = this.props;
+    getParentHeight() {
+        // const { getParentElem } = this.props;
         const elem = this.getParentElem;
+        console.log('Elem is: ');
+        console.log(elem);
+        console.log(elem.current);
         return elem().current.clientHeight;
     }
 
-    listenToScroll = () => {
-        const { fixMenu } = this.state;
-        // console.log('in ListenToScroll');
-        // console.log('Listen is logging getParentRefHeight...');
-        // console.log(this.getParentRefHeight());
-        // console.log('Listen is logging this.menuRef.current.clientHeight...');
-        // console.log(this.menuRef.current.clientHeight);
-        // console.log('Listen is moving on...');
+    listenToScroll() {
+        const { fixMenu, headerHeight } = this.state;
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        // console.log('winScroll is...');
-        // console.log(winScroll);
+
         if (fixMenu === false
-            && winScroll > (this.getParentRefHeight() - this.menuRef.current.clientHeight)
+            && winScroll > (headerHeight - this.menuRef.current.clientHeight)
         ) {
             this.setState({ fixMenu: true });
         }
 
         if (fixMenu === true
-            && winScroll < (this.getParentRefHeight())
+            && winScroll < (headerHeight)
         ) {
             this.setState({ fixMenu: false });
         }
@@ -77,19 +69,6 @@ class Navbar extends Component {
     render() {
         const { showMenu, fixMenu } = this.state;
         const { data } = this.props;
-
-        // function bodyClass() {
-        //     // if (fixMenu && size) {
-        //     //     return 'has-navbar-fixed-top sizeUp';
-        //     // }
-        //     if (fixMenu) {
-        //         return 'has-navbar-fixed-top'; // else if
-        //     }
-        //     // if (size) {
-        //     //     return 'sizeUp'; // else if
-        //     // }
-        //     return '';
-        // }
 
         return (
             <>

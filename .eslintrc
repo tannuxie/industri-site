@@ -8,11 +8,13 @@
     "react-hooks",
     "react"
   ],
-  //"parser": "babel-eslint",
+  "parser": "babel-eslint",
   "parserOptions": {
     "ecmaFeatures": {
-      "jsx": true
-    }
+        "experimentalObjectRestSpread": true,
+        "jsx": true
+    },
+    "sourceType": "module"
   },
   "settings": {
     "import/resolver": {
@@ -23,6 +25,7 @@
     }
   },
   "globals": {
+    "React": true,
     "fetch": false
   },
   "rules": {
@@ -48,6 +51,7 @@
     "react/button-has-type": 0,
     "jsx-a11y/anchor-is-valid": 0,
     "no-plusplus": 0,
+    "template-curly-spacing" : "off",
     "import/no-unresolved": [
         1,
         { "caseSensitive": false }
@@ -169,7 +173,7 @@
 
     // this option sets a specific tab width for your code
     // https://eslint.org/docs/rules/indent
-    indent: ['warn', 4, {
+    indent: [0, 4, {
       SwitchCase: 1,
       VariableDeclarator: 1,
       outerIIFEBody: 1,

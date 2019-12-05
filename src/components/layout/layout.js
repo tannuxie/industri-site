@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import '~style/style.scss';
 import Helmet from '~components/helmet/helmet';
 import Header from '~components/header/header';
 import Footer from '~components/footer/footer';
+import GlobalContextProvider, { GlobalStateContext } from '../../context/GlobalContextProvider';
 
 const Layout = ({ children, childTitle }) => {
-	const thisTitle = childTitle !== undefined
-		? `${childTitle} — Sävsjö Industrihistoria`
-		: 'Sävsjö Industrihistoria';
+    const state = useContext(GlobalStateContext);
 
-	return (
+    const thisTitle = childTitle !== undefined
+        ? `${childTitle} — Sävsjö Industrihistoria`
+        : 'Sävsjö Industrihistoria';
+
+    return (
 		<div>
-			<Helmet childTitle={thisTitle} />
+			<Helmet childTitle={thisTitle}>
+                <body className={state.size === 'big' ? 'sizeUp' : ''} />
+            </Helmet>
 			<Header />
 			<section className="section">
 				<div className="container">
@@ -20,7 +25,7 @@ const Layout = ({ children, childTitle }) => {
 			</section>
 			<Footer />
 		</div>
-	);
+    );
 };
 
 export default Layout;

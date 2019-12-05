@@ -5,55 +5,28 @@ import Navbar from '../navbar/navbar';
 class Header extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            headerHeight: 0,
-            isMounted: false,
-        };
-        this.headerRef = this.headerRef.bind(this);
-        this.elemRef = this.getElem.bind(this);
+        // this.state = {
+        //     // headerHeight: 0,
+        //     isMounted: false,
+        // };
+        // this.headerRef = this.headerRef.bind(this);
+        this.headerRef = React.createRef();
+        this.getElem = this.getElem.bind(this);
     }
 
-    componentDidMount() {
-        console.log('in Header Created');
-        this.setState(() => ({
-            isMounted: true,
-        }));
-    }
+    // componentDidMount() {
+    //     console.log('in Header Created');
+    //     this.setState(() => ({
+    //         isMounted: true,
+    //     }));
+    // }
 
     getElem() {
-        console.log('in header getElem');
-        // console.log(headerRef);
-        // console.log(headerRef.current);
-        console.log(this.state.headerHeight);
-        return this.state.headerHeight;
+        return this.headerRef;
     }
-
-    checkTheHeader() {
-        console.log('in Header checkTheHeader');
-        // setHeaderObj(element);
-        // console.log(headerObj);
-        if (this.headerRef !== null) {
-            console.log(`node isn't null...`);
-            console.log(this.headerRef.clientHeight);
-            this.setState(() => ({
-                headerHeight: this.headerRef.clientHeight,
-            }));
-            console.log(`height: ${this.state.headerHeight}`);
-        }
-    }
-
-    // useEffect(() => {
-    // setHeaderHeight(headerRef.current.clientHeight);
-    // dispatch({ })
-    // console.log(headerHeight);
-    // console.log(headerRef);
-    // console.log(headerRef.current);
-    //     return () => {
-    //         console.log('in Header Cleanup');
-    //     };
-    // });
 
     render() {
+        // const { isMounted } = this.state;
         return (
                 <section id="headerContainer" ref={this.headerRef} className="hero gradientBg">
                     <div className="hero-body">
@@ -73,11 +46,9 @@ class Header extends Component {
                             </article>
                         </div>
                     </div>
-                    {this.state.isMounted && (
                     <Navbar
-                        getParentElem={this.elemRef}
+                        getParentElem={this.getElem}
                     />
-                    )}
                 </section>
         );
     }

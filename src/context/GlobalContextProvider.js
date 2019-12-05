@@ -12,7 +12,7 @@ function reducer(state, action) {
         case 'TOGGLE_SIZE': {
             return {
                 ...state,
-                theme: state.size === 'normal' ? 'big' : 'normal',
+                size: state.size === 'normal' ? 'big' : 'normal',
             };
         }
 

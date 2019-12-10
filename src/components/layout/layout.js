@@ -1,31 +1,27 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import '~style/style.scss';
 import Helmet from '~components/helmet/helmet';
 import Header from '~components/header/header';
 import Footer from '~components/footer/footer';
-import GlobalContextProvider, { GlobalStateContext } from '../../context/GlobalContextProvider';
+import { ContextProviderComponent } from '../../context/context';
 
-const Layout = ({ children, childTitle }) => {
-    const state = useContext(GlobalStateContext);
-
-    const thisTitle = childTitle !== undefined
-        ? `${childTitle} — Sävsjö Industrihistoria`
-        : 'Sävsjö Industrihistoria';
-
+const Layout = ({ children }) => {
     return (
-		<div>
-			<Helmet childTitle={thisTitle}>
-                <body className={state.size === 'big' ? 'sizeUp' : ''} />
-            </Helmet>
-			<Header />
-			<section className="section">
-				<div className="container">
-					{children}
-				</div>
-			</section>
-			<Footer />
-		</div>
+        <ContextProviderComponent>
+            <Header />
+            <section className="section">
+                <div className="container">
+                    {children}
+                </div>
+            </section>
+            <Footer />
+        </ContextProviderComponent>
     );
+};
+
+Layout.propTypes = {
+    children: PropTypes.node.isRequired,
 };
 
 export default Layout;

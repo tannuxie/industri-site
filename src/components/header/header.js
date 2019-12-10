@@ -44,9 +44,10 @@ class Header extends Component {
                         </div>
                     </div>
                     {isMounted && (
-                    <Navbar
-                        getParentElem={this.getElem}
-                    />)}
+                        <Navbar
+                            getParentElem={this.getElem}
+                        />
+                    )}
                 </section>
         );
     }

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link, graphql } from 'gatsby';
 import { css } from '@emotion/core';
 import Img from 'gatsby-image';
-import Layout from '~components/layout/layout';
+import Helmet from '~components/helmet/helmet';
 // import ReactMarkdown from "react-markdown/with-html"
 // import { MDXProvider, mdx } from '@mdx-js/react'
 // import { MDXRenderer } from "gatsby-plugin-mdx"
@@ -12,11 +12,12 @@ import Layout from '~components/layout/layout';
 import MdxRender from '~components/mdxrender/mdxrender';
 
 const ArticleTemplate = ({ data }) => (
-    <Layout childTitle={`${data.strapiArticle.title}`}>
+    <>
+        <Helmet childTitle={`${data.strapiArticle.title}`} />
         <div>
             <h1
-				className="title is-1"
-				css={css`
+                className="title is-1"
+                css={css`
                     text-align: center;
                     `}
             >
@@ -44,9 +45,9 @@ const ArticleTemplate = ({ data }) => (
                 </div>
         </div>
 
-		<div
-			className="articleContent"
-			css={css`
+        <div
+            className="articleContent"
+            css={css`
                 @media (min-width: 768px) {
                     margin: 0 15%;
                 }
@@ -55,10 +56,10 @@ const ArticleTemplate = ({ data }) => (
                 }
                 clear: both;
                 `}
-		>
-			<MdxRender mdxBody={data.strapiArticle.childMdx.body} />
-		</div>
-    </Layout>
+        >
+            <MdxRender mdxBody={data.strapiArticle.childMdx.body} />
+        </div>
+    </>
 );
 
 ArticleTemplate.propTypes = {

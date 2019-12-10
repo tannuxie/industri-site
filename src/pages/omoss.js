@@ -1,12 +1,13 @@
 import React from 'react';
 
-import Layout from '~components/layout/layout';
+import Helmet from '~components/helmet/helmet';
 import Midsection from '~components/midsection/midsection';
 
 const OmossPage = () => (
-    <Layout>
+    <>
+        <Helmet childTitle="Om oss" />
         <Midsection />
-    </Layout>
+    </>
 );
 
 export default OmossPage;

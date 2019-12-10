@@ -5,16 +5,11 @@ import { css } from '@emotion/core';
 import { Link, StaticQuery, graphql } from 'gatsby';
 import { Helmet } from 'react-helmet';
 import Emoji from '~components/emoji';
-import GlobalContextProvider, { GlobalDispatchContext, GlobalStateContext } from '../../context/GlobalContextProvider';
+import ContextConsumer from '../../context/context';
 
 class Navbar extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            showMenu: false,
-            fixMenu: false,
-            headerHeight: 0,
-        };
 
         this.menuRef = React.createRef(this.menuRef);
         this.getParentHeight = this.getParentHeight.bind(this);
@@ -26,11 +21,10 @@ class Navbar extends Component {
     componentDidMount() {
         console.log('Navbar creating...');
         const elem = this.getParentElem;
-        this.setState({
-            headerHeight: elem().current.clientHeight,
-        });
+        // här måste man setta headerHeight-staten...
+
         // this.getParentElem = this.props.getParentElem.bind(this);
-        window.addEventListener('scroll', this.listenToScroll, true);
+        window.addEventListener('scroll', this.listenToScroll);
         console.log('Navbar created');
     }
 
@@ -50,7 +44,9 @@ class Navbar extends Component {
     }
 
     listenToScroll() {
-        const { fixMenu, headerHeight } = this.state;
+        // plocka in state för fixMenu och headerHeight här...
+        const { fixMenu, headerHeight } = 0;
+
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
 
         if (fixMenu === false
@@ -67,7 +63,8 @@ class Navbar extends Component {
     }
 
     render() {
-        const { showMenu, fixMenu } = this.state;
+        // plocka in state för showMenu och fixMenu här...
+        const { showMenu, fixMenu } = 0;
         const { data } = this.props;
 
         return (
@@ -133,11 +130,11 @@ class Navbar extends Component {
                                     tabIndex={0}
                                     onClick={() => {
                                         // dispatch({ type: 'TOGGLE_SIZE' });
-                                        console.log('sizebutton clicked');
                                         console.log(this.context);
                                         this.context({
                                             type: 'TOGGLE_SIZE',
                                         });
+                                        console.log(this.context);
                                     }}
                                     onKeyDown={(event) => {
                                         if (event.keycode === 13) {
@@ -179,7 +176,7 @@ class Navbar extends Component {
     }
 }
 
-Navbar.contextType = GlobalDispatchContext;
+Navbar.contextType = ContextConsumer;
 
 // Navbar.propTypes = {
 //     data: PropTypes.object.isRequired,

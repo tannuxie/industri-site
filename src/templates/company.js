@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, graphql } from 'gatsby';
 import { css } from '@emotion/core';
 import Img from 'gatsby-image';
-import Layout from '~components/layout/layout';
+import Helmet from '~components/helmet/helmet';
 import MyMap from '~components/map/map';
 import ReactMarkdown from 'react-markdown/with-html';
 // import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
@@ -33,7 +33,8 @@ const CompanyTemplate = ({ data }) => {
 	// console.log(typeof(pos));
 	// console.log(typeof(pos[0]));
 	return (
-		<Layout childTitle={`${data.strapiCompany.name}`}>
+		<>
+            <Helmet childTitle={`${data.strapiCompany.name}`} />
 			<div>
 				<h1
 					className="title is-1"
@@ -80,7 +81,7 @@ const CompanyTemplate = ({ data }) => {
 					margin: 0 15%;
 				}
 				@media (min-width: 1024px) {
-					margin: 0 30%;                
+					margin: 0 30%;
 				}
 				clear: both;
 				`}
@@ -91,7 +92,7 @@ const CompanyTemplate = ({ data }) => {
 				/>
 			</div>
 
-		</Layout>
+		</>
 	);
 };
 
@@ -141,5 +142,5 @@ query CompanyTemplate($id: Int!) {
 	  }
 	}
   }
-  
+
 `;

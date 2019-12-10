@@ -2,16 +2,18 @@ import React from 'react';
 import { Link, graphql } from 'gatsby';
 import { css } from '@emotion/core';
 import Layout from '~components/layout/layout';
+import Helmet from '~components/helmet/helmet';
 import ReactMarkdown from 'react-markdown/with-html';
 import TableList from '~components/tablelist/tablelist';
 
 const ListAll = ({ data }) => (
-        <Layout childTitle="Alla företag">
-            <h1 css={css`text-align: center;`}>Alla företag</h1>
-            <TableList
-                data={data}
-            />
-        </Layout>
+    <>
+        <Helmet childTitle="Alla företag" />
+        <h1 css={css`text-align: center;`}>Alla företag</h1>
+        <TableList
+            data={data}
+        />
+    </>
 );
 
 export default ListAll;
@@ -72,5 +74,5 @@ export const listAllQuery = graphql`
             }
         }
         }
-    }  
+    }
 `;

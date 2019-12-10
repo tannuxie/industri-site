@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, graphql } from 'gatsby';
 import Img from 'gatsby-image';
 import { css } from '@emotion/core';
-import Layout from '~components/layout/layout';
+import Helmet from '~components/helmet/helmet';
 import ReactMarkdown from 'react-markdown/with-html';
 import TableList from '~components/tablelist/tablelist';
 import text from '~components/text.json';
@@ -33,7 +33,8 @@ const Vandra = ({ data }) => {
 	});
 
 	return (
-		<Layout childTitle="Vandra">
+		<>
+            <Helmet childTitle={`${data.strapiArticle.title}`} />
 			<div>
 				<h1>Vandra</h1>
 				<p>{text.vandraText}</p>
@@ -93,7 +94,7 @@ const Vandra = ({ data }) => {
 						</div>
 					</>
 			))}
-		</Layout>
+		</>
 	);
 };
 

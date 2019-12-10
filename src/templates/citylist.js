@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, graphql } from 'gatsby';
 import { css } from '@emotion/core';
 import Img from 'gatsby-image';
-import Layout from '~components/layout/layout';
+import Helmet from '~components/helmet/helmet';
 import FilterCompanyList from '~components/filtercompanylist/filtercompanylist';
 import ReactMarkdown from 'react-markdown/with-html';
 
@@ -11,7 +11,8 @@ const CityListTemplate = ({ data, pageContext }) => {
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 	return (
-        <Layout childTitle={capitalizeFirstLetter(pageContext.string)}>
+        <>
+            <Helmet childTitle={capitalizeFirstLetter(pageContext.string)} />
             <h1 css={css`text-align: center;`}>
                 Företag i
                 {' '}
@@ -21,7 +22,7 @@ const CityListTemplate = ({ data, pageContext }) => {
                 data={data}
                 city={capitalizeFirstLetter(pageContext.string)}
             />
-        </Layout>
+        </>
 	);
 };
 
@@ -83,5 +84,5 @@ export const citylistQuery = graphql`
             }
         }
         }
-    }  
+    }
 `;

@@ -19,7 +19,8 @@ const StreetTemplate = ({ data }) => {
 	console.log(data);
 
 	return (
-        <Layout childTitle={`${data.strapiStreet.name}`}>
+        <>
+            <Helmet childTitle={`${data.strapiStreet.name}`} />
             <div>
                 <h1
                     className="title is-1"
@@ -57,7 +58,7 @@ const StreetTemplate = ({ data }) => {
                     margin: 0 15%;
                 }
                 @media (min-width: 1024px) {
-                    margin: 0 30%;                
+                    margin: 0 30%;
                 }
                 clear: both;
                 `}
@@ -68,7 +69,7 @@ const StreetTemplate = ({ data }) => {
                     </MDXRenderer>
                 </MDXProvider>
             </div>
-        </Layout>
+        </>
 	);
 };
 

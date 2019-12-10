@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 const lost = require('lost');
 
 module.exports = {
@@ -43,7 +44,13 @@ module.exports = {
 		],
 	},
 	plugins: [
-		'gatsby-plugin-react-helmet',
+        'gatsby-plugin-react-helmet',
+        {
+            resolve: `gatsby-plugin-layout`,
+            options: {
+                component: require.resolve(`./src/components/layout/layout.js`),
+            },
+        },
 		{
 			resolve: 'gatsby-plugin-react-helmet-canonical-urls',
 			options: {

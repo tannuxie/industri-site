@@ -38,7 +38,7 @@
     "react/jsx-curly-newline": 1,
     "react/state-in-constructor": 1,
     "react/static-property-placement": 1,
-    "react/jsx-props-no-spreading": 1,
+    "react/jsx-props-no-spreading": 0,
     "jsx-a11y/control-has-associated-label": 1,
     "no-unused-vars": 1,
     "no-console": 1,

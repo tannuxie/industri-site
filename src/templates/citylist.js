@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Link, graphql } from 'gatsby';
 import { css } from '@emotion/core';
 import Img from 'gatsby-image';
+import ReactMarkdown from 'react-markdown/with-html';
 import Helmet from '~components/helmet/helmet';
 import FilterCompanyList from '~components/filtercompanylist/filtercompanylist';
-import ReactMarkdown from 'react-markdown/with-html';
 
 const CityListTemplate = ({ data, pageContext }) => {
 	function capitalizeFirstLetter(string) {

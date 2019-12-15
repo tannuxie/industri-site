@@ -4,10 +4,10 @@ import Helmet from '~components/helmet/helmet';
 import Midsection from '~components/midsection/midsection';
 
 const IndexPage = () => (
-    <>
-        <Helmet />
-        <Midsection />
-    </>
+        <>
+            <Helmet />
+            <Midsection />
+        </>
 );
 
 export default IndexPage;

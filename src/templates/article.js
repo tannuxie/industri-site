@@ -12,7 +12,7 @@ import Helmet from '~components/helmet/helmet';
 import MdxRender from '~components/mdxrender/mdxrender';
 
 const ArticleTemplate = ({ data }) => (
-    <>
+    <div>
         <Helmet childTitle={`${data.strapiArticle.title}`} />
         <div>
             <h1
@@ -57,9 +57,9 @@ const ArticleTemplate = ({ data }) => (
                 clear: both;
                 `}
         >
-            <MdxRender mdxBody={data.strapiArticle.childMdx.body} />
+            {/* <MdxRender mdxBody={data.strapiArticle.childMdx.body} /> */}
         </div>
-    </>
+    </div>
 );
 
 ArticleTemplate.propTypes = {

@@ -2,11 +2,9 @@
 import React from 'react';
 
 const defaultContextValue = {
-  data: {
+  store: {
     // set your initial data shape here
     size: 'normal',
-    showMenu: false,
-    fixMenu: false,
     headerHeight: 0,
   },
   set: () => {},
@@ -27,8 +25,8 @@ class ContextProviderComponent extends React.Component {
 
   setData(newData) {
     this.setState((state) => ({
-      data: {
-        ...state.data,
+      store: {
+        ...state.store,
         ...newData,
       },
     }));

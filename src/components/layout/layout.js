@@ -1,14 +1,21 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import '~style/style.scss';
-import Helmet from '~components/helmet/helmet';
-import Header from '~components/header/header';
-import Footer from '~components/footer/footer';
-import { ContextProviderComponent } from '../../context/context';
+// import Helmet from '~components/helmet/helmet';
+import { Helmet } from 'react-helmet';
+import Header from '../header/header';
+import Footer from '../footer/footer';
+import ContextConsumer, { ContextProviderComponent } from '../../context/context';
 
-const Layout = ({ children }) => {
-    return (
+export default ({ children }) => (
         <ContextProviderComponent>
+            <ContextConsumer>
+                {({ store }) => (
+                    <Helmet>
+                        <body className={store.fixMenu ? 'has-navbar-fixed-top' : ''} />
+                    </Helmet>
+                )}
+            </ContextConsumer>
             <Header />
             <section className="section">
                 <div className="container">
@@ -17,11 +24,4 @@ const Layout = ({ children }) => {
             </section>
             <Footer />
         </ContextProviderComponent>
-    );
-};
-
-Layout.propTypes = {
-    children: PropTypes.node.isRequired,
-};
-
-export default Layout;
+);

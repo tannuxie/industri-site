@@ -45,12 +45,6 @@ module.exports = {
 	},
 	plugins: [
         'gatsby-plugin-react-helmet',
-        {
-            resolve: `gatsby-plugin-layout`,
-            options: {
-                component: require.resolve(`./src/components/layout/layout.js`),
-            },
-        },
 		{
 			resolve: 'gatsby-plugin-react-helmet-canonical-urls',
 			options: {
@@ -125,7 +119,13 @@ module.exports = {
 				defaultQuality: 75,
 			},
 		},
-		'gatsby-transformer-sharp',
+        'gatsby-transformer-sharp',
+        {
+            resolve: `gatsby-plugin-layout`,
+            options: {
+                component: require.resolve(`./src/components/layout/layout`),
+            },
+        },
 		{
 			resolve: 'gatsby-plugin-typography',
 			options: {

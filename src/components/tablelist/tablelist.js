@@ -124,7 +124,7 @@ const TableList = ({ data }) => {
 							<h3 css={css`
 								white-space: normal;
 								@media (max-width: 769px) {
-									margin-top:0px; 
+									margin-top:0px;
 								}
 							`}
 							>
@@ -177,7 +177,7 @@ const TableList = ({ data }) => {
 		show: true,
 		headerStyle: {
 			// eslint-disable-next-line no-restricted-globals
-			marginRight: `${location.pathname === !'/alla' && '0px'}`,
+			// marginRight: `${location.pathname === !'/alla' && '0px'}`,
 		},
 		style: {
 			display: 'none',
@@ -238,7 +238,7 @@ const TableList = ({ data }) => {
 		className: 'cityClass',
 		headerStyle: {
 			// eslint-disable-next-line no-restricted-globals
-			display: `${location.pathname === '/alla' ? 'block' : 'none'}`,
+			// display: `${location.pathname === '/alla' ? 'block' : 'none'}`,
 		},
 		style: {
 			display: 'none',

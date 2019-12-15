@@ -1,11 +1,12 @@
 import React from 'react';
-import Layout from '~components/layout/layout';
+import Helmet from '~components/helmet/helmet';
 
 const NotFoundPage = () => (
-  <Layout>
-    <h1>Sidan finns inte här!</h1>
-    <p>Det verkar som om att du kom fel nånstans på vägen...</p>
-  </Layout>
+    <>
+        <Helmet childTitle="Sidan hittades inte" />
+        <h1>Sidan finns inte här!</h1>
+        <p>Det verkar som om att du kom fel nånstans på vägen...</p>
+    </>
 );
 
 export default NotFoundPage;

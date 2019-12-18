@@ -19,7 +19,7 @@ class Navbar extends Component {
         this.state = {
             showMenu: false,
             fixMenu: false,
-            headerHeight: 0,
+            // headerHeight: 0,
         };
     }
 
@@ -29,7 +29,7 @@ class Navbar extends Component {
         // console.log(this.context);
         // const elem = this.getParentElem;
         // här måste man setta headerHeight-staten...
-        this.setState({ headerHeight: this.getParentElem().current.clientHeight });
+        // this.setState({ headerHeight: this.getParentElem().current.clientHeight });
         // this.getParentElem = this.props.getParentElem.bind(this);
         window.addEventListener('scroll', this.listenToScroll);
         console.log('Navbar created');
@@ -44,28 +44,28 @@ class Navbar extends Component {
     getParentHeight() {
         // const { getParentElem } = this.props;
         const elem = this.getParentElem;
-        console.log('Elem is: ');
-        console.log(elem);
-        console.log(elem.current);
+        // console.log('Elem is: ');
+        // console.log(elem);
+        // console.log(elem().current);
         return elem().current.clientHeight;
     }
 
     listenToScroll() {
         // plocka in state för fixMenu och headerHeight här...
         const { fixMenu } = this.state;
-        const { headerHeight } = this.state;
+        // const { headerHeight } = this.state;
 
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        console.log(`scrolled: ${winScroll}`);
-        console.log(`menuRef: ${this.menuRef.current.clientHeight}`);
-        console.log(this.getParentElem().current.clientHeight);
+        // console.log(`scrolled: ${winScroll}`);
+        // console.log(`menuRef: ${this.menuRef.current.clientHeight}`);
+        // console.log(this.getParentElem().current.clientHeight);
         if (fixMenu === false
-            && winScroll > (headerHeight - this.menuRef.current.clientHeight + 1)
+            && winScroll > (this.getParentHeight() - this.menuRef.current.clientHeight + 1)
         ) {
             this.setState({ fixMenu: true });
             // console.log('setting fixMenu: true');
         } else if (fixMenu === true
-            && winScroll < headerHeight
+            && winScroll < this.getParentHeight()
         ) {
             this.setState({ fixMenu: false });
             // console.log('setting fixMenu: false');
@@ -78,10 +78,20 @@ class Navbar extends Component {
 
         return (
             <ContextConsumer>
-                {({ store, set }) => (
+                {({ store, set, toggleSize }) => (
                 <>
                     <Helmet>
-                        <body className={fixMenu ? 'has-navbar-fixed-top' : ''} />
+                        <body
+                            className={
+                                fixMenu && store.size
+                                ? 'sizeUp has-navbar-fixed-top'
+                                : fixMenu
+                                ? 'has-navbar-fixed-top'
+                                : store.size
+                                ? 'sizeUp'
+                                : ''
+                            }
+                        />
                     </Helmet>
                     <div className="hero-foot is-hidden-mobile">
                         <nav
@@ -93,7 +103,7 @@ class Navbar extends Component {
                             `}
                         >
                             <div className="navbar-brand">
-                                <button
+                                <div
                                     id="navButton"
                                     // ref={this.buttonRef}
                                     onClick={() => this.setState({ showMenu: !showMenu })}
@@ -103,6 +113,7 @@ class Navbar extends Component {
                                         }
                                     }}
                                     className="navbar-burger burger"
+                                    role="button"
                                     data-target="navMenu"
                                     aria-label="menu"
                                     aria-expanded="false"
@@ -111,7 +122,7 @@ class Navbar extends Component {
                                     <span aria-hidden="true" />
                                     <span aria-hidden="true" />
                                     <span aria-hidden="true" />
-                                </button>
+                                </div>
                             </div>
 
                             <div
@@ -128,6 +139,7 @@ class Navbar extends Component {
                                         key={item.name}
                                         className="navbar-item"
                                         to={item.link}
+                                        onClick={() => this.setState({ showMenu: !showMenu })}
                                         >
                                         {item.name}
                                         </Link>
@@ -139,6 +151,8 @@ class Navbar extends Component {
                                         tabIndex={0}
                                         onClick={() => {
                                             // dispatch({ type: 'TOGGLE_SIZE' });
+                                            console.log(store.size);
+                                            toggleSize();
                                             console.log(store.size);
                                         }}
                                         onKeyDown={(event) => {

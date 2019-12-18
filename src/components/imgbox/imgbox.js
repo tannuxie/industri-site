@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
 import Img from 'gatsby-image';
@@ -17,88 +17,157 @@ class ImgBox extends React.Component {
             photoIndex: 0,
             isOpen: false,
         };
+        this.open = this.open.bind(this);
+        this.close = this.close.bind(this);
     }
 
-    render() {
-        const { photoIndex } = this.state;
-        const { id } = this.props;
-        console.log(id);
+    open = () => {
+        this.setState({
+            isOpen: true,
+        });
+    };
 
-        let aCaption = '';
-        if (id.caption !== undefined) {
-            aCaption = id.caption;
-        }
+    close = () => {
+        this.setState({
+            isOpen: false,
+        });
+    };
+
+    render() {
+        const { isOpen, photoIndex } = this.state;
+        const { data, images, caption } = this.props;
+        const aCaption = caption !== undefined ? caption : '';
 
         // const images = data.allStrapiImage.edges
-        const { data } = this.props;
         console.log(data);
-        const image = data.allStrapiImage.edges
-            .filter((animage) => animage.node.strapiId === id);
+        console.log(images);
+        const ids = images.map((e) => e.id);
+        console.log(ids);
+        const selectImages = data.allStrapiImage.edges
+            .filter((animage) => ids.indexOf(animage.node.strapiId) !== -1);
+
+        console.log(selectImages);
+        const aspectRatioSum = selectImages.map((e) => (
+            e.node.imagecontent.childImageSharp.fluid.aspectRatio))
+        .reduce((accumulator, currentValue, currentIndex, array) => accumulator + currentValue);
         // console.log('finished');
         // console.log(image);
 
-        const open = () => {
-            // setIsOpen(true);
-            this.setState({
-                isOpen: true,
-            });
-        };
-        const close = () => {
-            // setIsOpen(false);
-            this.setState({
-                isOpen: false,
-            });
-        };
-        const { isOpen } = this.state;
         return (
 			<>
 				<Helmet>
-					<body className={this.isOpen && 'right-scroll-bar-position'} />
+					<body className={isOpen && 'right-scroll-bar-position'} />
 				</Helmet>
-				<div
-					role="button"
-					tabIndex={0}
-					onClick={() => this.setState({ isOpen: !isOpen })}
-					onKeyDown={(event) => { if (event.keycode === 13) this.setState({ isOpen: !isOpen }); }}
-				>
-					<Img
-						fluid={image[0].node.imagecontent.childImageSharp.fluid}
-						alt={image[0].node.title}
-						imgStyle={{ objectFit: 'contain' }}
-					/>
-					{aCaption.length > 0 && (
-						<p style={{
-                            fontStyle: 'italic',
-                            textAlign: 'center',
-                            fontSize: '1.1rem',
-						}}
-						>
-							{aCaption}
-						</p>
-					)}
+                <div
+                    css={css`
+                        display: flex;
+                        justify-content: center;
+                        flex-direction: row;
+                        flex-wrap: wrap;
+                    `}
+                >
+                    {selectImages.map((item, index) => {
+                        const {
+                        id, strapiId, title, description, imagecontent,
+                        } = item.node;
+                        return (
+                            <div
+                                role="button"
+                                key={title}
+                                tabIndex={0}
+                                onClick={() => this.setState({
+                                    isOpen: !isOpen,
+                                    photoIndex: index,
+                                })}
+                                style={{
+                                    width: `${(imagecontent.childImageSharp.fluid.aspectRatio / aspectRatioSum) * 100}%`,
+                                }}
+                                onKeyDown={(event) => {
+                                    if (event.keycode === 13) {
+                                        this.setState({
+                                            isOpen: !isOpen,
+                                            photoIndex: index,
+                                        });
+                                    }
+                                }}
+                            >
+                                <Img
+                                    fluid={imagecontent.childImageSharp.fluid}
+                                    alt={title}
+                                    imgStyle={{ objectFit: 'contain' }}
+                                />
 
-					{isOpen && (
-						<DialogOverlay css={css`z-index: 9999;`} isOpen={isOpen} onDismiss={this.close()} onClick={() => this.open()}>
-							<DialogContent aria-label={image[0].node.title}>
-								<Img
-									fluid={image[0].node.imagecontent.childImageSharp.fluid}
-									alt={image[0].node.title}
-								/>
-								<h2>
-									{aCaption.length > 0 ? aCaption : image[0].node.title}
-								</h2>
-							</DialogContent>
-						</DialogOverlay>
-					)}
-				</div>
+
+                            </div>
+                        );
+                    })}
+                    {aCaption.length > 0 && (
+                        <p
+                            css={css`
+                                font-style: italic;
+                                text-align: center;
+                                font-size: 1.1rem;
+                                width: 100%;
+                                margin-bottom: 0;
+                            `}
+                        >
+                            {aCaption}
+                        </p>
+                    )}
+                    {isOpen && (
+                        <DialogOverlay
+                            css={css`z-index: 9999;`}
+                            isOpen={isOpen}
+                            onDismiss={this.close}
+                            onClick={() => this.open}
+                        >
+                            <DialogContent
+                                css={css`
+                                    @media (max-width: 1920px) {
+                                        width: 65vw;
+                                    }
+                                    @media (max-width: 1680px) {
+                                        width: 75vw;
+                                    }
+                                    @media (max-width: 1023px) {
+                                        width: 95vw;
+                                    }
+                                    @media (max-width: 769px) {
+                                        width: 100vw;
+                                        padding-left: 0;
+                                        padding-right: 0;
+                                    }
+                                `}
+                                aria-label={selectImages[photoIndex].node.title}
+                            >
+                                <Img
+                                    fluid={selectImages[photoIndex]
+                                        .node.imagecontent.childImageSharp.fluid}
+                                    alt={selectImages[photoIndex].node.title}
+                                />
+                                <h2>
+                                    {selectImages[photoIndex].node.title}
+                                </h2>
+                            </DialogContent>
+                        </DialogOverlay>
+                    )}
+                </div>
 			</>
         );
     }
 }
 
 ImgBox.propTypes = {
-    id: PropTypes.number.isRequired,
+    images: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number,
+        desc: PropTypes.string,
+    })).isRequired,
+    caption: PropTypes.string,
     data: PropTypes.objectOf(PropTypes.object).isRequired,
+};
+
+ImgBox.defaultProps = {
+    caption: undefined,
 };
 
 export default (props) => (
@@ -115,7 +184,8 @@ export default (props) => (
 							imagecontent {
 								childImageSharp {
 									fluid(maxWidth: 1920) {
-										...GatsbyImageSharpFluid
+                                        ...GatsbyImageSharpFluid
+                                        aspectRatio
 									}
 								}
 							}

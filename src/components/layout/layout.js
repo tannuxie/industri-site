@@ -9,13 +9,6 @@ import ContextConsumer, { ContextProviderComponent } from '../../context/context
 
 export default ({ children }) => (
         <ContextProviderComponent>
-            <ContextConsumer>
-                {({ store }) => (
-                    <Helmet>
-                        <body className={store.fixMenu ? 'has-navbar-fixed-top' : ''} />
-                    </Helmet>
-                )}
-            </ContextConsumer>
             <Header />
             <section className="section">
                 <div className="container">

@@ -57,7 +57,7 @@ const ArticleTemplate = ({ data }) => (
                 clear: both;
                 `}
         >
-            {/* <MdxRender mdxBody={data.strapiArticle.childMdx.body} /> */}
+            <MdxRender mdxBody={data.strapiArticle.childMdx.body} />
         </div>
     </div>
 );

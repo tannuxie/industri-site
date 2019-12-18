@@ -34,6 +34,7 @@
 		"gatsby-source-strapi": "^0.0.9",
 		"gatsby-transformer-sharp": "^2.1.18",
 		"leaflet": "^1.5.1",
+		"lodash": "^4.17.15",
 		"lost": "^8.3.1",
 		"mdx": "^0.3.1",
 		"node-sass": "^4.12.0",

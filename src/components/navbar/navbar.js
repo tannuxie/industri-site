@@ -25,20 +25,20 @@ class Navbar extends Component {
 
     // provar med att försöka binda getparentelem vid mount...? kanske kan placera i render?
     componentDidMount() {
-        console.log('Navbar creating...');
+        console.log('Navbar mounting...');
         // console.log(this.context);
         // const elem = this.getParentElem;
         // här måste man setta headerHeight-staten...
         // this.setState({ headerHeight: this.getParentElem().current.clientHeight });
         // this.getParentElem = this.props.getParentElem.bind(this);
         window.addEventListener('scroll', this.listenToScroll);
-        console.log('Navbar created');
+        console.log('Navbar mounted');
     }
 
     componentWillUnmount() {
-        console.log('Navbar cleaning up...');
+        console.log('Navbar unmounting...');
         window.removeEventListener('scroll', this.listenToScroll);
-        console.log('Navbar cleaned up');
+        console.log('Navbar unmounted');
     }
 
     getParentHeight() {

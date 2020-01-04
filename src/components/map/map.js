@@ -1,50 +1,67 @@
+/* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import { css } from '@emotion/core';
 
 export default class MyMap extends Component {
 	render() {
-		const { addresses } = this.props;
-		// console.log('component: ' + this.props.position);
-		console.log(addresses);
+		const {
+            address, pins, undertext, zoom,
+        } = this.props;
 
-		const myAddresses = addresses;
-		let latest = null;
+		console.log(pins);
 
-		for (let index = 0; index < myAddresses.length; index++) {
-			const element = myAddresses[index];
-			console.log(element);
+        // addresses shape
+        // pins: PropTypes.arrayOf(PropTypes.shape({
+        // name: PropTypes.string,
+        // addressstring1: PropTypes.string,
+        // addressstring2: PropTypes.string,
+        // position: PropTypes.arrayOf(PropTypes.number),
+        // subtitle: PropTypes.string,
+        // })).isRequired,
+        // undertext: PropTypes.string,
+        // zoom: PropTypes.number,
 
-			if (element.startdate !== undefined) {
-				Object.assign(myAddresses[index], { subtitle: `${element.startdate} - ${element.enddate}` });
-			} else if (element.subtitle !== undefined) {
-				Object.assign(myAddresses[index], { subtitle: element.subtitle });
-				latest = index;
-				break;
-			} else {
-				Object.assign(myAddresses[index], { subtitle: '' });
-				latest = index;
-				break;
-			}
+		const thePins = pins.map((pin) => {
+			console.log('pins element', pin);
+            const element = pin;
 
-			if (latest == null) {
-				latest = index;
-			} else if (myAddresses[latest].enddate === 'Nutid') {
-				break;
-			} else if (element.enddate === 'Nutid') {
-				latest = index;
-			} else if (element.enddate > myAddresses[latest].enddate) {
-				latest = index;
-			}
-			console.log(`subtitle: ${myAddresses[index].subtitle}`);
-		}
+            let text = element.name.split(/[\r\n]/g).filter(Boolean);
+            console.log('text', text);
+            // text = text[0].replace(/\r\n/g, '<br />').replace(/[\r\n]/g, '<br />');
+            // console.log(text);
+
+            if (!element.subtitle && text.length > 1) {
+                element.name = text[0];
+                element.subtitle = '';
+                let temp = [];
+                for (let i = 1; i < text.length; i++) {
+                    const string = text[i];
+                    temp.push(string);
+                    // if (i < text.length) {
+                    //     element.subtitle += <br />;
+                    // }
+                }
+                element.subtitle = temp;
+            }
+
+            return element;
+        });
+
+        console.log('thePins', thePins);
 
 
 		if (typeof window !== 'undefined') {
 			return (
-				<div>
+                <div
+                    css={css`
+                        width: 100%;
+                    `}
+                >
 					<Map
-						center={myAddresses[latest].position}
-						zoom={15}
+						center={address}
+						zoom={zoom}
 						style={{
 							height: '500px',
 						}}
@@ -53,19 +70,57 @@ export default class MyMap extends Component {
 							url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 							attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
 						/>
-						{myAddresses.map((element) => (
+						{thePins && thePins.map((element) => (
 							<Marker key={element.name} position={element.position}>
 								<Popup>
 									<b>{element.name}</b>
 									<br />
-									{element.subtitle}
+									{element.subtitle.map((line) => (
+                                        <span
+                                            key={line}
+                                            css={css`
+                                                display: block;
+                                            `}
+                                        >
+                                            {line}
+                                        </span>
+                                    ))}
 								</Popup>
 							</Marker>
 						))}
 					</Map>
-				</div>
+                    {undertext.length > 0 && (
+                        <p
+                            css={css`
+                                font-style: italic;
+                                text-align: center;
+                                width: 100%;
+                                margin-bottom: 0;
+                            `}
+                        >
+                            {undertext}
+                        </p>
+                    )}
+                </div>
 			);
 		}
 		return null;
 	}
 }
+
+MyMap.propTypes = {
+    address: PropTypes.arrayOf(PropTypes.number).isRequired,
+    pins: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string,
+        position: PropTypes.arrayOf(PropTypes.number),
+        subtitle: PropTypes.string,
+    })),
+    undertext: PropTypes.string,
+    zoom: PropTypes.number,
+};
+
+MyMap.defaultProps = {
+    pins: [],
+    undertext: '',
+    zoom: 15,
+};

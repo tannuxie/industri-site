@@ -1,12 +1,21 @@
 import React from 'react';
-
-import Helmet from '~components/helmet/helmet';
-import Midsection from '~components/midsection/midsection';
+import { Link, graphql } from 'gatsby';
+import { css } from '@emotion/core';
+import Img from 'gatsby-image';
 
 const IndexPage = () => (
         <>
-            <Helmet />
-            <Midsection />
+        <div className="columns">
+            <div className="column">
+                testesttest
+            </div>
+            <div className="column">
+                bild
+            </div>
+        </div>
+            <div className="column">
+                slumpat företag
+            </div>
         </>
 );
 

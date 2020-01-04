@@ -31,58 +31,37 @@ export default CityListTemplate;
 export const citylistQuery = graphql`
     query citylistQuery($string: String!) {
         company: allStrapiCompany(filter: {city: {eq: $string}, published: {eq: true}, mainimage: {id: {ne: null}}}) {
-        edges {
-            node {
-            id
-            companyquality
-            type
-            name
-            strapiId
-            summary
-            fields {
-                slug
-            }
-            addresses {
-                id
-                addressstring1
-                addressstring2
-                startdate(formatString: "YYYY")
-                enddate(formatString: "YYYY")
-                company
-                latitude
-                longitude
-            }
-            mainimage {
-                imagecontent {
-                id
-                }
-                id
-                title
-            }
-            city
-            }
-        }
-        }
-        image: allStrapiImage {
-        edges {
-            node {
-            id
-            title
-            strapiId
-            imagecontent {
-                childImageSharp {
-                fluid(maxWidth: 970) {
-                    ...GatsbyImageSharpFluid
-                }
+            edges {
+                node {
+                    id
+                    strapiId
+                    type
+                    name
+                    summary
+                    city
+                    quality
+                    fields {
+                        slug
+                    }
+                    address {
+                        id
+                        addresstext1
+                        addresstext2
+                        startdate(formatString: "YYYY")
+                        latitude
+                        longitude
+                    }
+                    mainimage {
+                        id
+                        childImageSharp {
+                            fluid {
+                                src
+                            }
+                            id
+                        }
+                    }
                 }
             }
-            companyimage {
-                name
-                id
-                summary
-            }
-            }
-        }
         }
     }
 `;

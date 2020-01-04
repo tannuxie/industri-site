@@ -19,60 +19,38 @@ const ListAll = ({ data }) => (
 export default ListAll;
 
 export const listAllQuery = graphql`
-    query listallQuery {
-        company: allStrapiCompany(filter: {published: {eq: true}, mainimage: {id: {ne: null}}}) {
+query listallQuery {
+    company: allStrapiCompany(filter: {published: {eq: true}, mainimage: {id: {ne: null}}}) {
         edges {
             node {
-            id
-            companyquality
-            type
-            name
-            strapiId
-            summary
-            fields {
-                slug
-            }
-            addresses {
                 id
-                addressstring1
-                addressstring2
-                startdate(formatString: "YYYY")
-                enddate(formatString: "YYYY")
-                company
-                latitude
-                longitude
-            }
-            mainimage {
-                imagecontent {
-                id
-                }
-                id
-                title
-            }
-            city
-            }
-        }
-        }
-        image: allStrapiImage {
-        edges {
-            node {
-            id
-            title
-            strapiId
-            imagecontent {
-                childImageSharp {
-                fluid(maxWidth: 970) {
-                    ...GatsbyImageSharpFluid
-                }
-                }
-            }
-            companyimage {
+                strapiId
                 name
-                id
+                type
+                quality
                 summary
+                city
+                fields {
+                    slug
+                }
+                address {
+                    id
+                    addresstext1
+                    addresstext2
+                    startdate(formatString: "YYYY")
+                    latitude
+                    longitude
+                }
+                mainimage {
+                    id
+                    childImageSharp {
+                        fluid {
+                            src
+                        }
+                    }
+                }
             }
-            }
-        }
         }
     }
+}
 `;

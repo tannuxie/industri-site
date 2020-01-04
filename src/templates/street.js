@@ -82,33 +82,26 @@ export const StreetQuery = graphql`
             fields {
                 slug
             }
-            childMdx {
-                body
-            }
             city
-            imagecontent {
+            content {
                 id
-                title
             }
-            content
-            latitude
-            longitude
             name
             strapiId
             summary
-            zoom
-        }
-        strapiImage(streetimage: {id: {eq: $id}}) {
-            title
-            id
-            streetimage {
+            mainimage {
                 id
-            }
-            imagecontent {
+                name
                 childImageSharp {
-                    fluid(maxWidth: 1920) {
+                    fluid {
                         src
                     }
+                }
+            }
+            children {
+                ... on Mdx {
+                    id
+                    body
                 }
             }
         }

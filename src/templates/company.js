@@ -2,9 +2,10 @@ import React from 'react';
 import { Link, graphql } from 'gatsby';
 import { css } from '@emotion/core';
 import Img from 'gatsby-image';
+import ReactMarkdown from 'react-markdown/with-html';
 import Helmet from '~components/helmet/helmet';
 import MyMap from '~components/map/map';
-import ReactMarkdown from 'react-markdown/with-html';
+import MdxRender from '~components/mdxrender/mdxrender';
 // import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
 
 const CompanyTemplate = ({ data }) => {
@@ -86,10 +87,11 @@ const CompanyTemplate = ({ data }) => {
 				clear: both;
 				`}
 			>
-				<ReactMarkdown
+				{/* <ReactMarkdown
 					source={data.strapiCompany.longtext}
 					escapeHtml={false}
-				/>
+				/> */}
+                <MdxRender mdxBody={data.strapiCompany.childMdx.body} />
 			</div>
 
 		</>
@@ -99,48 +101,58 @@ const CompanyTemplate = ({ data }) => {
 export default CompanyTemplate;
 
 export const companyQuery = graphql`
-query CompanyTemplate($id: Int!) {
-	strapiCompany(strapiId: {eq: $id}) {
-	  strapiId
-	  id
-	  mainimage {
-		id
-		title
-	  }
-	  fields {
-		slug
-	  }
-	  longtext
-	  name
-	  summary
-	  type
-	  updated_at
-	  created_at
-	  addresses {
-		addressstring1
-		addressstring2
-		company
-		enddate(formatString: "YYYY")
-		id
-		latitude
-		longitude
-		startdate(formatString: "YYYY")
-	  }
-	}
-	strapiImage(companyimage: {id: {eq: $id}}) {
-	  title
-	  id
-	  companyimage {
-		id
-	  }
-	  imagecontent {
-		childImageSharp {
-		  fluid(maxWidth: 1920) {
-			...GatsbyImageSharpFluid
-		  }
-		}
-	  }
-	}
-  }
-
+    query CompanyTemplate($id: Int!) {
+        strapiCompany(strapiId: {eq: $id}) {
+            strapiId
+            id
+            name
+            mainimage {
+                id
+                childImageSharp {
+                    fluid {
+                        ...GatsbyImageSharpFluid
+                        aspectRatio
+                    }
+                }
+            }
+            fields {
+                slug
+            }
+            summary
+            type
+            updated_at
+            created_at
+            address {
+                addresstext1
+                addresstext2
+                id
+                latitude
+                longitude
+                startdate
+            }
+            content {
+                undertext
+                textfield
+                id
+                bild {
+                    id
+                    beskrivning
+                    bildfil {
+                        childImageSharp {
+                            fluid {
+                                ...GatsbyImageSharpFluid
+                                aspectRatio
+                            }
+                        }
+                    }
+                }
+            }
+            children {
+                ... on Mdx {
+                id
+                body
+                }
+            }
+        }
+    }
 `;

@@ -101,56 +101,39 @@ const Vandra = ({ data }) => {
 export default Vandra;
 
 export const vandraQuery = graphql`
-	query vandraQuery {
-		allStrapiStreet {
-			edges {
-				node {
-					id
-					city
-					content
-					fields {
-						slug
-					}
-					imagecontent {
-						id
-						title
-					}
-					longitude
-					latitude
-					name
-					summary
-					zoom
-					strapiId
-					childMdx {
-						body
-						headings {
-							value
-						}
-						tableOfContents
-					}
-				}
-			}
-		}
-		allStrapiImage {
-			edges {
-				node {
-					streetimage {
-						id
-						name
-					}
-					strapiId
-					id
-					description
-					imagecontent {
-						childImageSharp {
-							fluid(maxWidth: 1920) {
-								...GatsbyImageSharpFluid
-							}
-						}
-					}
-					title
-				}
-			}
-		}
-	}
+query vandraQuery {
+    allStrapiStreet {
+        edges {
+            node {
+                id
+                strapiId
+                name
+                city
+                summary
+                content {
+                    id
+                    textfield
+                }
+                fields {
+                    slug
+                }
+                mainimage {
+                    id
+                    name
+                    childImageSharp {
+                        fluid {
+                            src
+                        }
+                    }
+                }
+                children {
+                    ... on Mdx {
+                    id
+                    body
+                    }
+                }
+            }
+        }
+    }
+}
 `;

@@ -6,6 +6,7 @@ import { css } from '@emotion/core';
 import { Helmet } from 'react-helmet';
 import { Dialog, DialogOverlay, DialogContent } from '@reach/dialog';
 import '@reach/dialog/styles.css';
+import Emoji from '~components/emoji';
 
 // import { zeroRightClassName,fullWidthClassName, noScrollbarsClassName }
 // from 'react-remove-scroll-bar';
@@ -16,9 +17,44 @@ class ImgBox extends React.Component {
         this.state = {
             photoIndex: 0,
             isOpen: false,
+            isMounted: false,
+            images: [{}],
+            undertext: '',
         };
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
+        // this.getImageIds = this.getImageIds.bind(this);
+        this.getAspectRatioSum = this.getAspectRatioSum.bind(this);
+    }
+
+    componentDidMount() {
+        console.log('Mounting...');
+        console.log('mount state: ', this.state.images);
+        const { images, undertext } = this.props;
+        this.setState({ images, undertext });
+
+        console.log('mount state: ', this.state.images);
+        this.setState({ isMounted: true });
+    }
+
+    componentWillUnmount() {
+        console.log('Unmounting...');
+
+        this.setState({ isMounted: false });
+    }
+
+    getAspectRatioSum = () => {
+        console.log('in getAspectRatio');
+
+        const { images } = this.state;
+        console.log('aspect images: ', images);
+        console.log(typeof images);
+
+        const aspectSum = images.map((currentImg) => (
+        currentImg.bildfil.childImageSharp.fluid.aspectRatio))
+        .reduce((accumulator, currentValue) => accumulator + currentValue);
+
+        return aspectSum;
     }
 
     open = () => {
@@ -34,30 +70,24 @@ class ImgBox extends React.Component {
     };
 
     render() {
-        const { isOpen, photoIndex } = this.state;
-        const { data, images, caption } = this.props;
-        const aCaption = caption !== undefined ? caption : '';
-
-        // const images = data.allStrapiImage.edges
-        console.log(data);
-        console.log(images);
-        const ids = images.map((e) => e.id);
-        console.log(ids);
-        const selectImages = data.allStrapiImage.edges
-            .filter((animage) => ids.indexOf(animage.node.strapiId) !== -1);
-
-        console.log(selectImages);
-        const aspectRatioSum = selectImages.map((e) => (
-            e.node.imagecontent.childImageSharp.fluid.aspectRatio))
-        .reduce((accumulator, currentValue, currentIndex, array) => accumulator + currentValue);
-        // console.log('finished');
-        // console.log(image);
+        console.log('in Render');
+        const {
+            isOpen, photoIndex, isMounted, images, undertext,
+        } = this.state;
+        // const { data, images, caption } = this.props;
+        // const { selectImages } = this.getImages();
+        // console.log('render selectImages', selectImages);
+        // const { imageCaptions } = this.getImageCaptions();
+        // const { aspectRatioSum } = this.getAspectRatioSum();
+        // const subtitle = this.getSubtitle();
 
         return (
-			<>
-				<Helmet>
+            <>
+			{isMounted && images.length > 0 && (
+                <>
+				{/* <Helmet>
 					<body className={isOpen && 'right-scroll-bar-position'} />
-				</Helmet>
+				</Helmet> */}
                 <div
                     css={css`
                         display: flex;
@@ -66,22 +96,25 @@ class ImgBox extends React.Component {
                         flex-wrap: wrap;
                     `}
                 >
-                    {selectImages.map((item, index) => {
+                    {images.map((item, index) => {
                         const {
-                        id, strapiId, title, description, imagecontent,
-                        } = item.node;
+                            beskrivning, bildfil,
+                        } = item;
                         return (
                             <div
                                 role="button"
-                                key={title}
+                                key={beskrivning}
                                 tabIndex={0}
                                 onClick={() => this.setState({
                                     isOpen: !isOpen,
                                     photoIndex: index,
                                 })}
-                                style={{
-                                    width: `${(imagecontent.childImageSharp.fluid.aspectRatio / aspectRatioSum) * 100}%`,
-                                }}
+                                css={css`
+                                    width: ${(bildfil.childImageSharp.fluid.aspectRatio / this.getAspectRatioSum()) * 100}%;
+                                    :focus {
+                                        outline: none;
+                                    }
+                                `}
                                 onKeyDown={(event) => {
                                     if (event.keycode === 13) {
                                         this.setState({
@@ -92,8 +125,8 @@ class ImgBox extends React.Component {
                                 }}
                             >
                                 <Img
-                                    fluid={imagecontent.childImageSharp.fluid}
-                                    alt={title}
+                                    fluid={bildfil.childImageSharp.fluid}
+                                    alt={beskrivning}
                                     imgStyle={{ objectFit: 'contain' }}
                                 />
 
@@ -101,99 +134,119 @@ class ImgBox extends React.Component {
                             </div>
                         );
                     })}
-                    {aCaption.length > 0 && (
+                    {undertext.length > 0 && (
                         <p
                             css={css`
                                 font-style: italic;
                                 text-align: center;
-                                font-size: 1.1rem;
                                 width: 100%;
                                 margin-bottom: 0;
                             `}
                         >
-                            {aCaption}
+                            {undertext}
                         </p>
                     )}
+
                     {isOpen && (
                         <DialogOverlay
-                            css={css`z-index: 9999;`}
+                            css={css`
+                                z-index: 9999;
+                            `}
                             isOpen={isOpen}
                             onDismiss={this.close}
                             onClick={() => this.open}
                         >
                             <DialogContent
                                 css={css`
-                                    @media (max-width: 1920px) {
+                                    position: relative;
+                                    margin: 2vh auto 0;
+                                    padding: 15px;
+                                    @media (max-width: 1680px) {
                                         width: 65vw;
                                     }
-                                    @media (max-width: 1680px) {
-                                        width: 75vw;
-                                    }
                                     @media (max-width: 1023px) {
-                                        width: 95vw;
+                                        width: 90vw;
                                     }
                                     @media (max-width: 769px) {
-                                        width: 100vw;
-                                        padding-left: 0;
-                                        padding-right: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        margin: 0;
+                                        padding: 0;
                                     }
                                 `}
-                                aria-label={selectImages[photoIndex].node.title}
+                                aria-label={images[photoIndex].beskrivning}
                             >
                                 <Img
-                                    fluid={selectImages[photoIndex]
-                                        .node.imagecontent.childImageSharp.fluid}
-                                    alt={selectImages[photoIndex].node.title}
+                                    fluid={images[photoIndex]
+                                        .bildfil.childImageSharp.fluid}
+                                    alt={images[photoIndex].beskrivning}
                                 />
-                                <h2>
-                                    {selectImages[photoIndex].node.title}
-                                </h2>
+                                <div
+                                    css={css`
+                                        position: relative;
+                                        display: flex;
+                                    `}
+                                >
+                                    <h2
+                                        css={css`
+                                            @media (max-width: 769px) {
+                                                padding-left: 5px;
+                                            }
+                                        `}
+                                    >
+                                        {images[photoIndex].beskrivning}
+                                    </h2>
+                                    <button
+                                        id="imgbox-close"
+                                        css={css`
+                                            position: absolute;
+                                            top: 10px;
+                                            right: 10px;
+                                            color: transparent;
+                                            text-shadow: 0 0 0 #4e4e4e;
+                                            border-width: 0;
+                                            background-color: transparent;
+                                            :focus {
+                                                outline: none;
+                                            }
+                                            @media (max-width: 769px) {
+                                                top: auto;
+                                                right: 5px;
+                                                bottom: 0;
+                                            }
+                                        `}
+                                        tabIndex={0}
+                                        onClick={() => this.close()}
+                                        onKeyDown={(event) => {
+                                            if (event.keycode === 13) {
+                                                this.close();
+                                            }
+                                        }}
+                                    >
+                                        <Emoji size={2} label="crossmark" emoji="✖️" />
+                                    </button>
+                                </div>
                             </DialogContent>
                         </DialogOverlay>
                     )}
                 </div>
-			</>
+                </>
+			)}
+            </>
         );
     }
 }
 
 ImgBox.propTypes = {
     images: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.number,
-        desc: PropTypes.string,
+        beskrivning: PropTypes.string,
+        bildfil: PropTypes.objectOf(PropTypes.object),
     })).isRequired,
-    caption: PropTypes.string,
-    data: PropTypes.objectOf(PropTypes.object).isRequired,
+    undertext: PropTypes.string,
 };
 
 ImgBox.defaultProps = {
-    caption: undefined,
+    undertext: '',
 };
 
-export default (props) => (
-	<StaticQuery
-		query={graphql`
-			query BoxQuery {
-				allStrapiImage {
-					edges {
-						node {
-							id
-							strapiId
-							title
-							description
-							imagecontent {
-								childImageSharp {
-									fluid(maxWidth: 1920) {
-                                        ...GatsbyImageSharpFluid
-                                        aspectRatio
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		`}
-		render={(data) => <ImgBox data={data} {...props} />}
-	/>
-);
+export default ImgBox;

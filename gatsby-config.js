@@ -102,7 +102,9 @@ module.exports = {
 					'address',
 					'company',
 					'street',
-					'tag',
+                    'tag',
+                    'foretag',
+                    'static-content',
 				],
 				queryLimit: 2000,
 				loginData: {

@@ -45,8 +45,9 @@ exports.onCreateNode = async ({
 			node,
 			name: 'slug',
 			value: slug,
-		});
-	}
+        });
+    }
+
 	if (node.internal.type === 'StrapiArticle') {
 		const slug = convertToSlug(node.title);
 		createNodeField({
@@ -54,16 +55,6 @@ exports.onCreateNode = async ({
 			name: 'slug',
 			value: slug,
 		});
-		// const content = await loadNodeContent(node);
-
-		const content = `${node.content}`;
-		const mdxNode = await createMDXNode({
-			id: createNodeId(`${node.id} >>> Mdx`),
-			node,
-			content,
-		});
-		createNode(mdxNode);
-		createParentChildLink({ parent: node, child: mdxNode });
 	}
 	if (node.internal.type === 'StrapiStreet') {
 		const slug = convertToSlug(node.name);
@@ -72,16 +63,51 @@ exports.onCreateNode = async ({
 			name: 'slug',
 			value: slug,
 		});
+    }
 
-		const content = `${node.content}`;
-		const mdxNode = await createMDXNode({
-			id: createNodeId(`${node.strapiId} >>> Mdx`),
-			node,
-			content,
-		});
-		createNode(mdxNode);
-		createParentChildLink({ parent: node, child: mdxNode });
-	}
+    if (node.internal.type === 'StrapiCompany'
+    || node.internal.type === 'StrapiArticle'
+    || node.internal.type === 'StrapiStreet') {
+        const textObjects = [];
+
+        Object.keys(node.content).forEach((item) => {
+            // console.log('item: ', item);
+            // console.log('item.content[item]: ', node.content[item]);
+            Object.keys(node.content[item]).forEach((item2) => {
+                console.log('item2: ', item2);
+                console.log('node.content[item][item2]: ', node.content[item][item2]);
+                if (item2 === 'textfield') {
+                    textObjects.push(node.content[item][item2]);
+                }
+                if (item2 === 'text' || item2 === 'text_vanster' || item2 === 'text_hoger') {
+                    // console.log('textobject: ', node.content[item][item2][textfield]);
+                    Object.keys(node.content[item][item2]).forEach((item3) => {
+                        console.log('item3: ', item3);
+                        console.log('node.content[item][item2][item3]: ', node.content[item][item2][item3]);
+
+                        if (item3 === 'textfield') {
+                            textObjects.push(node.content[item][item2][item3]);
+                        }
+                    });
+                }
+            });
+        });
+
+        if (textObjects.length > 0) {
+            console.log('textObjects: ', textObjects);
+            textObjects.forEach(async (item) => {
+                const content = `${item}`;
+                const mdxNode = await createMDXNode({
+                id: createNodeId(`${node.id}${item} >>> Mdx`),
+                node,
+                content,
+                });
+                // console.log('const mdxNode', mdxNode);
+                createNode(mdxNode);
+                createParentChildLink({ parent: node, child: mdxNode });
+            });
+        }
+    }
 };
 
 // Implement the Gatsby API “createPages”. This is called once the
@@ -91,7 +117,7 @@ exports.createPages = ({ actions, graphql }) => {
 
 	const getEntities = makeRequest(graphql, `
   {
-    article: allStrapiArticle(filter: {published: {eq: true}, coverimage: {id: {ne: null}}}) {
+    article: allStrapiArticle(filter: {published: {eq: true}, mainimage: {id: {ne: null}}}) {
       edges {
         node {
           id
@@ -111,7 +137,7 @@ exports.createPages = ({ actions, graphql }) => {
         }
       }
     }
-    street: allStrapiStreet(filter: {published: {eq: true}, imagecontent: {id: {ne: null}}}) {
+    street: allStrapiStreet(filter: {published: {eq: true}, mainimage: {id: {ne: null}}}) {
       edges {
         node {
           id

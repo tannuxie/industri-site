@@ -26,24 +26,27 @@ export default class MyMap extends Component {
 		const thePins = pins.map((pin) => {
 			console.log('pins element', pin);
             const element = pin;
-
-            let text = element.name.split(/[\r\n]/g).filter(Boolean);
-            console.log('text', text);
-            // text = text[0].replace(/\r\n/g, '<br />').replace(/[\r\n]/g, '<br />');
-            // console.log(text);
-
-            if (!element.subtitle && text.length > 1) {
-                element.name = text[0];
-                element.subtitle = '';
-                let temp = [];
-                for (let i = 1; i < text.length; i++) {
-                    const string = text[i];
-                    temp.push(string);
-                    // if (i < text.length) {
-                    //     element.subtitle += <br />;
-                    // }
+            if (!element.subtitle) {
+                const text = element.name.split(/[\r\n]/g).filter(Boolean);
+                console.log('text', text);
+                // text = text[0].replace(/\r\n/g, '<br />').replace(/[\r\n]/g, '<br />');
+                // console.log(text);
+                if (text.length > 1) {
+                    element.name = text[0];
+                    element.subtitle = '';
+                    let temp = [];
+                    for (let i = 1; i < text.length; i++) {
+                        const string = text[i];
+                        temp.push(string);
+                        // if (i < text.length) {
+                        //     element.subtitle += <br />;
+                        // }
+                    }
+                    element.subtitle = temp;
                 }
-                element.subtitle = temp;
+            } else {
+                const text = element.subtitle.split(/[\r\n]/g).filter(Boolean);
+                element.subtitle = text;
             }
 
             return element;

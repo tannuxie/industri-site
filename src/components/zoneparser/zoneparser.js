@@ -115,7 +115,7 @@ const ZoneParser = (content) => {
             if (item.text_vanster && item.text_hoger) {
                 key = item.text_vanster.textfield;
                 return (
-                    <div className="columns is-8 is-variable is-vcentered">
+                    <div className="columns is-6 is-variable is-vcentered">
                         <div className="column">
                             <MdxRender mdxBody={item.text_vanster.textfield} />
                         </div>

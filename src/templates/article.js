@@ -4,29 +4,15 @@ import { Link, graphql } from 'gatsby';
 import { css } from '@emotion/core';
 import Img from 'gatsby-image';
 import Helmet from '~components/helmet/helmet';
-// import ReactMarkdown from "react-markdown/with-html"
-// import { MDXProvider, mdx } from '@mdx-js/react'
-// import { MDXRenderer } from "gatsby-plugin-mdx"
-// import MyMap from '~components/map/map'
-// import ImgBox from '~components/imgbox/imgbox'
 import ZoneParser from '~components/zoneparser/zoneparser';
 
 const ArticleTemplate = ({ data }) => {
     console.log(data);
-    // const content = data.strapiArticle.content.map((item) => {
-    //     const current = item;
-    //     let currentMdx = 0;
-    //     if (current.textfield) {
-    //         current.textfield = data.strapiArticle.children[currentMdx].body;
-    //         currentMdx++;
-    //     }
-
-    //     return current;
-    // });
+    const article = data.strapiArticle;
 
     return (
         <div>
-            <Helmet childTitle={`${data.strapiArticle.title}`} />
+            <Helmet childTitle={`${article.title}`} />
             <div>
                 <h1
                     className="title is-1"
@@ -34,7 +20,7 @@ const ArticleTemplate = ({ data }) => {
                         text-align: center;
                         `}
                 >
-                        {data.strapiArticle.title}
+                        {article.title}
                 </h1>
                     <div
                         className="articleImageBox"
@@ -50,8 +36,8 @@ const ArticleTemplate = ({ data }) => {
                             `}
                         >
                         <Img
-                            fluid={data.strapiArticle.mainimage.childImageSharp.fluid}
-                            alt={data.strapiArticle.title}
+                            fluid={article.mainimage.childImageSharp.fluid}
+                            alt={article.title}
                             imgStyle={{ objectFit: 'contain' }}
                         />
                         </div>
@@ -60,8 +46,8 @@ const ArticleTemplate = ({ data }) => {
 
             <div>
                 <ZoneParser
-                    content={data.strapiArticle.content}
-                    childMdx={data.strapiArticle.children}
+                    content={article.content}
+                    childMdx={article.children}
                 />
             </div>
         </div>

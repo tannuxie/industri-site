@@ -50,14 +50,16 @@ export const citylistQuery = graphql`
                         startdate(formatString: "YYYY")
                         latitude
                         longitude
+                        enddate
                     }
                     mainimage {
                         id
                         childImageSharp {
                             fluid {
                                 src
+                                aspectRatio
                             }
-                            id
+                        id
                         }
                     }
                 }

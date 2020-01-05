@@ -74,16 +74,16 @@ exports.onCreateNode = async ({
             // console.log('item: ', item);
             // console.log('item.content[item]: ', node.content[item]);
             Object.keys(node.content[item]).forEach((item2) => {
-                console.log('item2: ', item2);
-                console.log('node.content[item][item2]: ', node.content[item][item2]);
+                // console.log('item2: ', item2);
+                // console.log('node.content[item][item2]: ', node.content[item][item2]);
                 if (item2 === 'textfield') {
                     textObjects.push(node.content[item][item2]);
                 }
                 if (item2 === 'text' || item2 === 'text_vanster' || item2 === 'text_hoger') {
                     // console.log('textobject: ', node.content[item][item2][textfield]);
                     Object.keys(node.content[item][item2]).forEach((item3) => {
-                        console.log('item3: ', item3);
-                        console.log('node.content[item][item2][item3]: ', node.content[item][item2][item3]);
+                        // console.log('item3: ', item3);
+                        // console.log('node.content[item][item2][item3]: ', node.content[item][item2][item3]);
 
                         if (item3 === 'textfield') {
                             textObjects.push(node.content[item][item2][item3]);
@@ -94,7 +94,7 @@ exports.onCreateNode = async ({
         });
 
         if (textObjects.length > 0) {
-            console.log('textObjects: ', textObjects);
+            // console.log('textObjects: ', textObjects);
             textObjects.forEach(async (item) => {
                 const content = `${item}`;
                 const mdxNode = await createMDXNode({

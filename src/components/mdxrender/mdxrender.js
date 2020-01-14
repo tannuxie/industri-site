@@ -6,8 +6,6 @@ import ImgBox from '~components/imgbox/imgbox';
 import Linky from '~components/linky/linky';
 
 const shortcodes = {
-	MyMap,
-    ImgBox,
     Linky,
 };
 

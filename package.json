@@ -45,7 +45,7 @@
 		"react-icons": "^3.6.1",
 		"react-leaflet": "^2.5.0",
 		"react-markdown": "^4.1.0",
-		"react-table": "^6.10.0",
+		"react-table": "^7.0.0-rc.15",
 		"react-typography": "^0.16.19",
 		"theme-ui": "^0.2.49",
 		"typography": "^0.16.19",

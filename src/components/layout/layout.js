@@ -11,7 +11,7 @@ export default ({ children }) => (
         <ContextProviderComponent>
             <Header />
             <section className="section">
-                <div className="container is-half">
+                <div className="container">
                     {children}
                 </div>
             </section>

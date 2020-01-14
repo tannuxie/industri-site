@@ -161,28 +161,29 @@ class Navbar extends Component {
                                             }
                                         }}
                                         css={css`
-                                        color: transparent;
-                                        text-shadow: 0 0 0 #4e4e4e;
-                                        display: flex;
-                                        align-items: flex-start;
+                                            color: transparent;
+                                            text-shadow: 0 0 0 #4e4e4e;
+                                            display: flex;
+                                            align-items: flex-start;
                                         `}
                                     >
-                                    <span
-                                        css={css`display: flex;
+                                        <span
+                                            css={css`
+                                                display: flex;
+                                                height: 2rem;
+                                                align-items: center;
+                                            `}
+                                        >
+                                            <Emoji size={1} label="small-a" emoji="🇦" />
+                                        </span>
+                                        <span
+                                            css={css` display: flex;
                                             height: 2rem;
                                             align-items: center;
-                                        `}
-                                    >
-                                        <Emoji size={1} label="small-a" emoji="🇦" />
-                                    </span>
-                                    <span
-                                        css={css` display: flex;
-                                        height: 2rem;
-                                        align-items: center;
-                                        `}
-                                    >
-                                        <Emoji size={2} label="big-a" emoji="🇦" />
-                                    </span>
+                                            `}
+                                        >
+                                            <Emoji size={2} label="big-a" emoji="🇦" />
+                                        </span>
                                     </a>
                                 </div>
 

@@ -63,20 +63,3 @@ body.sizeUp > div > div > section:nth-of-type(2) {
 .articleContent .gatsby-image-wrapper {
 	max-height: 500px;
 }
-
-// ****************
-// *** Table ***
-// ****************
-
-.table img {
-   object-fit: cover!important;
-}
-.rt-th.filterHeading.rt-resizable-header.-cursor-pointer:nth-child(3) {
-   margin-right: 20px;
-}
-.rt-th.filterHeading.rt-resizable-header.-cursor-pointer {
-	padding: 0 0 5px 0;
- }
-.rt-th.filterField:nth-child(4) {
-   margin-right: 0px!important;
-}

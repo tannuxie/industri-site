@@ -6,7 +6,10 @@ twintheme.overrideThemeStyles = ({ rhythm }, options, styles) => ({
 		// color: '#4a4a4a',
 		textShadow: 'none',
 		backgroundImage: 'none',
-	},
+    },
+    ':focus': {
+        outline: 'none',
+    },
 });
 
 const typography = new Typography(twintheme);

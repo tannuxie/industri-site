@@ -23,7 +23,7 @@ class ImgBox extends React.Component {
         };
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
-        // this.getImageIds = this.getImageIds.bind(this);
+        this.toggleRightScroll = this.toggleRightScroll.bind(this);
         this.getAspectRatioSum = this.getAspectRatioSum.bind(this);
     }
 
@@ -61,12 +61,19 @@ class ImgBox extends React.Component {
         this.setState({
             isOpen: true,
         });
+        this.toggleRightScroll();
     };
 
     close = () => {
         this.setState({
             isOpen: false,
         });
+        this.toggleRightScroll();
+    };
+
+    toggleRightScroll = () => {
+        const element = document.getElementsByTagName('body')[0];
+        element.classList.toggle('right-scroll-bar-position');
     };
 
     render() {
@@ -85,9 +92,6 @@ class ImgBox extends React.Component {
             <>
 			{isMounted && images.length > 0 && (
                 <>
-				{/* <Helmet>
-					<body className={isOpen && 'right-scroll-bar-position'} />
-				</Helmet> */}
                 <div
                     css={css`
                         display: flex;
@@ -105,10 +109,12 @@ class ImgBox extends React.Component {
                                 role="button"
                                 key={beskrivning}
                                 tabIndex={0}
-                                onClick={() => this.setState({
-                                    isOpen: !isOpen,
+                                onClick={() => {
+                                    this.open();
+                                    this.setState({
                                     photoIndex: index,
-                                })}
+                                });
+                                }}
                                 css={css`
                                     width: ${(bildfil.childImageSharp.fluid.aspectRatio / this.getAspectRatioSum()) * 100}%;
                                     :focus {
@@ -117,8 +123,8 @@ class ImgBox extends React.Component {
                                 `}
                                 onKeyDown={(event) => {
                                     if (event.keycode === 13) {
+                                        this.open();
                                         this.setState({
-                                            isOpen: !isOpen,
                                             photoIndex: index,
                                         });
                                     }
@@ -151,6 +157,8 @@ class ImgBox extends React.Component {
                         <DialogOverlay
                             css={css`
                                 z-index: 9999;
+                                display: flex;
+                                align-items: center;
                             `}
                             isOpen={isOpen}
                             onDismiss={this.close}
@@ -169,7 +177,6 @@ class ImgBox extends React.Component {
                                     }
                                     @media (max-width: 769px) {
                                         width: 100%;
-                                        height: 100%;
                                         margin: 0;
                                         padding: 0;
                                     }
@@ -183,12 +190,14 @@ class ImgBox extends React.Component {
                                 />
                                 <div
                                     css={css`
-                                        position: relative;
                                         display: flex;
+                                        justify-content: space-between;
+                                        align-items: stretch;
                                     `}
                                 >
                                     <h2
                                         css={css`
+                                            margin-top: 1.25rem;
                                             @media (max-width: 769px) {
                                                 padding-left: 5px;
                                             }
@@ -199,16 +208,13 @@ class ImgBox extends React.Component {
                                     <button
                                         id="imgbox-close"
                                         css={css`
-                                            position: absolute;
-                                            top: 10px;
-                                            right: 10px;
+                                            margin-top: 0.25rem;
+                                            padding: 0 5px;
+                                            max-height: calc(35px + 1.25rem);
                                             color: transparent;
                                             text-shadow: 0 0 0 #4e4e4e;
                                             border-width: 0;
                                             background-color: transparent;
-                                            :focus {
-                                                outline: none;
-                                            }
                                             @media (max-width: 769px) {
                                                 top: auto;
                                                 right: 5px;
@@ -223,7 +229,23 @@ class ImgBox extends React.Component {
                                             }
                                         }}
                                     >
-                                        <Emoji size={2} label="crossmark" emoji="✖️" />
+                                        <span
+                                            css={css`
+                                                height: 50px;
+                                                width: 100%;
+                                                display: flex;
+                                                align-items: center;
+                                                justify-content: center;
+
+                                                :before {
+                                                    content: 'x';
+                                                    font-weight: 300;
+                                                    font-family: Arial, sans-serif;
+                                                    font-size: 3rem;
+                                                    cursor: pointer;
+                                                }
+                                            `}
+                                        />
                                     </button>
                                 </div>
                             </DialogContent>

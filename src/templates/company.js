@@ -40,23 +40,18 @@ const CompanyTemplate = ({ data }) => {
 				>
 					{company.name}
 				</h1>
-				<div
-					className="articleImageBox"
-					css={css`
-					width: 100%;
-					margin: 2rem 0;
-					`}
-				>
-					<div
-						css={css`
-						display: flex;
-						justify-content: center;
-						`}
-					>
-					<Img
-						fluid={company.mainimage.childImageSharp.fluid}
-						alt={company.name}
-					/>
+				<div>
+					<div>
+                        <Img
+                            fluid={company.mainimage.childImageSharp.fluid}
+                            alt={company.name}
+                            css={css`
+                                margin: 1.5rem 0;
+                                img {
+                                    object-fit: cover!important;
+                                }
+                            `}
+                        />
 					</div>
 				</div>
 			</div>
@@ -94,7 +89,7 @@ export const companyQuery = graphql`
             mainimage {
                 id
                 childImageSharp {
-                    fluid {
+                    fluid(maxWidth: 1920) {
                         ...GatsbyImageSharpFluid
                         aspectRatio
                     }
@@ -125,7 +120,7 @@ export const companyQuery = graphql`
                     beskrivning
                     bildfil {
                         childImageSharp {
-                            fluid {
+                            fluid(maxWidth: 1360) {
                                 ...GatsbyImageSharpFluid
                                 aspectRatio
                             }
@@ -138,7 +133,7 @@ export const companyQuery = graphql`
                     id
                     bildfil {
                         childImageSharp {
-                            fluid {
+                            fluid(maxWidth: 1360) {
                                 ...GatsbyImageSharpFluid
                                 aspectRatio
                             }

@@ -37,10 +37,19 @@ img {
 body.sizeUp > div > div > section:nth-of-type(2) {
     font-size: 150%;
 }
-.right-scroll-bar-position {
-	right: 17px !important;
+
+body.right-scroll-bar-position {
+    right: 0px !important;
+    margin-right: 0px!important;
 }
 
+button, input {
+    padding: 0px 4px;
+}
+
+button, select {
+    padding: 4px 4px;
+}
 // ****************
 // *** Navbar ***
 // ****************

@@ -22,19 +22,8 @@ const ArticleTemplate = ({ data }) => {
                 >
                         {article.title}
                 </h1>
-                    <div
-                        className="articleImageBox"
-                        css={css`
-                            width: 100%;
-                            margin: 2rem 0;
-                        `}
-                    >
-                        <div
-                            css={css`
-                                display: flex;
-                                justify-content: center;
-                            `}
-                        >
+                    <div>
+                        <div>
                         <Img
                             fluid={article.mainimage.childImageSharp.fluid}
                             alt={article.title}

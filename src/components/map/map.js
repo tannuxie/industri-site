@@ -74,7 +74,7 @@ export default class MyMap extends Component {
 							attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
 						/>
 						{thePins && thePins.map((element) => (
-							<Marker key={element.name} position={element.position}>
+							<Marker key={`${element.name } ${ element.position[0]}`} position={element.position}>
 								<Popup>
 									<b>{element.name}</b>
 									<br />

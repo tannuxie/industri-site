@@ -45,7 +45,8 @@ query listallQuery {
                     id
                     childImageSharp {
                         fluid {
-                            src
+                            ...GatsbyImageSharpFluid
+                            aspectRatio
                         }
                     }
                 }

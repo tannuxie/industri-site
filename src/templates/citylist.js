@@ -56,10 +56,10 @@ export const citylistQuery = graphql`
                         id
                         childImageSharp {
                             fluid {
-                                src
+                                ...GatsbyImageSharpFluid
                                 aspectRatio
                             }
-                        id
+                            id
                         }
                     }
                 }

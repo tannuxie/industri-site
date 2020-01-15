@@ -8,11 +8,11 @@ import {
     useFlexLayout,
     usePagination,
     useFilters,
-    useGlobalFilter,
 } from 'react-table';
 import { Link, graphql } from 'gatsby';
 import Img from 'gatsby-image';
 import Emoji from '~components/emoji';
+import { rhythm, scale } from '../../style/typography';
 
 const Styles = styled.div`
   table {
@@ -66,34 +66,6 @@ const StyleI = styled.i`
     padding: 15px;
 `;
 
-function GlobalFilter({
-    preGlobalFilteredRows,
-    globalFilter,
-    setGlobalFilter,
-  }) {
-    const count = preGlobalFilteredRows.length;
-
-    return (count > 0) ? (
-      <span>
-        <input
-          value={globalFilter || ''}
-          onChange={(e) => {
-            setGlobalFilter(e.target.value || undefined); // Set undefined to remove filter
-          }}
-          placeholder={`${count} företag...`}
-          style={{
-            fontSize: '1.1rem',
-            border: '0',
-          }}
-        />
-      </span>
-    ) : (
-    <span>
-        Här var det tomt!
-    </span>
-    );
-}
-
 // Define a default UI for filtering
 function DefaultColumnFilter({
     column: { filterValue, preFilteredRows, setFilter },
@@ -106,7 +78,7 @@ function DefaultColumnFilter({
         onChange={(e) => {
           setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
         }}
-        placeholder={`Sök igenom ${count} företag...`}
+        placeholder={`Bland ${count} företag`}
         css={css`
             max-width: 100%
         `}
@@ -144,17 +116,23 @@ function DefaultColumnFilter({
             [
                 'Trä',
                 'Metall',
-                'Möbler / träförädling',
+                'Möbler / Träförädling',
                 'Livsmedel',
-                'Skor & kläder',
-                'Plast / gummi',
+                'Skor & Kläder',
+                'Plast / Gummi',
                 'Övrigt / Diverse',
             ]
         ) : null
     ))(), [id]);
     console.log(someOptions);
     console.log(options);
-
+    const defaultAllOption = React.useMemo(() => (
+        () => ((id === 'city')
+        ? 'En stad'
+        : (id === 'type')
+        ? 'En bransch'
+        : 'Alla'
+    ))(), [id]);
     // Render a multi-select box
     return (
       <select
@@ -163,10 +141,10 @@ function DefaultColumnFilter({
           setFilter(e.target.value || undefined);
         }}
         css={css`
-            max-width: 100%
+            max-width: 100%;
         `}
       >
-        <option value="">Alla</option>
+        <option value="">{defaultAllOption}</option>
         {someOptions.map((option, i) => (
           <option key={option} value={option}>
             {option}
@@ -177,6 +155,8 @@ function DefaultColumnFilter({
 }
 
 function Table({ columns, data }) {
+    console.log('typography', rhythm, scale);
+
     const filterTypes = React.useMemo(
         () => ({
           // Or, override the default text filter to use
@@ -223,9 +203,6 @@ function Table({ columns, data }) {
       gotoPage,
       nextPage,
       previousPage,
-      flatColumns,
-      preGlobalFilteredRows,
-      setGlobalFilter,
       // setPageSize,
       state: { pageIndex, pageSize },
     } = useTable(
@@ -241,7 +218,6 @@ function Table({ columns, data }) {
       },
       useFlexLayout,
       useFilters, // useFilters!
-      useGlobalFilter,
       usePagination,
     );
     console.log('state', state);
@@ -253,7 +229,6 @@ function Table({ columns, data }) {
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-                {console.log('headersGroup', headerGroup)}
                 {headerGroup.headers.map((column) => {
                 console.log('column', column);
                 return (typeof column.Header === 'string'
@@ -261,7 +236,7 @@ function Table({ columns, data }) {
                 <th {...column.getHeaderProps()}>
                     {column.render('Header')}
                     {/* Render the columns filter UI */}
-                    <div>
+                    <div css={css`max-width:100%;`}>
                         {column.canFilter ? column.render('Filter') : null}
                     </div>
                 </th>
@@ -269,29 +244,15 @@ function Table({ columns, data }) {
                 })}
             </tr>
           ))}
-            <tr>
-                <th
-                    colSpan={flatColumns.length}
-                    style={{
-                        textAlign: 'left',
-                    }}
-                >
-                    <GlobalFilter
-                        preGlobalFilteredRows={preGlobalFilteredRows}
-                        globalFilter={state.globalFilter}
-                        setGlobalFilter={setGlobalFilter}
-                    />
-                </th>
-            </tr>
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map((row, i) => {
             prepareRow(row);
-            console.log('row', row);
+            // console.log('row', row);
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
-                  return ((cell.column.id !== 'city' || (cell.column.id === 'city' && location.pathname === '/alla'))
+                  return ((cell.column.id !== 'city')
                   && cell.column.id !== 'type') && (
                     <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                   );
@@ -500,7 +461,7 @@ const TableList = ({ data }) => {
             {
                 id: 'name',
                 accessor: 'name',
-                Header: 'Sök på namn',
+                Header: 'Sök på namn...',
                 Filter: DefaultColumnFilter,
                 Cell: ({ row }) => {
                     console.log(row);
@@ -523,8 +484,22 @@ const TableList = ({ data }) => {
                                     {row.original.name}
                                 </h3>
                             </Link>
-                            <p css={css`text-transform: capitalize; font-style: italic;`}>{row.original.type}</p>
-                            <p css={css`white-space: pre-wrap;`}>{row.original.summary}</p>
+                            <p
+                                css={css`
+                                    text-transform: capitalize;
+                                    font-style: italic;
+                                    margin-bottom: 0.75rem;
+                                `}
+                            >
+                                {row.original.type}
+                            </p>
+                            <p
+                                css={css`
+                                    white-space: pre-wrap;
+                                `}
+                            >
+                                {row.original.summary}
+                            </p>
                         </div>
                     );
                 },
@@ -532,7 +507,7 @@ const TableList = ({ data }) => {
             {
                 id: 'city',
                 accessor: 'city',
-                Header: 'Filtrera på stad',
+                Header: 'Filtrera på...',
                 Filter: SelectColumnFilter,
             },
             {
@@ -543,8 +518,9 @@ const TableList = ({ data }) => {
             {
                 id: 'type',
                 accessor: 'type',
-                Header: 'Filtrera på företagstyp',
+                Header: 'Eller på...',
                 Filter: SelectColumnFilter,
+                filter: 'text',
             },
         ],
         [],

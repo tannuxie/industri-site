@@ -134,11 +134,13 @@ const ZoneParser = (content) => {
 
                 return (
                     <div className='columns is-centered'>
-                        <MyMap
-                            address={[item.latitude, item.longitude]}
-                            undertext={item.undertext}
-                            pins={pins}
-                        />
+                        <div className="column">
+                            <MyMap
+                                address={[item.latitude, item.longitude]}
+                                undertext={item.undertext}
+                                pins={pins}
+                            />
+                        </div>
                     </div>
                 );
             }

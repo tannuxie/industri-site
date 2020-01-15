@@ -98,12 +98,9 @@ module.exports = {
 				contentTypes: [
 					'user',
 					'article',
-					'image',
-					'address',
 					'company',
 					'street',
                     'tag',
-                    'foretag',
                     'static-content',
 				],
 				queryLimit: 2000,

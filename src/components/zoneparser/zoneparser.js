@@ -6,8 +6,11 @@ import MyMap from '~components/map/map';
 const ZoneParser = (content) => {
     console.log('ZoneParser content: ', content);
 
+    // source types: footer
+
     const theContent = content.content;
     const theChildMdx = content.childMdx;
+    const source = content.source || 'default';
 
     // console.log('theContent', theContent);
     // console.log('theChildMdx', theChildMdx);
@@ -48,7 +51,13 @@ const ZoneParser = (content) => {
                 key = item.textfield;
                  return (
                      <div className='columns is-centered'>
-                        <div className='column is-half'>
+                        <div
+                            className={`column ${source
+                                === 'footer'
+                                ? 'is-three-quarters'
+                                : 'is-half'
+                            }`}
+                        >
                             <MdxRender mdxBody={item.textfield} />
                         </div>
                      </div>

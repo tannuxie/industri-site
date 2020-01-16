@@ -13,7 +13,7 @@ const ArticleTemplate = ({ data }) => {
     return (
         <div>
             <Helmet childTitle={`${article.title}`} />
-            <div>
+            <div id="article-top">
                 <h1
                     className="title is-1"
                     css={css`
@@ -22,18 +22,18 @@ const ArticleTemplate = ({ data }) => {
                 >
                         {article.title}
                 </h1>
+                <div>
                     <div>
-                        <div>
                         <Img
                             fluid={article.mainimage.childImageSharp.fluid}
                             alt={article.title}
                             imgStyle={{ objectFit: 'contain' }}
                         />
-                        </div>
                     </div>
+                </div>
             </div>
 
-            <div>
+            <div id="article-content">
                 <ZoneParser
                     content={article.content}
                     childMdx={article.children}

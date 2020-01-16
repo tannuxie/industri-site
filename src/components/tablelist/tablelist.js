@@ -8,11 +8,13 @@ import {
     useFlexLayout,
     usePagination,
     useFilters,
+    useGlobalFilter,
 } from 'react-table';
 import { Link, graphql } from 'gatsby';
 import Img from 'gatsby-image';
 import Emoji from '~components/emoji';
 import { rhythm, scale } from '../../style/typography';
+import sortValues from '~components/sortValues';
 
 const Styles = styled.div`
   table {
@@ -66,6 +68,29 @@ const StyleI = styled.i`
     padding: 15px;
 `;
 
+function GlobalFilter({
+    preGlobalFilteredRows,
+    globalFilter,
+    setGlobalFilter,
+  }) {
+    const count = preGlobalFilteredRows.length;
+
+    return (count > 0) ? (
+        <span id="table-results-number">
+            {`${count} företag...`}
+        </span>
+    ) : (
+        <span
+            id="table-results-none"
+            css={css`
+                padding: 2rem 0;
+            `}
+        >
+            Här var det tomt!
+        </span>
+    );
+}
+
 // Define a default UI for filtering
 function DefaultColumnFilter({
     column: { filterValue, preFilteredRows, setFilter },
@@ -80,7 +105,7 @@ function DefaultColumnFilter({
         }}
         placeholder={`Bland ${count} företag`}
         css={css`
-            max-width: 100%
+            max-width: 100%;
         `}
       />
     );
@@ -155,8 +180,6 @@ function DefaultColumnFilter({
 }
 
 function Table({ columns, data }) {
-    console.log('typography', rhythm, scale);
-
     const filterTypes = React.useMemo(
         () => ({
           // Or, override the default text filter to use
@@ -174,6 +197,12 @@ function Table({ columns, data }) {
         }),
         [],
     );
+
+    const scrollToTable = (() => {
+            const element = document.getElementsByTagName('h1')[0];
+            if (element) element.scrollIntoView();
+    });
+
 
     const defaultColumn = React.useMemo(
         () => ({
@@ -203,6 +232,9 @@ function Table({ columns, data }) {
       gotoPage,
       nextPage,
       previousPage,
+      flatColumns,
+      preGlobalFilteredRows,
+      setGlobalFilter,
       // setPageSize,
       state: { pageIndex, pageSize },
     } = useTable(
@@ -218,6 +250,7 @@ function Table({ columns, data }) {
       },
       useFlexLayout,
       useFilters, // useFilters!
+      useGlobalFilter,
       usePagination,
     );
     console.log('state', state);
@@ -244,6 +277,18 @@ function Table({ columns, data }) {
                 })}
             </tr>
           ))}
+            <tr>
+                <th
+                    id="table-results"
+                    colSpan={flatColumns.length}
+                >
+                    <GlobalFilter
+                        preGlobalFilteredRows={preGlobalFilteredRows}
+                        globalFilter={state.globalFilter}
+                        setGlobalFilter={setGlobalFilter}
+                    />
+                </th>
+            </tr>
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map((row, i) => {
@@ -273,10 +318,16 @@ function Table({ columns, data }) {
             `}
             role="button"
             tabIndex={0}
-            onClick={() => gotoPage(0)}
-            onKeyDown={(event) => {
-                if (event.keycode === 13) {
+            onClick={() => {
+                if (canPreviousPage) {
                     gotoPage(0);
+                    scrollToTable();
+                }
+            }}
+            onKeyDown={(event) => {
+                if (event.keycode === 13 && canPreviousPage) {
+                    gotoPage(0);
+                    scrollToTable();
                 }
             }}
             disabled={!canPreviousPage}
@@ -301,14 +352,21 @@ function Table({ columns, data }) {
         {' '}
         <a
             css={css`
+                margin: 0 ${rhythm};
                 ${canPreviousPage ? ('cursor: pointer;') : ('filter: saturate(0.25);')};
             `}
             role="button"
             tabIndex={0}
-            onClick={() => previousPage()}
-            onKeyDown={(event) => {
-                if (event.keycode === 13) {
+            onClick={() => {
+                if (canPreviousPage) {
                     previousPage();
+                    scrollToTable();
+                }
+            }}
+            onKeyDown={(event) => {
+                if (event.keycode === 13 && canPreviousPage) {
+                    previousPage();
+                    scrollToTable();
                 }
             }}
             disabled={!canPreviousPage}
@@ -339,14 +397,21 @@ function Table({ columns, data }) {
         {' '}
         <a
             css={css`
+                margin: 0 ${rhythm};
                 ${canNextPage ? ('cursor: pointer') : ('filter: saturate(0.25);')};
             `}
             role="button"
             tabIndex={0}
-            onClick={() => nextPage()}
+            onClick={() => {
+                if (canNextPage) {
+                nextPage();
+                scrollToTable();
+                }
+            }}
             onKeyDown={(event) => {
-                if (event.keycode === 13) {
+                if (event.keycode === 13 && canNextPage) {
                     nextPage();
+                    scrollToTable();
                 }
             }}
             disabled={!canNextPage}
@@ -368,10 +433,16 @@ function Table({ columns, data }) {
             `}
             role="button"
             tabIndex={0}
-            onClick={() => gotoPage(pageCount - 1)}
-            onKeyDown={(event) => {
-                if (event.keycode === 13) {
+            onClick={() => {
+                if (canNextPage) {
                     gotoPage(pageCount - 1);
+                    scrollToTable();
+                }
+            }}
+            onKeyDown={(event) => {
+                if (event.keycode === 13 && canNextPage) {
+                    gotoPage(pageCount - 1);
+                    scrollToTable();
                 }
             }}
             disabled={!canNextPage}
@@ -400,34 +471,11 @@ function Table({ columns, data }) {
 
 const TableList = ({ data }) => {
     console.log('table data', data);
-
+    console.log('typography', rhythm, scale);
 
     const array = React.useMemo(() => data.company.edges.map((item) => item.node), []);
 
-    function compareValues(key, order = 'asc') {
-        return function innerSort(a, b) {
-          if (!Object.prototype.hasOwnProperty.call(a, key)
-          || !Object.prototype.hasOwnProperty.call(b, key)) {
-            return 0;
-          }
-
-          const varA = (typeof a[key] === 'string')
-            ? a[key].toUpperCase() : a[key];
-          const varB = (typeof b[key] === 'string')
-            ? b[key].toUpperCase() : b[key];
-
-          let comparison = 0;
-          if (varA > varB) {
-            comparison = 1;
-          } else if (varA < varB) {
-            comparison = -1;
-          }
-          return (
-            (order === 'desc') ? (comparison * -1) : comparison
-          );
-        };
-    }
-    const sortedData = React.useMemo(() => array.sort(compareValues('name', 'asc')), []);
+    const sortedData = React.useMemo(() => array.sort(sortValues('name', 'asc')), []);
     console.log(sortedData);
 
     const columns = React.useMemo(
@@ -468,14 +516,15 @@ const TableList = ({ data }) => {
                     return (
                         <div
                             css={css`
-                                padding-left: 0.75rem;
+                                padding-left: calc(${rhythm} / 2);
                             `}
                         >
                             <Link to={`/industri/${row.original.fields.slug}`}>
                                 <h3
                                     css={css`
                                         white-space: normal;
-                                        margin-top: 0.75rem;
+                                        margin-top: calc(${rhythm} / 2);
+                                        padding-right: calc(${rhythm} / 2);
                                         @media (max-width: 769px) {
                                             margin-top:0px;
                                         }
@@ -488,7 +537,7 @@ const TableList = ({ data }) => {
                                 css={css`
                                     text-transform: capitalize;
                                     font-style: italic;
-                                    margin-bottom: 0.75rem;
+                                    margin-bottom: 0.125rem;
                                 `}
                             >
                                 {row.original.type}
@@ -496,6 +545,27 @@ const TableList = ({ data }) => {
                             <p
                                 css={css`
                                     white-space: pre-wrap;
+                                    margin-bottom: 0;
+                                    position: relative;
+                                    padding-right: calc(${rhythm} / 2);
+                                    max-height: calc(${rhythm} * 8);
+                                    overflow: hidden;
+
+                                    :before {
+                                        content: "...";
+                                        position: absolute;
+                                        bottom: 0;
+                                        right: 0;
+                                        width: 1rem;
+                                    }
+                                    :after {
+                                        content: "";
+                                        position: absolute;
+                                        right: 0;
+                                        width: 1rem;
+                                        height: ${rhythm};
+                                        background: white;
+                                    }
                                 `}
                             >
                                 {row.original.summary}

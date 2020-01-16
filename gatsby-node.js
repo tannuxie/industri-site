@@ -67,7 +67,8 @@ exports.onCreateNode = async ({
 
     if (node.internal.type === 'StrapiCompany'
     || node.internal.type === 'StrapiArticle'
-    || node.internal.type === 'StrapiStreet') {
+    || node.internal.type === 'StrapiStreet'
+    || node.internal.type === 'StrapiStaticContent') {
         const textObjects = [];
 
         Object.keys(node.content).forEach((item) => {

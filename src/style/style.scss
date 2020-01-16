@@ -30,12 +30,9 @@ img {
 	align-items: center;
 }
 
-.footer {
-	width: 100%;
-}
-
-body.sizeUp > div > div > section:nth-of-type(2) {
-    font-size: 150%;
+body.sizeUp #article-content,
+body.sizeUp #company-content  {
+    font-size: 1.5rem;
 }
 
 body.right-scroll-bar-position {
@@ -54,6 +51,10 @@ button, select {
 // *** Navbar ***
 // ****************
 
+a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, a.navbar-item.is-active, .navbar-link:focus, .navbar-link:focus-within, .navbar-link:hover, .navbar-link.is-active {
+    box-shadow: inset 0px -5px 5px 0px #0000000d;
+}
+
 .navbarFixed {
 	position: fixed;
 	top: 0px;
@@ -63,12 +64,4 @@ button, select {
 	background: linear-gradient(to right, #2980b9, #6dd5fa)!important;
 	width: 100%;
 	z-index: 9998;
-}
-
-// ****************
-// *** Articles ***
-// ****************
-
-.articleContent .gatsby-image-wrapper {
-	max-height: 500px;
 }

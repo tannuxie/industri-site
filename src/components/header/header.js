@@ -25,7 +25,7 @@ class Header extends Component {
     render() {
         const { isMounted } = this.state;
         return (
-                <section id="headerContainer" ref={this.headerRef} className="hero gradientBg">
+                <section id="header-container" ref={this.headerRef} className="hero gradientBg">
                     <div className="hero-body">
                         <div className="container center">
                             <article className="media">

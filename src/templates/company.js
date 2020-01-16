@@ -31,7 +31,7 @@ const CompanyTemplate = ({ data }) => {
 	return (
 		<>
             <Helmet childTitle={`${company.name}`} />
-			<div>
+			<div id="company-top">
 				<h1
 					className="title is-1"
 					css={css`
@@ -56,14 +56,14 @@ const CompanyTemplate = ({ data }) => {
 				</div>
 			</div>
 
-            <div>
+            <div id="company-map">
                 <MyMap
                     address={[company.address[0].latitude, company.address[0].longitude]}
                     pins={pins}
                 />
             </div>
 
-            <div>
+            <div id="company-content">
                 <ZoneParser
                     content={company.content}
                     childMdx={company.children}

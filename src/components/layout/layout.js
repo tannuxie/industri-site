@@ -10,8 +10,8 @@ import ContextConsumer, { ContextProviderComponent } from '../../context/context
 export default ({ children }) => (
         <ContextProviderComponent>
             <Header />
-            <section className="section">
-                <div className="container">
+            <section id="main-section" className="section">
+                <div id="main-container" className="container">
                     {children}
                 </div>
             </section>

@@ -3,40 +3,35 @@ import MdxRender from '~components/mdxrender/mdxrender';
 import ImgBox from '~components/imgbox/imgbox';
 import MyMap from '~components/map/map';
 
-const ZoneParser = (content) => {
+const ZoneParser = ({ content, childMdx, source = 'default' }) => {
     console.log('ZoneParser content: ', content);
+    console.log('ZoneParser childMdx: ', childMdx);
+    console.log('ZoneParser source: ', source);
 
     // source types: footer
 
-    const theContent = content.content;
-    const theChildMdx = content.childMdx;
-    const source = content.source || 'default';
-
-    // console.log('theContent', theContent);
-    // console.log('theChildMdx', theChildMdx);
-
     let currentMdx = 0;
 
-    const contentWithMdx = theContent.map((item) => {
+    const contentWithMdx = content.map((item) => {
         const current = item;
         console.log('before contentWithMdx', current);
 
         // textfield = vanlig textkolumn
         if (current.textfield) {
-            current.textfield = theChildMdx[currentMdx].body;
+            current.textfield = childMdx[currentMdx].body;
             currentMdx += 1;
         }
         // text = 2col texttext/textimg
         if (current.text) {
-            current.text.textfield = theChildMdx[currentMdx].body;
+            current.text.textfield = childMdx[currentMdx].body;
             currentMdx += 1;
         }
         if (current.text_vanster) {
-            current.text_vanster.textfield = theChildMdx[currentMdx].body;
+            current.text_vanster.textfield = childMdx[currentMdx].body;
             currentMdx += 1;
         }
         if (current.text_hoger) {
-            current.text_hoger.textfield = theChildMdx[currentMdx].body;
+            current.text_hoger.textfield = childMdx[currentMdx].body;
             currentMdx += 1;
         }
         return current;

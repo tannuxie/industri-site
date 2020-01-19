@@ -26,6 +26,7 @@ const Footer = ({ data }) => {
                 return (
                     <div
                         className="content has-text-centered"
+                        key={item.role}
                     >
                         <ZoneParser
                             content={item.content}

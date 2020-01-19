@@ -1,16 +1,74 @@
-/* eslint-disable react/prefer-stateless-function */
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+// import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import { css } from '@emotion/core';
+import Loadable from 'react-loadable';
 
-export default class MyMap extends Component {
-	render() {
-		const {
-            address, pins, undertext, zoom,
-        } = this.props;
+const Loading = () => {
+    return (
+        <div css={css`
+            width: 100%
+            height: 500px;
+        `}
+        >
+            <h1
+                css={css`text-align: center;`}
+            >
+                Laddar...
+            </h1>
+        </div>
+    );
+};
 
-		console.log(pins);
+const LoadableComponent = Loadable.Map({
+    loader: {
+      leaf: () => import('react-leaflet'),
+    },
+    loading: Loading,
+    render(loaded, props) {
+      const {
+          Map, Marker, Popup, TileLayer,
+        } = loaded.leaf;
+        const { address, zoom, thePins } = props;
+      return (
+        <Map
+            center={address}
+            zoom={zoom}
+            style={{
+                height: '500px',
+            }}
+        >
+        <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+        />
+        {thePins && thePins.map((element) => (
+            <Marker key={`${element.name } ${ element.position[0]}`} position={element.position}>
+                <Popup>
+                    <b>{element.name}</b>
+                    <br />
+                    {element.subtitle.map((line) => (
+                        <span
+                            key={line}
+                            css={css`
+                                display: block;
+                            `}
+                        >
+                            {line}
+                        </span>
+                    ))}
+                </Popup>
+            </Marker>
+        ))}
+        </Map>
+      );
+    },
+  });
+
+const MyMap = ({
+    address, pins, undertext, zoom,
+    }) => {
+		console.log('MyMap', address, pins, undertext, zoom);
 
         // addresses shape
         // pins: PropTypes.arrayOf(PropTypes.shape({
@@ -54,44 +112,19 @@ export default class MyMap extends Component {
 
         console.log('thePins', thePins);
 
-
-		if (typeof window !== 'undefined') {
-			return (
-                <div
-                    css={css`
-                        width: 100%;
-                    `}
-                >
-					<Map
-						center={address}
-						zoom={zoom}
-						style={{
-							height: '500px',
-						}}
-					>
-						<TileLayer
-							url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-							attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-						/>
-						{thePins && thePins.map((element) => (
-							<Marker key={`${element.name } ${ element.position[0]}`} position={element.position}>
-								<Popup>
-									<b>{element.name}</b>
-									<br />
-									{element.subtitle.map((line) => (
-                                        <span
-                                            key={line}
-                                            css={css`
-                                                display: block;
-                                            `}
-                                        >
-                                            {line}
-                                        </span>
-                                    ))}
-								</Popup>
-							</Marker>
-						))}
-					</Map>
+        return (
+            <div
+                css={css`
+                    width: 100%;
+                `}
+            >
+                {(typeof window !== 'undefined') && (
+                <>
+                    <LoadableComponent
+                        address={address}
+                        zoom={zoom}
+                        thePins={thePins}
+                    />
                     {undertext.length > 0 && (
                         <p
                             css={css`
@@ -104,12 +137,11 @@ export default class MyMap extends Component {
                             {undertext}
                         </p>
                     )}
-                </div>
-			);
-		}
-		return null;
-	}
-}
+                </>
+                )}
+            </div>
+        );
+};
 
 MyMap.propTypes = {
     address: PropTypes.arrayOf(PropTypes.number).isRequired,
@@ -127,3 +159,6 @@ MyMap.defaultProps = {
     undertext: '',
     zoom: 15,
 };
+
+export { MyMap };
+export default MyMap;

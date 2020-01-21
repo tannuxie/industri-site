@@ -1,33 +1,67 @@
 import React from 'react';
 // import '~style/style.scss';
 import { css } from '@emotion/core';
-import { Link, graphql } from 'gatsby';
+import { Link, StaticQuery, graphql } from 'gatsby';
 import Img from 'gatsby-image';
 import TableList from '~components/tablelist/tablelist';
 
 const FilterCompanyList = ({ data, city }) => {
-	// console.log('city is ' + city);
-	// console.log(data)
-	// console.log('company array length: ' + data.company.edges.length);
+    console.log('filtercompanylist data', data);
+    console.log('filtercompanylist city', city);
 
-	for (let index = data.company.edges.length - 1; index >= 0; index--) {
-		const current = data.company.edges[index].node;
-		// console.log('current: ' + index + ' ' + JSON.stringify(current));
-		// console.log('current typeof: ' + typeof current.addresses);
-		// console.log(current.city.toUpperCase());
-		// console.log(city.toUpperCase());
+    const companies = data.company.edges.filter((item) => {
+        return item.node.city.toLowerCase() === city.toLowerCase();
+    }).map((item) => item.node);
 
-		if (current.city.toUpperCase() !== city.toUpperCase()) {
-			// ta bort, splicea bort detta företaget
-			// console.log('inte i staden, tar bort');
+    console.log('filtercompanylist companies', companies);
 
-			data.company.edges.splice(index, 1);
-		}
-	}
-	// console.log('finished array length: ' + data.company.edges.length);
 	return (
-        <TableList data={data} />
+        <TableList data={companies} />
 	);
 };
 
-export default FilterCompanyList;
+export default (props) => (
+	<StaticQuery
+		query={graphql`
+            query FilterCompanyQuery {
+                company: allStrapiCompany(filter: {published: {eq: true}, mainimage: {id: {ne: null}}}) {
+                    edges {
+                        node {
+                            id
+                            strapiId
+                            name
+                            published
+                            quality
+                            summary
+                            type
+                            fields {
+                                slug
+                            }
+                            city
+                            address {
+                                addresstext1
+                                addresstext2
+                                enddate
+                                id
+                                latitude
+                                longitude
+                                startdate
+                            }
+                            mainimage {
+                                childImageSharp {
+                                    fluid {
+                                        ...GatsbyImageSharpFluid
+                                        aspectRatio
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+		`}
+		render={(data) => (
+			<FilterCompanyList data={data} {...props} />
+		)}
+	/>
+);

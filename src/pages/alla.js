@@ -6,15 +6,19 @@ import Layout from '~components/layout/layout';
 import Helmet from '~components/helmet/helmet';
 import TableList from '~components/tablelist/tablelist';
 
-const ListAll = ({ data }) => (
-    <>
-        <Helmet childTitle="Alla företag" />
-        <h1 css={css`text-align: center;`}>Alla företag</h1>
-        <TableList
-            data={data}
-        />
-    </>
-);
+const ListAll = ({ data }) => {
+    const companies = data.company.edges.map((item) => item.node);
+
+    return (
+        <>
+            <Helmet childTitle="Alla företag" />
+            <h1 css={css`text-align: center;`}>Alla företag</h1>
+            <TableList
+                data={companies}
+            />
+        </>
+    );
+};
 
 export default ListAll;
 

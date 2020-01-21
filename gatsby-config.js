@@ -105,8 +105,8 @@ module.exports = {
 				],
 				queryLimit: 2000,
 				loginData: {
-					identifier: 'industrisite',
-					password: '_GGkq.RU@CG9!_i',
+					identifier: '',
+					password: '',
 				},
 			},
 		},

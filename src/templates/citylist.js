@@ -1,26 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link, graphql } from 'gatsby';
 import { css } from '@emotion/core';
 import Img from 'gatsby-image';
-import ReactMarkdown from 'react-markdown/with-html';
 import Helmet from '~components/helmet/helmet';
 import FilterCompanyList from '~components/filtercompanylist/filtercompanylist';
+import { capitalizeFirstLetter } from '~components/functions';
 
 const CityListTemplate = ({ data, pageContext }) => {
-	function capitalizeFirstLetter(string) {
-		return string.charAt(0).toUpperCase() + string.slice(1);
-	}
+    const city = capitalizeFirstLetter(pageContext.string);
 	return (
         <>
-            <Helmet childTitle={capitalizeFirstLetter(pageContext.string)} />
-            <h1 css={css`text-align: center;`}>
+            <Helmet childTitle={city} />
+            <h1
+                css={css`
+                    text-align: center;
+                `}
+            >
                 Företag i
                 {' '}
-                {`${capitalizeFirstLetter(pageContext.string)}`}
+                {`${city}`}
             </h1>
             <FilterCompanyList
-                data={data}
-                city={capitalizeFirstLetter(pageContext.string)}
+                city={city}
             />
         </>
 	);

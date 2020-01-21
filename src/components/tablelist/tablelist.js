@@ -12,9 +12,10 @@ import {
 } from 'react-table';
 import { Link, graphql } from 'gatsby';
 import Img from 'gatsby-image';
+import queryString from 'query-string';
 import Emoji from '~components/emoji';
 import { rhythm, scale } from '../../style/typography';
-import sortValues from '~components/sortValues';
+import { compareValues } from '~components/functions';
 
 const Styles = styled.div`
   table {
@@ -33,7 +34,7 @@ const Styles = styled.div`
         flex-wrap: wrap;
         flex-direction: column;
         align-items: center;
-        padding: 0.5rem;
+        padding: 0.5rem 0.5rem 1rem 0.5rem;
     }
 
     th,
@@ -57,7 +58,7 @@ const Styles = styled.div`
   }
 
   .pagination {
-    padding: 0.5rem;
+    padding: 1rem;
   }
 `;
 
@@ -107,6 +108,8 @@ function DefaultColumnFilter({
         css={css`
             max-width: 100%;
         `}
+        className='input'
+        type="text"
       />
     );
   }
@@ -160,22 +163,24 @@ function DefaultColumnFilter({
     ))(), [id]);
     // Render a multi-select box
     return (
-      <select
-        value={filterValue}
-        onChange={(e) => {
-          setFilter(e.target.value || undefined);
-        }}
-        css={css`
-            max-width: 100%;
-        `}
-      >
-        <option value="">{defaultAllOption}</option>
-        {someOptions.map((option, i) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
+        <div className="select">
+            <select
+                value={filterValue}
+                onChange={(e) => {
+                setFilter(e.target.value || undefined);
+                }}
+                css={css`
+                    max-width: 100%;
+                `}
+            >
+                <option value="">{defaultAllOption}</option>
+                {someOptions.map((option, i) => (
+                <option key={option} value={option}>
+                    {option}
+                </option>
+                ))}
+            </select>
+        </div>
     );
 }
 
@@ -197,6 +202,68 @@ function Table({ columns, data }) {
         }),
         [],
     );
+
+    console.log(location);
+    console.log('location.search', location.search);
+    const parsed = queryString.parse(location.search);
+    console.log('queryString parsed', parsed);
+
+    const citySearchString = React.useMemo(() => (
+        () => {
+            if (!location.pathname.startsWith('/alla')) {
+                return '';
+            }
+
+            switch (parsed.stad) {
+                case 'savsjo':
+                    return 'Sävsjö';
+                case 'vrigstad':
+                    return 'Vrigstad';
+                case 'stockaryd':
+                    return 'Stockaryd';
+                case 'rorvik':
+                    return 'Rörvik';
+                case 'hylletofta':
+                    return 'Hylletofta';
+                default:
+                    return '';
+            }
+        }
+    )(), []);
+    console.log('citySearchString', citySearchString);
+
+    const typeSearchString = React.useMemo(() => (
+        () => {
+            switch (parsed.bransch) {
+                case 'tra':
+                    return 'Trä';
+                case 'metall':
+                    return 'Metall';
+                case 'mobler':
+                    return 'Möbler / Träförädling';
+                case 'livsmedel':
+                    return 'Livsmedel';
+                case 'skor':
+                    return 'Skor & Kläder';
+                case 'plast':
+                    return 'Plast / Gummi';
+                case 'ovrigt':
+                    return 'Övrigt / Diverse';
+                default:
+                    return '';
+            }
+        }
+    )(), []);
+    console.log('typeSearchString', typeSearchString);
+
+    // const typeSearchString = (parsed.bransch === 'trä'
+    // || parsed.bransch === 'metall'
+    // || parsed.bransch === 'möbler / träförädling'
+    // || parsed.bransch === 'livsmedel'
+    // || parsed.bransch === 'skor & kläder'
+    // || parsed.bransch === 'hylletofta'
+    // || parsed.bransch === 'hylletofta'
+    // ) ? 'parsed.stad' : '';
 
     const scrollToTable = (() => {
             const element = document.getElementsByTagName('h1')[0];
@@ -246,6 +313,16 @@ function Table({ columns, data }) {
         initialState: {
             pageIndex: 0,
             hiddenColumns: ['quality'],
+            filters: [
+                {
+                    id: 'city',
+                    value: citySearchString,
+                },
+                {
+                    id: 'type',
+                    value: typeSearchString,
+                },
+            ],
          },
       },
       useFlexLayout,
@@ -473,9 +550,7 @@ const TableList = ({ data }) => {
     console.log('table data', data);
     console.log('typography', rhythm, scale);
 
-    const array = React.useMemo(() => data.company.edges.map((item) => item.node), []);
-
-    const sortedData = React.useMemo(() => array.sort(sortValues('name', 'asc')), []);
+    const sortedData = React.useMemo(() => data.sort(compareValues('name', 'asc')), []);
     console.log(sortedData);
 
     const columns = React.useMemo(

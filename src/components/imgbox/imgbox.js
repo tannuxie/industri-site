@@ -169,10 +169,8 @@ class ImgBox extends React.Component {
                                     position: relative;
                                     margin: 2vh auto 0;
                                     padding: 15px;
+                                    width: 70vw;
                                     @media (max-width: 1680px) {
-                                        width: 65vw;
-                                    }
-                                    @media (max-width: 1023px) {
                                         width: 90vw;
                                     }
                                     @media (max-width: 769px) {
@@ -187,6 +185,7 @@ class ImgBox extends React.Component {
                                     fluid={images[photoIndex]
                                         .bildfil.childImageSharp.fluid}
                                     alt={images[photoIndex].beskrivning}
+                                    style={{ maxHeight: '1000px' }}
                                 />
                                 <div
                                     css={css`
@@ -208,7 +207,7 @@ class ImgBox extends React.Component {
                                     <button
                                         id="imgbox-close"
                                         css={css`
-                                            margin-top: 0.25rem;
+                                            margin-top: 0.5rem;
                                             padding: 0 5px;
                                             max-height: calc(35px + 1.25rem);
                                             color: transparent;

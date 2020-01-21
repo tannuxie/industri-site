@@ -1,7 +1,9 @@
 import React from 'react';
+import { css } from '@emotion/core';
 import MdxRender from '~components/mdxrender/mdxrender';
 import ImgBox from '~components/imgbox/imgbox';
 import MyMap from '~components/map/map';
+import CompanyHighlight from '~components/CompanyHighlight/CompanyHighlight';
 
 const ZoneParser = ({ content, childMdx, source = 'default' }) => {
     console.log('ZoneParser content: ', content);
@@ -146,6 +148,24 @@ const ZoneParser = ({ content, childMdx, source = 'default' }) => {
                             />
                         </div>
                     </div>
+                );
+            }
+            if (item.filtrering) {
+                key = `${item.id } ${ item.filtrering}`;
+                return (
+                    <>
+                        <div className='columns'>
+                            <div
+                                className='column is-12'
+                            >
+                                <h2 css={css`font-style: italic;`}>Här kommer ett urval ur våra berättelser...</h2>
+                            </div>
+                        </div>
+
+                        <div className='columns'>
+                            <CompanyHighlight filtering={item.filtrering} />
+                        </div>
+                    </>
                 );
             }
         })();

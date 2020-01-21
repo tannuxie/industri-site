@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from '@emotion/core';
 import { StaticQuery, graphql } from 'gatsby';
 // import '~style/style.scss';
-import sortValues from '~components/sortValues';
+import { compareValues } from '~components/functions';
 import ZoneParser from '~components/zoneparser/zoneparser';
 
 const Footer = ({ data }) => {
@@ -11,7 +11,7 @@ const Footer = ({ data }) => {
         return item.node.role.startsWith('footer') === true;
     }).map((item) => item.node);
     console.log('filtered footer data', footerData);
-    const sortedFooterData = React.useMemo(() => footerData.sort(sortValues('role', 'asc')), []);
+    const sortedFooterData = React.useMemo(() => footerData.sort(compareValues('role', 'asc')), []);
     console.log('sorted footer data', sortedFooterData);
 
     return (

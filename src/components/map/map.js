@@ -14,7 +14,7 @@ const Loading = () => {
             <h1
                 css={css`text-align: center;`}
             >
-                Laddar...
+                Laddar karta...
             </h1>
         </div>
     );
@@ -26,42 +26,50 @@ const LoadableComponent = Loadable.Map({
     },
     loading: Loading,
     render(loaded, props) {
-      const {
+        const {
           Map, Marker, Popup, TileLayer,
         } = loaded.leaf;
         const { address, zoom, thePins } = props;
-      return (
-        <Map
-            center={address}
-            zoom={zoom}
-            style={{
-                height: '500px',
-            }}
-        >
-        <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-        />
-        {thePins && thePins.map((element) => (
-            <Marker key={`${element.name } ${ element.position[0]}`} position={element.position}>
-                <Popup>
-                    <b>{element.name}</b>
-                    <br />
-                    {element.subtitle.map((line) => (
-                        <span
-                            key={line}
-                            css={css`
-                                display: block;
-                            `}
-                        >
-                            {line}
-                        </span>
+        return (
+            <div>
+                {(typeof window !== 'undefined') && (
+                <Map
+                        center={address}
+                        zoom={zoom}
+                        style={{
+                            height: '500px',
+                        }}
+                >
+                    <TileLayer
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                    />
+                    {thePins && thePins.map((element) => (
+                        <Marker key={`${element.name } ${ element.position[0]}`} position={element.position}>
+                            <Popup>
+                                <b>{element.name}</b>
+                                {element.subtitle && (
+                                <>
+                                    <br />
+                                    {element.subtitle.map((line) => (
+                                        <span
+                                            key={line}
+                                            css={css`
+                                                display: block;
+                                            `}
+                                        >
+                                            {line}
+                                        </span>
+                                    ))}
+                                </>
+                                )}
+                            </Popup>
+                        </Marker>
                     ))}
-                </Popup>
-            </Marker>
-        ))}
-        </Map>
-      );
+                </Map>
+                )}
+            </div>
+        );
     },
   });
 
@@ -118,7 +126,6 @@ const MyMap = ({
                     width: 100%;
                 `}
             >
-                {(typeof window !== 'undefined') && (
                 <>
                     <LoadableComponent
                         address={address}
@@ -138,7 +145,6 @@ const MyMap = ({
                         </p>
                     )}
                 </>
-                )}
             </div>
         );
 };
@@ -160,5 +166,4 @@ MyMap.defaultProps = {
     zoom: 15,
 };
 
-export { MyMap };
 export default MyMap;

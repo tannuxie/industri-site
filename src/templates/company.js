@@ -108,63 +108,66 @@ export const companyQuery = graphql`
                 id
                 latitude
                 longitude
-                startdate
-                enddate
+                startdate(formatString: "YYYY")
+                enddate(formatString: "YYYY")
             }
             content {
                 undertext
                 textfield
-                id
                 bild {
-                    id
-                    beskrivning
-                    bildfil {
-                        childImageSharp {
-                            fluid(maxWidth: 1360) {
-                                ...GatsbyImageSharpFluid
-                                aspectRatio
-                            }
-                        }
+                  beskrivning
+                  bildfil {
+                    childImageSharp {
+                      fluid(maxWidth: 1360) {
+                        ...GatsbyImageSharpFluid
+                        aspectRatio
+                      }
+                      id
                     }
+                    id
+                  }
                 }
                 bredd_bildbox
                 imgbox {
-                    beskrivning
-                    id
-                    bildfil {
-                        childImageSharp {
-                            fluid(maxWidth: 1360) {
-                                ...GatsbyImageSharpFluid
-                                aspectRatio
-                            }
-                        }
+                  beskrivning
+                  bildfil {
+                    childImageSharp {
+                      fluid(maxWidth: 1360) {
+                        ...GatsbyImageSharpFluid
+                        aspectRatio
+                      }
+                      id
                     }
+                    id
+                  }
+                  id
                 }
                 latitude
                 layout
                 longitude
                 map_pin {
-                    beskrivning
-                    id
-                    latitude
-                    longitude
+                  beskrivning
+                  latitude
+                  longitude
+                  id
                 }
                 text {
-                    id
-                    textfield
+                  textfield
+                  id
                 }
                 text_hoger {
-                    id
-                    textfield
+                  textfield
+                  id
                 }
                 text_vanster {
-                    id
-                    textfield
+                  textfield
+                  id
                 }
                 undertext_bildbox
                 width
                 zoom
-            }
+                id
+              }
             children {
                 ... on Mdx {
                     id

@@ -3,7 +3,7 @@ import { css } from '@emotion/core';
 import MdxRender from '~components/mdxrender/mdxrender';
 import ImgBox from '~components/imgbox/imgbox';
 import MyMap from '~components/map/map';
-import CompanyHighlight from '~components/CompanyHighlight/CompanyHighlight';
+import CompanyHighlight from '~components/companyhighlight/companyhighlight';
 
 const ZoneParser = ({ content, childMdx, source = 'default' }) => {
     console.log('ZoneParser content: ', content);
@@ -61,7 +61,7 @@ const ZoneParser = ({ content, childMdx, source = 'default' }) => {
                  );
             }
             if (item.bild) {
-                key = item.bild[0].beskrivning;
+                key = `${item.bild[0].beskrivning} + ${item.bild[0].bildfil.childImageSharp.fluid.aspectRatio}`;
                 const bildboxSizeClass = (() => {
                     const sizeTypes = {
                         '1': 'is-12',
@@ -99,7 +99,11 @@ const ZoneParser = ({ content, childMdx, source = 'default' }) => {
                 return (
                     <div className="columns is-centered is-vcentered">
                         <div className={item.layout !== 'bild_hoger' ? (`column ${ imgboxSizeClass}`) : 'column'}>
-                            {item.layout === 'bild_hoger' ? <MdxRender mdxBody={item.text.textfield} />
+                            {item.layout === 'bild_hoger' ? (
+                                <div css={css`@media (max-width: 1023px) {padding: 0 0.5rem;}`}>
+                                    <MdxRender mdxBody={item.text.textfield} />
+                                </div>
+                            )
                             : (
                             <ImgBox
                                 images={item.imgbox}
@@ -113,7 +117,11 @@ const ZoneParser = ({ content, childMdx, source = 'default' }) => {
                                 images={item.imgbox}
                                 undertext={item.undertext_bildbox && item.undertext_bildbox}
                             />
-                            ) : (<MdxRender mdxBody={item.text.textfield} />)}
+                            ) : (
+                                <div css={css`@media (max-width: 1023px) {padding: 0 0.5rem;}`}>
+                                    <MdxRender mdxBody={item.text.textfield} />
+                                </div>
+                            )}
                         </div>
                     </div>
                 );
@@ -158,7 +166,14 @@ const ZoneParser = ({ content, childMdx, source = 'default' }) => {
                             <div
                                 className='column is-12'
                             >
-                                <h2 css={css`font-style: italic;`}>Här kommer ett urval ur våra berättelser...</h2>
+                                <h2
+                                    css={css`
+                                        font-style: italic;
+                                        padding: 0 0.5rem;
+                                    `}
+                                >
+                                    Här kommer ett urval ur våra berättelser...
+                                </h2>
                             </div>
                         </div>
 

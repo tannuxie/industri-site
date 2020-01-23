@@ -28,6 +28,10 @@ module.exports = {
 			{
 				name: 'Rörvik',
 				link: '/rorvik',
+            },
+            {
+				name: 'Hultagård',
+				link: '/hultagard',
 			},
 			{
 				name: 'Hylletofta',
@@ -102,6 +106,7 @@ module.exports = {
 					'street',
                     'tag',
                     'static-content',
+                    'media',
 				],
 				queryLimit: 2000,
 				loginData: {
@@ -156,7 +161,7 @@ module.exports = {
 				anonymize: true,
 			},
 		},
-		'gatsby-plugin-sitemap',
+        'gatsby-plugin-sitemap',
 		// this (optional) plugin enables Progressive Web App + Offline functionality
 		// To learn more, visit: https://gatsby.app/offline
 		// `gatsby-plugin-offline`

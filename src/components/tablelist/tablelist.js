@@ -563,12 +563,12 @@ const TableList = ({ data }) => {
                     console.log(row);
                     return (
                         <div css={css`
-                            max-height:500px;
-                            overflow:hidden;
-                            display:flex;
-                            flex-grow:1;
+                            max-height: 500px;
+                            overflow: hidden;
+                            display: flex;
+                            flex-grow: 1;
                             @media (max-width: 769px) {
-                                max-height:300px;
+                                max-height: 300px;
                             }
                         `}
                         >
@@ -601,7 +601,7 @@ const TableList = ({ data }) => {
                                         margin-top: calc(${rhythm} / 2);
                                         padding-right: calc(${rhythm} / 2);
                                         @media (max-width: 769px) {
-                                            margin-top:0px;
+                                            margin-top: 0px;
                                         }
                                     `}
                                 >

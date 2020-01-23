@@ -54,11 +54,9 @@ export const articleQuery = graphql`
         strapiArticle(strapiId: {eq: $id}) {
             title
             content {
-                id
                 textfield
                 undertext
                 bild {
-                    id
                     beskrivning
                     bildfil {
                         childImageSharp {
@@ -75,25 +73,20 @@ export const articleQuery = graphql`
                 latitude
                 text {
                     textfield
-                    id
                 }
                 text_vanster {
                     textfield
-                    id
                 }
                 text_hoger {
                     textfield
-                    id
                 }
                 map_pin {
                     longitude
                     latitude
-                    id
                     beskrivning
                 }
                 imgbox {
                     beskrivning
-                    id
                     bildfil {
                         childImageSharp {
                             fluid {

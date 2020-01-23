@@ -56,23 +56,18 @@ export default (props) => (
                                 undertext
                                 textfield
                                 layout
-                                id
                                 filtrering
                                 bredd_bildbox
                                 text_vanster {
                                     textfield
-                                    id
                                 }
                                 text_hoger {
                                     textfield
-                                    id
                                 }
                                 text {
                                     textfield
-                                    id
                                 }
                                 imgbox {
-                                    id
                                     beskrivning
                                     bildfil {
                                         childImageSharp {
@@ -84,7 +79,6 @@ export default (props) => (
                                     }
                                 }
                                 bild {
-                                    id
                                     beskrivning
                                     bildfil {
                                         childImageSharp {

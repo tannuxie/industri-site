@@ -23,6 +23,10 @@ export default ({ children }) => (
                     css={css`
                         align-self: center;
                         width: 100%;
+                        margin: 0 auto 1rem;
+                        @media (min-width: 1024px) {
+                            margin: 0 auto 2rem;
+                        }
                     `}
                 >
                     {children}

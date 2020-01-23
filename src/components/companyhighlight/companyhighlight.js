@@ -23,13 +23,19 @@ const CompanyHighlight = ({ data, filtering = 1 }) => {
     )(), [filterValue]);
     console.log(filteredCompanies);
 
-    const randomCompany = filteredCompanies[Math.floor(Math.random() * filteredCompanies.length)];
+    const randomCompany = React.useMemo(() => (
+        () => {
+            const pickone = filteredCompanies[Math.floor(Math.random() * filteredCompanies.length)]
+            return pickone;
+        }
+    )(), [filterValue]);
+
     console.log('randomCompany', randomCompany);
 
     return (
         <>
             <div
-                className='column is-4'
+                className='column'
                 css={css`
                 max-height:500px;
                 overflow:hidden;
@@ -50,7 +56,9 @@ const CompanyHighlight = ({ data, filtering = 1 }) => {
             <div
                 className='column'
                 css={css`
-                    padding-left: calc(${rhythm} / 2);
+                    @media (max-width: 769px) {
+                        padding: 0 1.25rem;
+                    }
                 `}
             >
                 <Link to={`/industri/${randomCompany.fields.slug}`}>
@@ -59,6 +67,7 @@ const CompanyHighlight = ({ data, filtering = 1 }) => {
                             white-space: normal;
                             margin-top: calc(${rhythm} / 2);
                             padding-right: calc(${rhythm} / 2);
+                            text-align: center;
                             @media (max-width: 769px) {
                                 margin-top:0px;
                             }
@@ -141,7 +150,8 @@ export default (props) => (
                             mainimage {
                                 childImageSharp {
                                     fluid {
-                                        src
+                                        ...GatsbyImageSharpFluid
+                                        aspectRatio
                                     }
                                 }
                             }

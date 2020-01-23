@@ -107,7 +107,7 @@ class ImgBox extends React.Component {
                         return (
                             <div
                                 role="button"
-                                key={beskrivning}
+                                key={`${beskrivning}`}
                                 tabIndex={0}
                                 onClick={() => {
                                     this.open();
@@ -185,7 +185,7 @@ class ImgBox extends React.Component {
                                     fluid={images[photoIndex]
                                         .bildfil.childImageSharp.fluid}
                                     alt={images[photoIndex].beskrivning}
-                                    style={{ maxHeight: '1000px' }}
+                                    style={{ maxHeight: '80vh' }}
                                 />
                                 <div
                                     css={css`

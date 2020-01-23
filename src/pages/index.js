@@ -34,23 +34,18 @@ export const startsidaQuery = graphql`
                 undertext
                 textfield
                 layout
-                id
                 filtrering
                 bredd_bildbox
                 text_vanster {
                     textfield
-                    id
                 }
                 text_hoger {
                     textfield
-                    id
                 }
                 text {
                     textfield
-                    id
                 }
                 imgbox {
-                    id
                     beskrivning
                     bildfil {
                         childImageSharp {
@@ -62,7 +57,6 @@ export const startsidaQuery = graphql`
                     }
                 }
                 bild {
-                    id
                     beskrivning
                     bildfil {
                         childImageSharp {

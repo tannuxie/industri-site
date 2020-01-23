@@ -139,6 +139,13 @@ class Navbar extends Component {
                                         key={item.name}
                                         className="navbar-item"
                                         to={item.link}
+                                        css={css`
+                                            @media (min-width: 1024px) {
+                                                :focus, :hover, :active {
+                                                    box-shadow: inset 0px -5px 5px 0px #0000000d;
+                                                }
+                                            }
+                                        `}
                                         onClick={() => this.setState({ showMenu: !showMenu })}
                                         >
                                         {item.name}
@@ -165,25 +172,38 @@ class Navbar extends Component {
                                             text-shadow: 0 0 0 #4e4e4e;
                                             display: flex;
                                             align-items: flex-start;
+                                            @media (min-width: 1024px) {
+                                                :focus, :hover, :active {
+                                                    box-shadow: inset 0px -5px 5px 0px #0000000d;
+                                                }
+                                            }
                                         `}
                                     >
-                                        <span
+                                        <div
                                             css={css`
                                                 display: flex;
                                                 height: 2rem;
+                                                padding: 0 5px;
+                                            `}
+                                        >
+                                            <span
+                                                css={css`
+                                                    display: flex;
+                                                    height: 2rem;
+                                                    align-items: center;
+                                                `}
+                                            >
+                                                <Emoji size={1} label="small-a" emoji="🇦" />
+                                            </span>
+                                            <span
+                                                css={css` display: flex;
+                                                height: 2rem;
                                                 align-items: center;
-                                            `}
-                                        >
-                                            <Emoji size={1} label="small-a" emoji="🇦" />
-                                        </span>
-                                        <span
-                                            css={css` display: flex;
-                                            height: 2rem;
-                                            align-items: center;
-                                            `}
-                                        >
-                                            <Emoji size={2} label="big-a" emoji="🇦" />
-                                        </span>
+                                                `}
+                                            >
+                                                <Emoji size={2} label="big-a" emoji="🇦" />
+                                            </span>
+                                        </div>
                                     </a>
                                 </div>
 

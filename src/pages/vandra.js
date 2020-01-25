@@ -18,7 +18,9 @@ const Vandra = ({ data }) => {
     console.log(cities);
     const cityStreets = cities.map(((item) => ({
             name: item,
-            streets: streets.filter(((item2) => item2.city.toLowerCase() === item.toLowerCase())),
+            streets: streets.filter(((item2) => item2.city.toLowerCase() === item.replace(/å/g, 'a')
+            .replace(/ä/g, 'a')
+            .replace(/ö/g, 'o').toLowerCase())),
         })));
     console.log(cityStreets);
 
@@ -115,7 +117,7 @@ const Vandra = ({ data }) => {
                                     </p>
                                 </div>
                                 <Img
-                                    fluid={street.mainimage.childImageSharp.fluid}
+                                    fluid={street.streetimage.childImageSharp.fluid}
                                     alt={street.name}
                                     style={{
                                         maxHeight: '250px',
@@ -146,87 +148,110 @@ export const vandraQuery = graphql`
                     fields {
                         slug
                     }
-                    mainimage {
+                    streetimage {
                         childImageSharp {
                             fluid {
-                                ...GatsbyImageSharpFluid
+                                src
                                 aspectRatio
                             }
                         }
                     }
-                    children {
-                        ... on Mdx {
-                            id
-                            body
-                            excerpt
-                            frontmatter {
-                                title
-                            }
-                            headings {
-                                value
-                                depth
-                            }
-                            tableOfContents
-                            timeToRead
-                            wordCount {
-                                paragraphs
-                                sentences
-                                words
-                            }
+                children {
+                    ... on Mdx {
+                        id
+                        body
+                        excerpt
+                        frontmatter {
+                            title
+                        }
+                        headings {
+                            value
+                            depth
+                        }
+                        tableOfContents
+                        timeToRead
+                        wordCount {
+                            paragraphs
+                            sentences
+                            words
                         }
                     }
                 }
             }
         }
+    }
         static: strapiStaticContent(role: {eq: "vandra"}) {
-            id
-            strapiId
-            role
-            content {
-                width
-                undertext_bildbox
-                undertext
+        id
+        strapiId
+        role
+        content {
+            size
+            undertext_bildbox
+            undertext
+            text_vanster {
                 textfield
-                text_vanster {
-                    textfield
-                }
-                text_hoger {
-                    textfield
-                }
-                text {
-                    textfield
-                }
-                layout
-                imgbox {
-                    bildfil {
-                        childImageSharp {
-                            fluid {
-                                ...GatsbyImageSharpFluid
-                                aspectRatio
-                            }
-                        }
+            }
+            text_hoger {
+                textfield
+            }
+            text {
+                textfield
+            }
+            layout
+            imgbox {
+            bildfil {
+                childImageSharp {
+                    fluid {
+                        ...GatsbyImageSharpFluid
+                        aspectRatio
                     }
-                    beskrivning
                 }
-                filtrering
-                bredd_bildbox
-                bild {
-                    beskrivning
-                    bildfil {
-                        childImageSharp {
-                            fluid {
-                                ...GatsbyImageSharpFluid
-                                aspectRatio
-                            }
+            }
+            beskrivning
+            }
+            filter
+            bredd_bildbox
+            bild {
+                beskrivning
+                bildfil {
+                    childImageSharp {
+                        fluid {
+                            ...GatsbyImageSharpFluid
+                            aspectRatio
                         }
                     }
                 }
             }
-            children {
-              ... on Mdx {
+            zoom
+            size
+            longitude
+            latitude
+            map_pins {
+                longitude
+                latitude
                 id
-                body
-              }
+                beskrivning
+            }
+            karta {
+                zoom
+                undertext
+                longitude
+                latitude
+                id
+                map_pins {
+                    longitude
+                    latitude
+                    id
+                    beskrivning
+                }
+            }
+            bredd_karta
+            }
+            children {
+                ... on Mdx {
+                    id
+                    body
+                }
             }
         }
     }

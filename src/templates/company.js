@@ -43,7 +43,7 @@ const CompanyTemplate = ({ data }) => {
 				<div>
 					<div>
                         <Img
-                            fluid={company.mainimage.childImageSharp.fluid}
+                            fluid={company.companyimage.childImageSharp.fluid}
                             alt={company.name}
                             css={css`
                                 margin: 1.5rem 0;
@@ -86,13 +86,14 @@ export const companyQuery = graphql`
             strapiId
             id
             name
-            mainimage {
+            companyimage {
                 id
                 childImageSharp {
                     fluid(maxWidth: 1920) {
                         ...GatsbyImageSharpFluid
                         aspectRatio
                     }
+                    id
                 }
             }
             fields {
@@ -113,61 +114,76 @@ export const companyQuery = graphql`
             }
             content {
                 undertext
-                textfield
                 bild {
-                  beskrivning
-                  bildfil {
-                    childImageSharp {
-                      fluid(maxWidth: 1360) {
-                        ...GatsbyImageSharpFluid
-                        aspectRatio
-                      }
-                      id
+                    beskrivning
+                    bildfil {
+                        childImageSharp {
+                            fluid(maxWidth: 1360) {
+                                ...GatsbyImageSharpFluid
+                                aspectRatio
+                            }
+                            id
+                        }
+                        id
                     }
                     id
-                  }
                 }
                 bredd_bildbox
                 imgbox {
-                  beskrivning
-                  bildfil {
-                    childImageSharp {
-                      fluid(maxWidth: 1360) {
-                        ...GatsbyImageSharpFluid
-                        aspectRatio
-                      }
-                      id
+                    beskrivning
+                    bildfil {
+                        childImageSharp {
+                            fluid(maxWidth: 1360) {
+                                ...GatsbyImageSharpFluid
+                                aspectRatio
+                            }
+                            id
+                        }
+                        id
                     }
                     id
-                  }
-                  id
                 }
                 latitude
                 layout
                 longitude
-                map_pin {
-                  beskrivning
-                  latitude
-                  longitude
-                  id
+                map_pins {
+                beskrivning
+                latitude
+                longitude
+                id
                 }
                 text {
-                  textfield
-                  id
+                    textfield
+                    id
                 }
                 text_hoger {
-                  textfield
-                  id
+                    textfield
+                    id
                 }
                 text_vanster {
-                  textfield
-                  id
+                    textfield
+                    id
                 }
                 undertext_bildbox
-                width
+                size
                 zoom
                 id
-              }
+                size
+                bredd_karta
+                karta {
+                    zoom
+                    undertext
+                    longitude
+                    latitude
+                    id
+                    map_pins {
+                        longitude
+                        latitude
+                        id
+                        beskrivning
+                    }
+                }
+            }
             children {
                 ... on Mdx {
                     id
@@ -175,6 +191,8 @@ export const companyQuery = graphql`
                 }
             }
             quality
+            city
+            layout
         }
     }
 `;

@@ -89,7 +89,7 @@ export const StreetQuery = graphql`
             name
             strapiId
             summary
-            mainimage {
+            streetimage {
                 id
                 name
                 childImageSharp {

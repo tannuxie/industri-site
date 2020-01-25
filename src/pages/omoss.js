@@ -28,34 +28,13 @@ export const omOssQuery = graphql`
             id
             strapiId
             role
+            children {
+                ... on Mdx {
+                    id
+                    body
+                }
+            }
             content {
-                width
-                undertext_bildbox
-                undertext
-                textfield
-                text_vanster {
-                    textfield
-                }
-                text_hoger {
-                    textfield
-                }
-                text {
-                    textfield
-                }
-                layout
-                imgbox {
-                    bildfil {
-                        childImageSharp {
-                            fluid {
-                                ...GatsbyImageSharpFluid
-                                aspectRatio
-                            }
-                        }
-                    }
-                    beskrivning
-                }
-                filtrering
-                bredd_bildbox
                 bild {
                     beskrivning
                     bildfil {
@@ -67,12 +46,55 @@ export const omOssQuery = graphql`
                         }
                     }
                 }
-            }
-            children {
-              ... on Mdx {
+                bredd_bildbox
+                bredd_karta
+                filter
                 id
-                body
-              }
+                imgbox {
+                    beskrivning
+                    bildfil {
+                        childImageSharp {
+                            fluid {
+                                ...GatsbyImageSharpFluid
+                                aspectRatio
+                            }
+                        }
+                    }
+                }
+                karta {
+                    id
+                    latitude
+                    longitude
+                    zoom
+                    undertext
+                    map_pins {
+                        latitude
+                        longitude
+                        beskrivning
+                    }
+                }
+                latitude
+                layout
+                longitude
+                map_pins {
+                    beskrivning
+                    latitude
+                    longitude
+                }
+                size
+                text {
+                    textfield
+                }
+                text_hoger {
+                    textfield
+                }
+                text_vanster {
+                    textfield
+                }
+                undertext
+                undertext_bildbox
+                size
+                zoom
             }
         }
     }

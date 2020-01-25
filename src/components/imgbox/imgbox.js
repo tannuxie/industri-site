@@ -140,7 +140,7 @@ class ImgBox extends React.Component {
                             </div>
                         );
                     })}
-                    {undertext.length > 0 && (
+                    {undertext && undertext.length > 0 && (
                         <p
                             css={css`
                                 font-style: italic;

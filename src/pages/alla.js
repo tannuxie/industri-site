@@ -24,7 +24,7 @@ export default ListAll;
 
 export const listAllQuery = graphql`
 query listallQuery {
-    company: allStrapiCompany(filter: {published: {eq: true}, mainimage: {id: {ne: null}}}) {
+    company: allStrapiCompany(filter: {published: {eq: true}, companyimage: {id: {ne: null}}}) {
         edges {
             node {
                 id
@@ -45,7 +45,7 @@ query listallQuery {
                     latitude
                     longitude
                 }
-                mainimage {
+                companyimage {
                     id
                     childImageSharp {
                         fluid {

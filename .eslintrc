@@ -29,6 +29,7 @@
     "fetch": false
   },
   "rules": {
+    "no-nested-ternary": 0,
     "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
     "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
     "react/jsx-uses-react": "error",
@@ -365,7 +366,7 @@
     'no-negated-condition': 'off',
 
     // disallow nested ternary expressions
-    'no-nested-ternary': 'error',
+    //'no-nested-ternary': 'error',
 
     // disallow use of the Object constructor
     'no-new-object': 'error',

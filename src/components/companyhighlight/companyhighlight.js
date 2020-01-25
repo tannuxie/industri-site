@@ -4,11 +4,15 @@ import { Link, StaticQuery, graphql } from 'gatsby';
 import Img from 'gatsby-image';
 import { rhythm, scale } from '../../style/typography';
 
-const CompanyHighlight = ({ data, filtering = 1 }) => {
+const CompanyHighlight = ({ data, filter = 1 }) => {
     console.log('CompanyHighlight data', data);
-    const filterValue = (filtering !== 1 && filtering !== 2 && filtering !== 3) ? 1 : filtering;
 
-    console.log('CompanyHighlight filtering', filterValue);
+    // filters: ett_eller_mer, tva_eller_tre, endast_tre
+    const filterValue = filter === 'ett_eller_mer' ? '1'
+    : filter === 'tva_eller_tre' ? '2'
+    : filter === 'endast_tre' && '3';
+
+    console.log('CompanyHighlight filter', filterValue);
     const companies = data.allStrapiCompany.edges.map((item) => item.node);
     console.log('CompanyHighlight companies', companies);
 
@@ -25,7 +29,21 @@ const CompanyHighlight = ({ data, filtering = 1 }) => {
 
     const randomCompany = React.useMemo(() => (
         () => {
-            const pickone = filteredCompanies[Math.floor(Math.random() * filteredCompanies.length)]
+            const pickone = filteredCompanies[Math.floor(Math.random() * filteredCompanies.length)];
+            pickone.type === 'tra' ? pickone.type = 'Trä' :
+            pickone.type === 'metall' ? pickone.type = 'Metall' :
+            pickone.type === 'moblertraforadling' ? pickone.type = 'Möbler / Träförädling' :
+            pickone.type === 'livsmedel' ? pickone.type = 'Livsmedel' :
+            pickone.type === 'skorklader' ? pickone.type = 'Skor & Kläder' :
+            pickone.type === 'plastgummi' ? pickone.type = 'Plast / Gummi' :
+            (pickone.type === 'ovrigtdiverse') && (pickone.type = 'Övrigt / Diverse');
+
+            pickone.city === 'savsjo' ? pickone.city = 'Sävsjö' :
+            pickone.city === 'vrigstad' ? pickone.city = 'Vrigstad' :
+            pickone.city === 'stockaryd' ? pickone.city = 'Stockaryd' :
+            pickone.city === 'rorvik' ? pickone.city = 'Rörvik' :
+            pickone.city === 'hultagard' ? pickone.city = 'Hultagård' :
+            (pickone.city === 'hylletofta') && (pickone.city = 'Hylletofta');
             return pickone;
         }
     )(), [filterValue]);
@@ -47,7 +65,7 @@ const CompanyHighlight = ({ data, filtering = 1 }) => {
                 `}
             >
                 <Img
-                    fluid={randomCompany.mainimage.childImageSharp.fluid}
+                    fluid={randomCompany.companyimage.childImageSharp.fluid}
                     alt={randomCompany.name}
                     title={randomCompany.name}
                 />
@@ -147,7 +165,7 @@ export default (props) => (
                                 longitude
                                 startdate
                             }
-                            mainimage {
+                            companyimage {
                                 childImageSharp {
                                     fluid {
                                         ...GatsbyImageSharpFluid

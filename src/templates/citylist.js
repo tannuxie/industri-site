@@ -31,7 +31,7 @@ export default CityListTemplate;
 
 export const citylistQuery = graphql`
     query citylistQuery($string: String!) {
-        company: allStrapiCompany(filter: {city: {eq: $string}, published: {eq: true}, mainimage: {id: {ne: null}}}) {
+        company: allStrapiCompany(filter: {city: {eq: $string}, published: {eq: true}, companyimage: {id: {ne: null}}}) {
             edges {
                 node {
                     id
@@ -53,7 +53,7 @@ export const citylistQuery = graphql`
                         longitude
                         enddate
                     }
-                    mainimage {
+                    companyimage {
                         id
                         childImageSharp {
                             fluid {

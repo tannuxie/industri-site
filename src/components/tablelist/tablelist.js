@@ -549,6 +549,25 @@ function Table({ columns, data }) {
 const TableList = ({ data }) => {
     console.log('table data', data);
     console.log('typography', rhythm, scale);
+    const fixedNameData = React.useMemo(() => data.map(((item) => {
+        const current = item;
+        item.type === 'tra' ? current.type = 'Trä' :
+        item.type === 'metall' ? current.type = 'Metall' :
+        item.type === 'moblertraforadling' ? current.type = 'Möbler / Träförädling' :
+        item.type === 'livsmedel' ? current.type = 'Livsmedel' :
+        item.type === 'skorklader' ? current.type = 'Skor & Kläder' :
+        item.type === 'plastgummi' ? current.type = 'Plast / Gummi' :
+        (item.type === 'ovrigtdiverse') && (current.type = 'Övrigt / Diverse');
+
+        item.city === 'savsjo' ? current.city = 'Sävsjö' :
+        item.city === 'vrigstad' ? current.city = 'Vrigstad' :
+        item.city === 'stockaryd' ? current.city = 'Stockaryd' :
+        item.city === 'rorvik' ? current.city = 'Rörvik' :
+        item.city === 'hultagard' ? current.city = 'Hultagård' :
+        (item.city === 'hylletofta') && (current.city = 'Hylletofta');
+
+        return current;
+    })), []);
 
     const sortedData = React.useMemo(() => data.sort(compareValues('name', 'asc')), []);
     console.log(sortedData);
@@ -557,7 +576,7 @@ const TableList = ({ data }) => {
         () => [
             {
                 id: 'image',
-                accessor: 'mainimage.id',
+                accessor: 'companyimage.id',
                 Header: (() => null),
                 Cell: ({ row }) => {
                     console.log(row);
@@ -573,7 +592,7 @@ const TableList = ({ data }) => {
                         `}
                         >
                             <Img
-                                fluid={row.original.mainimage.childImageSharp.fluid}
+                                fluid={row.original.companyimage.childImageSharp.fluid}
                                 alt={row.original.name}
                                 title={row.original.name}
                             />

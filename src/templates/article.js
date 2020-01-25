@@ -25,7 +25,7 @@ const ArticleTemplate = ({ data }) => {
                 <div>
                     <div>
                         <Img
-                            fluid={article.mainimage.childImageSharp.fluid}
+                            fluid={article.articleimage.childImageSharp.fluid}
                             alt={article.title}
                             imgStyle={{ objectFit: 'contain' }}
                         />
@@ -53,15 +53,15 @@ export const articleQuery = graphql`
     query ArticleTemplate($id: Int!) {
         strapiArticle(strapiId: {eq: $id}) {
             title
+            layout
             content {
-                textfield
                 undertext
                 bild {
                     beskrivning
                     bildfil {
                         childImageSharp {
                             fluid {
-                                ...GatsbyImageSharpFluid
+                                src
                                 aspectRatio
                             }
                         }
@@ -80,7 +80,7 @@ export const articleQuery = graphql`
                 text_hoger {
                     textfield
                 }
-                map_pin {
+                map_pins {
                     longitude
                     latitude
                     beskrivning
@@ -90,24 +90,38 @@ export const articleQuery = graphql`
                     bildfil {
                         childImageSharp {
                             fluid {
-                                ...GatsbyImageSharpFluid
+                                src
                                 aspectRatio
                             }
                         }
                     }
                 }
                 bredd_bildbox
-                width
+                size
                 undertext_bildbox
+                bredd_karta
+                id
+                karta {
+                    latitude
+                    longitude
+                    undertext
+                    zoom
+                    map_pins {
+                        beskrivning
+                        latitude
+                        longitude
+                    }
+                }
+                size
             }
             id
             fields {
                 slug
             }
-            mainimage {
+            articleimage {
                 childImageSharp {
                     fluid {
-                        ...GatsbyImageSharpFluid
+                        src
                         aspectRatio
                     }
                 }

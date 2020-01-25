@@ -29,12 +29,11 @@ export const startsidaQuery = graphql`
             role
             strapiId
             content {
-                width
+                size
                 undertext_bildbox
                 undertext
-                textfield
                 layout
-                filtrering
+                filter
                 bredd_bildbox
                 text_vanster {
                     textfield
@@ -67,25 +66,41 @@ export const startsidaQuery = graphql`
                         }
                     }
                 }
+                zoom
+                size
+                longitude
+                latitude
+                karta {
+                    id
+                    latitude
+                    longitude
+                    zoom
+                    undertext
+                    map_pins {
+                        latitude
+                        longitude
+                        beskrivning
+                    }
+                }
+                bredd_karta
             }
             children {
-                    ... on Mdx {
-                          id
-                      body
-                      frontmatter {
-                          title
-                      }
-                      headings {
-                          value
-                          depth
-                      }
-                      tableOfContents
-                      timeToRead
-                      wordCount {
-                          words
-                          sentences
+                ... on Mdx {
+                    id
+                    body
+                    frontmatter {
+                        title
+                    }
+                    headings {
+                        value
+                        depth
+                    }
+                    tableOfContents
+                    timeToRead
+                    wordCount {
+                        words
+                        sentences
                         paragraphs
-
                     }
                 }
             }

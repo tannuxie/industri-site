@@ -51,12 +51,11 @@ export default (props) => (
                             role
                             strapiId
                             content {
-                                width
+                                size
                                 undertext_bildbox
                                 undertext
-                                textfield
                                 layout
-                                filtrering
+                                filter
                                 bredd_bildbox
                                 text_vanster {
                                     textfield
@@ -89,6 +88,27 @@ export default (props) => (
                                         }
                                     }
                                 }
+                                bredd_karta
+                                karta {
+                                latitude
+                                longitude
+                                undertext
+                                zoom
+                                map_pins {
+                                    beskrivning
+                                    latitude
+                                    longitude
+                                }
+                                }
+                                latitude
+                                longitude
+                                map_pins {
+                                    beskrivning
+                                    latitude
+                                    longitude
+                                }
+                                size
+                                zoom
                             }
                             children {
                                 ... on Mdx {

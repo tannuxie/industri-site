@@ -1,6 +1,4 @@
 /* eslint-disable quotes */
-const lost = require('lost');
-
 module.exports = {
 	siteMetadata: {
 		title: 'Sävsjö Industrihistoria',
@@ -54,7 +52,16 @@ module.exports = {
 			options: {
 				siteUrl: 'https://www.example.com',
 			},
+        },
+        {
+			resolve: 'gatsby-plugin-sharp',
+			options: {
+				useMozJpeg: false,
+				stripMetadata: true,
+				defaultQuality: 75,
+			},
 		},
+        'gatsby-transformer-sharp',
 		{
 			resolve: 'gatsby-plugin-mdx',
 			options: {
@@ -95,8 +102,42 @@ module.exports = {
 				extensions: [],
 			},
 		},
+        {
+            resolve: `gatsby-plugin-layout`,
+            options: {
+                component: require.resolve(`./src/components/layout/layout`),
+            },
+        },
 		{
-			resolve: 'gatsby-source-strapi',
+			resolve: 'gatsby-plugin-typography',
+			options: {
+				pathToConfigModule: 'src/style/typography',
+			},
+		},
+		'gatsby-plugin-emotion',
+		{
+			resolve: 'gatsby-plugin-sass',
+			options: {
+				postCssPlugins: [],
+				precision: 8,
+			},
+		},
+		{
+			resolve: 'gatsby-plugin-react-leaflet',
+			options: {
+				linkStyles: true, // (default: true) Enable/disable loading stylesheets via CDN
+			},
+		},
+		{
+			resolve: 'gatsby-plugin-google-analytics',
+			options: {
+				trackingId: 'UA-XXXXXXXX-X',
+				// Setting this parameter is optional (requried for some countries such as Germany)
+				anonymize: true,
+			},
+        },
+        {
+            resolve: 'gatsby-source-strapi',
 			options: {
 				apiURL: 'http://localhost:1337',
 				contentTypes: [
@@ -113,52 +154,6 @@ module.exports = {
 					identifier: '',
 					password: '',
 				},
-			},
-		},
-		{
-			resolve: 'gatsby-plugin-sharp',
-			options: {
-				useMozJpeg: false,
-				stripMetadata: true,
-				defaultQuality: 75,
-			},
-		},
-        'gatsby-transformer-sharp',
-        {
-            resolve: `gatsby-plugin-layout`,
-            options: {
-                component: require.resolve(`./src/components/layout/layout`),
-            },
-        },
-		{
-			resolve: 'gatsby-plugin-typography',
-			options: {
-				pathToConfigModule: 'src/style/typography',
-			},
-		},
-		// `gatsby-plugin-theme-ui`,
-		'gatsby-plugin-emotion',
-		{
-			resolve: 'gatsby-plugin-sass',
-			options: {
-				postCssPlugins: [
-					lost(),
-				],
-				precision: 8,
-			},
-		},
-		{
-			resolve: 'gatsby-plugin-react-leaflet',
-			options: {
-				linkStyles: true, // (default: true) Enable/disable loading stylesheets via CDN
-			},
-		},
-		{
-			resolve: 'gatsby-plugin-google-analytics',
-			options: {
-				trackingId: 'UA-XXXXXXXX-X',
-				// Setting this parameter is optional (requried for some countries such as Germany)
-				anonymize: true,
 			},
 		},
         'gatsby-plugin-sitemap',

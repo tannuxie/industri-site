@@ -10,7 +10,10 @@ const FilterCompanyList = ({ data, city }) => {
     console.log('filtercompanylist city', city);
 
     const companies = data.company.edges.filter((item) => {
-        return item.node.city.toLowerCase() === city.toLowerCase();
+        return item.node.city.toLowerCase() === city.replace(/å/g, 'a')
+		.replace(/ä/g, 'a')
+        .replace(/ö/g, 'o')
+        .toLowerCase();
     }).map((item) => item.node);
 
     console.log('filtercompanylist companies', companies);
@@ -24,7 +27,7 @@ export default (props) => (
 	<StaticQuery
 		query={graphql`
             query FilterCompanyQuery {
-                company: allStrapiCompany(filter: {published: {eq: true}, mainimage: {id: {ne: null}}}) {
+                company: allStrapiCompany(filter: {published: {eq: true}, companyimage: {id: {ne: null}}}) {
                     edges {
                         node {
                             id
@@ -47,7 +50,7 @@ export default (props) => (
                                 longitude
                                 startdate
                             }
-                            mainimage {
+                            companyimage {
                                 childImageSharp {
                                     fluid {
                                         ...GatsbyImageSharpFluid

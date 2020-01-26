@@ -24,6 +24,8 @@ img {
 	background: linear-gradient(to right, $primary-color, $secondary-color);
 }
 
+
+
 .center {
 	display: flex;
 	justify-content: center;
@@ -50,17 +52,14 @@ button, select {
 // *** Navbar ***
 // ****************
 
-// a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, a.navbar-item.is-active, .navbar-link:focus, .navbar-link:focus-within, .navbar-link:hover, .navbar-link.is-active {
-//     box-shadow: inset 0px -5px 5px 0px #0000000d;
-// }
-
 .navbarFixed {
 	position: fixed;
 	top: 0px;
 	left: 0px;
 	z-index: 30;
 	//background-color:#57b9e5!important;
-	background: linear-gradient(to right, #2980b9, #6dd5fa)!important;
+    //background: linear-gradient(to right, #2980b9, #6dd5fa)!important;
+    background: linear-gradient(to right, #bbbbbb, #ffffff)!important;
 	width: 100%;
 	z-index: 9998;
 }

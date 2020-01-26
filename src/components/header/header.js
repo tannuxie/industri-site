@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 // import '~style/style.scss';
 import Navbar from '../navbar/navbar';
+import { css } from '@emotion/core';
+import { StaticQuery, graphql } from 'gatsby';
+import BackgroundImage from 'gatsby-background-image';
+import styled from '@emotion/styled';
 
 class Header extends Component {
     constructor(props) {
@@ -23,34 +27,101 @@ class Header extends Component {
     }
 
     render() {
-        const { isMounted } = this.state;
-        return (
-                <section id="header-container" ref={this.headerRef} className="hero gradientBg">
-                    <div className="hero-body">
-                        <div className="container center">
-                            <article className="media">
-                                <div className="media-content">
-                                    <div className="content">
-                                        <h3 className="is-size-2 has-text-white">
-                                            Sävsjö kommuns
+        console.log('props', this.props);
 
-                                        </h3>
-                                        <h1 className="subtitle has-text-white is-size-1">
-                                            Industrihistoria
-                                        </h1>
-                                    </div>
+        const { isMounted } = this.state;
+        const imageData = this.props.data.allFile.edges[0].node.childImageSharp.fluid;
+
+        return (
+            <BackgroundImage
+                id="header-container"
+                Tag="section"
+                preserveStackingContext
+                className="hero"
+                css={css`
+                    width: 100%;
+                    height: 100%;
+                    background-position: bottom center;
+                    background-repeat: repeat-y;
+                    background-size: cover;
+                `}
+                fluid={imageData}
+                backgroundColor="#040e18"
+            >
+                <div
+                    ref={this.headerRef}
+                    className="hero-body"
+                >
+                    <div className="container center">
+                        <article className="media">
+                            <div className="media-content">
+                                <div
+                                    css={css`
+                                        display: flex;
+                                        justify-content: center;
+                                        flex-direction: column;
+                                        align-items: center;
+                                    `}
+                                >
+                                    <h3
+                                        id="header1"
+                                        className="is-size-2"
+                                        css={css`
+                                            font-size: 2rem;
+                                            background-color: #ffffffde;
+                                            padding: 5px;
+                                        `}
+                                    >
+                                        Sävsjö kommuns
+                                    </h3>
+                                    <h1
+                                        id="header2"
+                                        className="is-size-1"
+                                        css={css`
+                                            font-size: 3rem;
+                                            background-color: #ffffffde;
+                                            padding: 5px;
+                                        `}
+                                    >
+                                        Industrihistoria
+                                    </h1>
                                 </div>
-                            </article>
-                        </div>
+                            </div>
+                        </article>
                     </div>
-                    {isMounted && (
-                        <Navbar
-                            getParentElem={this.getElem}
-                        />
-                    )}
-                </section>
+                </div>
+                {isMounted && (
+                    <Navbar
+                        getParentElem={this.getElem}
+                    />
+                )}
+            </BackgroundImage>
         );
     }
 }
 
-export default Header;
+export default (props) => (
+    <StaticQuery
+		query={graphql`
+            query HeaderQuery {
+                allFile(filter: {name: {eq: "omslagsbild"}}) {
+                    edges {
+                        node {
+                            id
+                            name
+                            childImageSharp {
+                                fluid(quality: 90, maxWidth: 1920) {
+                                    aspectRatio
+                                    ...GatsbyImageSharpFluid
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+		`}
+		render={(data) => (
+            <Header data={data} {...props} />
+        )}
+    />
+);

@@ -53,22 +53,22 @@ class Navbar extends Component {
     listenToScroll() {
         // plocka in state för fixMenu och headerHeight här...
         const { fixMenu } = this.state;
-        // const { headerHeight } = this.state;
+        const { headerHeight } = this.state;
 
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        // console.log(`scrolled: ${winScroll}`);
-        // console.log(`menuRef: ${this.menuRef.current.clientHeight}`);
-        // console.log(this.getParentElem().current.clientHeight);
+        console.log(`scrolled: ${winScroll}`);
+        console.log(`menuRef: ${this.menuRef.current.clientHeight}`);
+        console.log(this.getParentElem().current.clientHeight);
         if (fixMenu === false
-            && winScroll > (this.getParentHeight() - this.menuRef.current.clientHeight + 1)
+            && winScroll > (this.getParentHeight() + 1)
         ) {
             this.setState({ fixMenu: true });
-            // console.log('setting fixMenu: true');
+            console.log('setting fixMenu: true');
         } else if (fixMenu === true
             && winScroll < this.getParentHeight()
         ) {
             this.setState({ fixMenu: false });
-            // console.log('setting fixMenu: false');
+            console.log('setting fixMenu: false');
         }
     }
 
@@ -113,6 +113,11 @@ class Navbar extends Component {
                                         }
                                     }}
                                     className="navbar-burger burger"
+                                    css={css`
+                                        @media (max-width: 769px) {
+                                            background: linear-gradient(to right,#f7f7f7,#f3f3f3) !important;
+                                        }
+                                    `}
                                     role="button"
                                     data-target="navMenu"
                                     aria-label="menu"
@@ -131,6 +136,7 @@ class Navbar extends Component {
                                 className={showMenu ? 'navbar-menu is-active' : 'navbar-menu'}
                                 css={css`
                                     flex-grow: 0;
+                                    background: linear-gradient(to right, #c7c7c7, #f3f3f3) !important;
                                 `}
                             >
                                 <div className="navbar-start">

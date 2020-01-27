@@ -25,7 +25,7 @@ export default ({ children }) => (
                         width: 100%;
                         margin: 0 auto 1rem;
                         @media (min-width: 1024px) {
-                            margin: 0 auto 2rem;
+                            margin: 2rem auto 2rem;
                         }
                     `}
                 >

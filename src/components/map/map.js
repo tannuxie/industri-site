@@ -3,12 +3,17 @@ import PropTypes from 'prop-types';
 // import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import { css } from '@emotion/core';
 import Loadable from 'react-loadable';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Loading = () => {
     return (
         <div css={css`
             width: 100%
             height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         `}
         >
             <h1
@@ -16,6 +21,7 @@ const Loading = () => {
             >
                 Laddar karta...
             </h1>
+            <CircularProgress />
         </div>
     );
 };

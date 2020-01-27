@@ -86,7 +86,7 @@ const ZoneParser = ({
                         en_fjardedel: 'is-3',
                         undefined: 'is-12',
                     };
-                    return sizeTypes[item.width];
+                    return sizeTypes[item.size];
                 })();
                 return (
                     <div className='columns is-centered'>

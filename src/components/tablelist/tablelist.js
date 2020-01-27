@@ -569,7 +569,7 @@ const TableList = ({ data }) => {
         return current;
     })), []);
 
-    const sortedData = React.useMemo(() => data.sort(compareValues('name', 'asc')), []);
+    const sortedData = React.useMemo(() => fixedNameData.sort(compareValues('name', 'asc')), []);
     console.log(sortedData);
 
     const columns = React.useMemo(

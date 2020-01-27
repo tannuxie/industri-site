@@ -27,10 +27,10 @@ class Header extends Component {
     }
 
     render() {
-        console.log('props', this.props);
+        // console.log('props', this.props);
 
         const { isMounted } = this.state;
-        const imageData = this.props.data.allFile.edges[0].node.childImageSharp.fluid;
+        const imageData = this.props.data.file.childImageSharp.fluid;
 
         return (
             <BackgroundImage
@@ -104,17 +104,13 @@ export default (props) => (
     <StaticQuery
 		query={graphql`
             query HeaderQuery {
-                allFile(filter: {name: {eq: "omslagsbild"}}) {
-                    edges {
-                        node {
-                            id
-                            name
-                            childImageSharp {
-                                fluid(quality: 90, maxWidth: 1920) {
-                                    aspectRatio
-                                    ...GatsbyImageSharpFluid
-                                }
-                            }
+                file(name: {eq: "omslagsbild"}) {
+                    id
+                    name
+                    childImageSharp {
+                        fluid(quality: 90, maxWidth: 1920) {
+                            aspectRatio
+                            ...GatsbyImageSharpFluid
                         }
                     }
                 }

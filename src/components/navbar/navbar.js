@@ -56,9 +56,9 @@ class Navbar extends Component {
         const { headerHeight } = this.state;
 
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        console.log(`scrolled: ${winScroll}`);
-        console.log(`menuRef: ${this.menuRef.current.clientHeight}`);
-        console.log(this.getParentElem().current.clientHeight);
+        // console.log(`scrolled: ${winScroll}`);
+        // console.log(`menuRef: ${this.menuRef.current.clientHeight}`);
+        // console.log(this.getParentElem().current.clientHeight);
         if (fixMenu === false
             && winScroll > (this.getParentHeight() + 1)
         ) {
@@ -114,7 +114,7 @@ class Navbar extends Component {
                                     }}
                                     className="navbar-burger burger"
                                     css={css`
-                                        @media (max-width: 769px) {
+                                        @media (max-width: 1023px) {
                                             background: linear-gradient(to right,#f7f7f7,#f3f3f3) !important;
                                         }
                                     `}

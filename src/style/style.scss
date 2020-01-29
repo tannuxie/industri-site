@@ -48,6 +48,15 @@ button, input {
 button, select {
     padding: 4px 4px;
 }
+
+@media (max-width: 1023px) {
+    .column.is-3, .column.is-4, .column.is-5, .column.is-6,
+    .column.is-7, .column.is-8, .column.is-9, .column.is-10 {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+}
+
 // ****************
 // *** Navbar ***
 // ****************

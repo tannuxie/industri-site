@@ -136,7 +136,16 @@ class Navbar extends Component {
                                 className={showMenu ? 'navbar-menu is-active' : 'navbar-menu'}
                                 css={css`
                                     flex-grow: 0;
-                                    background: linear-gradient(to right, #c7c7c7, #f3f3f3) !important;
+                                    @media (min-width: 1024px) {
+                                        background: linear-gradient(to right,#bdbdbd,#fdfdfd) !important;
+                                    }
+                                    @media (min-width: 1280px) {
+                                        background: linear-gradient(to right,#c3c3c3,#f7f7f7) !important;
+                                    }
+                                    @media (min-width: 1366px) {
+                                        background: linear-gradient(to right,#c5c5c5,#f5f5f5) !important
+                                    }
+
                                 `}
                             >
                                 <div className="navbar-start">

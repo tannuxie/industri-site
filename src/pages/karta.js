@@ -34,26 +34,24 @@ import '~style/slider.css';
 
 // computeDestinationPoint(point, distance, bearing, radius = earthRadius)
 
-const Loading = () => {
-    return (
-        <div css={css`
-            width: 100%
-            height: 500px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        `}
+const Loading = () => (
+    <div css={css`
+        width: 100%
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    `}
+    >
+        <h1
+            css={css`text-align: center;`}
         >
-            <h1
-                css={css`text-align: center;`}
-            >
-                Laddar karta...
-            </h1>
-            <CircularProgress />
-        </div>
-    );
-};
+            Laddar karta...
+        </h1>
+        <CircularProgress />
+    </div>
+);
 
 // pins ska vara en array med objekt som har
 // name, position(array med lat, lng), subtitle(array av textrader)
@@ -68,7 +66,7 @@ const LoadableComponent = Loadable.Map({
           Map, Marker, Popup, Tooltip, TileLayer,
         } = loaded.leaf;
         const {
-            center, bounds, pins, zoom,
+            center, bounds, pins, zoom, changeActive,
         } = props;
         const myIcon = ((year) => {
             const icon = L.divIcon({
@@ -114,8 +112,21 @@ const LoadableComponent = Loadable.Map({
                             key={`${element.name } ${ element.position[0]}`}
                             position={element.position}
                             icon={myIcon(element.startdate)}
+                            data-company={element.name}
+                            // onClick={((e) => {
+                            //     console.log(e);
+                            //     changeActive(e.target.options['data-company']);
+                            // })}
                         >
-                            <Popup>
+                            <Popup
+                                data-company={element.name}
+                                onOpen={(() => {
+                                    changeActive(element.name);
+                                })}
+                                onClose={(() => {
+                                    changeActive('');
+                                })}
+                            >
                                 <b>{element.name}</b>
                                 {element.subtitle && (
                                 <>
@@ -143,20 +154,32 @@ const LoadableComponent = Loadable.Map({
   });
 
 const KartSida = () => {
+    const { createSliderWithTooltip } = Slider;
+    const Range = createSliderWithTooltip(Slider.Range);
+
+    // filter
     const [currentCity, setCurrentCity] = useState('');
     const [currentType, setCurrentType] = useState('');
 
+    // lägre och övre max-värden för slidern
     const [lowerMax, setLowerMax] = useState(0);
     const [upperMax, setUpperMax] = useState(0);
 
+    // nuvarande värden för slidern
     const [value1, setValue1] = useState(0);
     const [value2, setValue2] = useState(0);
 
+    // nuvarande antal aktuella företag
     const [numberOfCompanies, setNumberOfCompanies] = useState(0);
 
+    // kartans state
     const [mapCenter, setMapCenter] = useState([]);
     const [mapBounds, setMapBounds] = useState([]);
     const [mapPins, setMapPins] = useState([]);
+
+    // aktuellt företag
+    const [currentCompany, setCurrentCompany] = useState('');
+    const [infoTabOpen, setInfoTabOpen] = useState(false);
 
     const data = useStaticQuery(graphql`
         query AddressQuery {
@@ -225,142 +248,6 @@ const KartSida = () => {
 
         return result;
     }, [data]);
-    // console.log('withMinMaxData', withMinMaxData);
-
-    // const filteredByCityType = useMemo(() => {
-    //     console.log('in filteredByCityType');
-
-    //     const result = withMinMaxData.filter((item) => (
-    //     (currentCity) ? item.city === currentCity : item))
-    //     .filter((item) => ((currentType) ? item.type === currentType : item));
-    //     console.log('filteredByCityType result', result);
-    //     return result;
-    // }, [withMinMaxData, currentCity, currentType]);
-    // console.log('filteredByCityType', filteredByCityType);
-
-    // const findLowest = useMemo(() => {
-    //     console.log('in findLowest');
-    //     if (filteredByCityType.length === 0) {
-    //         return 1900;
-    //     }
-    //     const minValues = filteredByCityType.map((item) => item.min);
-    //     const result = Math.min(...minValues);
-    //     console.log('findLowest result', result);
-
-    //     return result;
-    // }, [filteredByCityType]);
-
-    // const findHighest = useMemo(() => {
-    //     console.log('in findHighest');
-    //     const now = new Date();
-    //     if (filteredByCityType.length === 0) {
-    //         console.log('findHighest result', now.getFullYear());
-    //         return now.getFullYear();
-    //     }
-
-    //     const maxValues = filteredByCityType.map((item) => item.max);
-
-    //     const result = Math.max(...maxValues);
-    //     console.log('findHighest result', result);
-
-    //     return result;
-    // }, [filteredByCityType]);
-
-    // console.log('lowest', findLowest);
-    // console.log('highest', findHighest);
-
-    // const filteredByRange = useMemo(() => {
-    //     console.log('in filteredByRange');
-
-    //     const result = filteredByCityType.filter((item) => (
-    //         (value1 !== lowerMax || value2 !== upperMax)
-    //         ? (item.max >= value1 && item.min <= value2)
-    //         : item
-    //     ))
-    //     .map((item) => {
-    //         const current = item;
-    //         const newAddr = current.address.filter((item2) => (
-    //             (value1 !== lowerMax || value2 !== upperMax)
-    //             ? (item2.startdate <= value2 && item2.enddate >= value1)
-    //             : item2
-    //         ));
-    //         current.address = newAddr;
-
-    //         return current;
-    //     });
-
-    //     console.log('filteredByRange result', result);
-    //     return result;
-    // }, [value1, value2]);
-    // console.log('filteredByRange', filteredByRange);
-
-    // *********************** //
-    // geografiska beräkningar //
-    // *********************** //
-
-    // beräkna centerpunkten bland relevanta koordinater
-    // const calcCenter = useMemo(() => {
-    //     console.log('in calcCenter');
-    //     const addresses = filteredByRange.map((item) => item.address).flat();
-    //     // console.log('addresses', addresses);
-    //     const coordinates = addresses.map((item) => ({
-    //             latitude: item.latitude,
-    //             longitude: item.longitude,
-
-    //     }));
-    //     // console.log('coordinates', coordinates);
-    //     // console.log('getCenterOfBounds', getCenterOfBounds(coordinates));
-
-    //     return getCenterOfBounds(coordinates);
-    // }, [filteredByRange]);
-    // console.log('calcCenter', calcCenter);
-
-    // beräkna hur kartan ska vara positionerad över centerpunkten
-    // const calcBounds = useMemo(() => {
-    //     console.log('in calcBounds');
-    //     const addresses = filteredByRange.map((item) => item.address).flat();
-    //     // console.log('addresses', addresses);
-    //     const coordinates = addresses.map((item) => ({
-    //             latitude: item.latitude,
-    //             longitude: item.longitude,
-
-    //     }));
-    //     // console.log('coordinates', coordinates);
-    //     // console.log('getBounds', getBounds(coordinates));
-    //     const bounds = getBounds(coordinates);
-    //     const result = [
-    //         [
-    //             bounds.maxLat,
-    //             bounds.maxLng,
-    //         ],
-    //         [
-    //             bounds.minLat,
-    //             bounds.minLng,
-    //         ],
-    //     ];
-    //     console.log(result);
-
-    //     return result;
-    // }, [filteredByRange]);
-    // console.log('calcBounds', calcBounds);
-
-
-    // initial inställning av datum till slidern
-    // useEffect(() => {
-    //     console.log('in useEffect: setup');
-    //     if (lowerMax === 0) {
-    //         setLowerMax(findLowest);
-    //     }
-    //     if (upperMax === 0) {
-    //         setUpperMax(findHighest);
-    //     }
-    //     if (value1 === 0) {
-    //         setValue1(findLowest);
-    //     }
-    //     if (value2 === 0) {
-    //         setValue2(findHighest);
-    //     }
-    // }, [filteredByCityType]);
 
     // uppdatera kartans state
     useEffect(() => {
@@ -370,6 +257,7 @@ const KartSida = () => {
         const filteredByCityType = withMinMaxData.filter((item) => (
             (currentCity) ? item.city === currentCity : item))
             .filter((item) => ((currentType) ? item.type === currentType : item));
+        console.log('filteredbyCityType', filteredByCityType);
 
         const min = (() => {
             if (filteredByCityType.length === 0) {
@@ -380,6 +268,7 @@ const KartSida = () => {
             return minNmbr;
         })();
         console.log('findLowest result', min);
+
         if (value1 === 0 || value1 < min) {
             setValue1(min);
         }
@@ -396,32 +285,23 @@ const KartSida = () => {
             return result;
         })();
         console.log('findHighest result', max);
+
         if (value2 === 0 || value2 > max) {
             setValue2(max);
         }
         setUpperMax(max);
 
-        const filteredByRange = filteredByCityType.filter((item) => (
+        const addresses = filteredByCityType.map((item) => item.address).flat();
+
+        const filteredByRange = addresses.filter((item) => (
             (value1 !== lowerMax || value2 !== upperMax)
-            ? (item.max >= value1 && item.min <= value2)
+            ? (item.enddate >= value1 && item.startdate <= value2)
             : item
-        ))
-        .map((item) => {
-            const current = item;
-            const newAddr = current.address.filter((item2) => (
-                (value1 !== lowerMax || value2 !== upperMax)
-                ? (item2.startdate <= value2 && item2.enddate >= value1)
-                : item2
-            ));
-            current.address = newAddr;
+        ));
 
-            return current;
-        });
-
-        const addresses = filteredByRange.map((item) => item.address).flat();
-        console.log('addresses length', addresses.length, 'content', addresses);
-        setNumberOfCompanies(addresses.length);
-        const pins = addresses.map((item) => {
+        console.log('addresses length', filteredByRange.length, 'content', filteredByRange);
+        setNumberOfCompanies(filteredByRange.length);
+        const pins = filteredByRange.map((item) => {
             const obj = {
                 position: [item.latitude, item.longitude],
                 subtitle: [item.addresstext1, item.addresstext2],
@@ -431,8 +311,8 @@ const KartSida = () => {
         });
         setMapPins(pins);
 
-        if (addresses.length > 0) {
-            const coordinates = addresses.map((item) => ({
+        if (filteredByRange.length > 0) {
+            const coordinates = filteredByRange.map((item) => ({
                 latitude: item.latitude,
                 longitude: item.longitude,
             }));
@@ -448,45 +328,35 @@ const KartSida = () => {
             );
             console.log('distance', distance);
 
-            const distantPoint = computeDestinationPoint(
-                getCenterOfBounds(coordinates),
-                distance * 1.2,
-                180,
-            );
-            const otherPoint = computeDestinationPoint(
-                getCenterOfBounds(coordinates),
-                distance * 1.2,
-                0,
-            );
-            console.log('distantPoint', distantPoint);
-
-            coordinates.push(distantPoint, otherPoint);
-            console.log('addedCoords', coordinates);
-
             const bounds = getBounds(coordinates);
             console.log('bounds', bounds);
 
-            // const boundsArray = bounds.sort((a, b) => {
-            //     const Alat = a.latitude;
-            //     const Bblat = b.latitude;
+            const someBounds = getBoundsOfDistance(
+                getCenterOfBounds(coordinates),
+                (distance * 1.3),
+            );
+            console.log('someBounds', someBounds);
+            const someBoundsArray = [
+                [someBounds[0].latitude, someBounds[0].longitude],
+                [someBounds[1].latitude, someBounds[1].longitude],
+            ];
+            console.log('someBoundsArray', someBoundsArray);
 
-            //     let comparison = 0;
-            //     if (Alat < Bblat) {
-            //       comparison = 1;
-            //     } else if (Alat > Bblat) {
-            //       comparison = -1;
-            //     }
-            //     return comparison;
-            // }).reverse();
-            // console.log('boundsArray', boundsArray);
-
-            setMapBounds(bounds);
+            setMapBounds(someBoundsArray);
             setMapCenter(getCenterOfBounds(coordinates));
         }
-    }, [currentCity, currentType, lowerMax, upperMax, value1, value2, withMinMaxData]);
+    }, [currentCity, currentType, lowerMax, upperMax,
+        value1, value2, withMinMaxData]);
 
-    const { createSliderWithTooltip } = Slider;
-    const Range = createSliderWithTooltip(Slider.Range);
+    const changeActive = useCallback((company) => {
+        // console.log('useCallback, this is', company);
+        if (company === '') {
+            setInfoTabOpen(false);
+         } else {
+            setCurrentCompany(company);
+            setInfoTabOpen(true);
+         }
+    }, []);
 
     return (
         <section className="section">
@@ -529,16 +399,61 @@ const KartSida = () => {
             <div className="columns is-centered">
                 <div className="column is-10 is-centered">
                     <div
+                        id="map-container"
                         css={css`
                             width: 100%;
+                            position: relative;
+                            overflow: hidden;
+                            ${infoTabOpen && (`
+                                #map-overlay {
+                                    left: 80%;
+                                }
+                            `)}
+
                         `}
                     >
-                            <LoadableComponent
-                                center={mapCenter}
-                                bounds={mapBounds}
-                                pins={mapPins}
-                                // zoom={zoom}
-                            />
+                        <LoadableComponent
+                            center={mapCenter}
+                            bounds={mapBounds}
+                            pins={mapPins}
+                            changeActive={changeActive}
+                            // zoom={zoom}
+                        />
+                        <div
+                            id="map-overlay"
+                            css={css`
+                                position: absolute;
+                                bottom: 70%;
+                                left: 100%;
+                                background-color: #008CBA;
+                                overflow: hidden;
+                                width: 20%;
+                                height: 15%;
+                                -webkit-transition: .5s ease;
+                                -webkit-transition: .5s ease;
+                                transition: .5s ease;
+                                z-index: 10000;
+                                display: flex;
+                                align-items: center;
+                            `}
+                        >
+                            <div
+                                id="map-overlay-content"
+                                css={css`
+                                    color: white;
+                                    text-align: center;
+                                `}
+                            >
+                                Läs mer om
+                                {' '}
+                                {currentCompany
+                                    ? (
+                                        <b>
+                                        {currentCompany}
+                                        </b>
+                                    ) : 'ett företag?'}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useStaticQuery, graphql } from 'gatsby';
+import { graphql, Link, useStaticQuery } from 'gatsby';
 import { css } from '@emotion/core';
+import Img from 'gatsby-image';
 import Slider from 'rc-slider';
 import getDistance from 'geolib/es/getDistance';
 import getCenterOfBounds from 'geolib/es/getCenterOfBounds';
@@ -83,6 +84,8 @@ const LoadableComponent = Loadable.Map({
                     center={center}
                     bounds={bounds && bounds}
                     zoom={zoom && zoom}
+                    maxZoom={17}
+                    minZoom={10}
                     style={{
                         height: '600px',
                     }}
@@ -106,6 +109,9 @@ const LoadableComponent = Loadable.Map({
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                        maxZoom={17}
+                        crossOrigin="anonymous"
+                        bounds={bounds && (bounds * 1.5)}
                     />
                     {pins && pins.map((element) => (
                         <Marker
@@ -119,12 +125,11 @@ const LoadableComponent = Loadable.Map({
                             // })}
                         >
                             <Popup
-                                data-company={element.name}
                                 onOpen={(() => {
-                                    changeActive(element.name);
+                                    changeActive(element.strapiId);
                                 })}
                                 onClose={(() => {
-                                    changeActive('');
+                                    changeActive(-1);
                                 })}
                             >
                                 <b>{element.name}</b>
@@ -158,8 +163,8 @@ const KartSida = () => {
     const Range = createSliderWithTooltip(Slider.Range);
 
     // filter
-    const [currentCity, setCurrentCity] = useState('');
-    const [currentType, setCurrentType] = useState('');
+    const [currentCity, setCurrentCity] = useState('alla');
+    const [currentType, setCurrentType] = useState('alla');
 
     // lägre och övre max-värden för slidern
     const [lowerMax, setLowerMax] = useState(0);
@@ -170,7 +175,8 @@ const KartSida = () => {
     const [value2, setValue2] = useState(0);
 
     // nuvarande antal aktuella företag
-    const [numberOfCompanies, setNumberOfCompanies] = useState(0);
+    const [nmbrCompaniesAfterCityType, setNmbrCompaniesAfterCityType] = useState(0);
+    const [nmbrCompaniesAfterRange, setNmbrCompaniesAfterRange] = useState(0);
 
     // kartans state
     const [mapCenter, setMapCenter] = useState([]);
@@ -178,8 +184,8 @@ const KartSida = () => {
     const [mapPins, setMapPins] = useState([]);
 
     // aktuellt företag
-    const [currentCompany, setCurrentCompany] = useState('');
-    const [infoTabOpen, setInfoTabOpen] = useState(false);
+    const [currentCompany, setCurrentCompany] = useState(-1);
+    const [infoTabOpen, setInfoTabOpen] = useState(0);
 
     const data = useStaticQuery(graphql`
         query AddressQuery {
@@ -191,6 +197,15 @@ const KartSida = () => {
                         name
                         city
                         type
+                        summary
+                        companyimage {
+                          childImageSharp {
+                            fluid(maxWidth: 970) {
+                              aspectRatio
+                              ...GatsbyImageSharpFluid
+                            }
+                          }
+                        }
                         fields {
                             slug
                         }
@@ -232,6 +247,7 @@ const KartSida = () => {
             const address = item.address.map((item2) => {
                 const currAddr = item2;
                 currAddr.name = item.name;
+                currAddr.strapiId = item.strapiId;
                 currAddr.city = item.city;
                 currAddr.type = item.type;
                 currAddr.slug = item.fields.slug;
@@ -255,9 +271,10 @@ const KartSida = () => {
         console.log('withMinMaxData', withMinMaxData);
 
         const filteredByCityType = withMinMaxData.filter((item) => (
-            (currentCity) ? item.city === currentCity : item))
-            .filter((item) => ((currentType) ? item.type === currentType : item));
+            (currentCity !== 'alla') ? item.city === currentCity : item))
+            .filter((item) => ((currentType !== 'alla') ? item.type === currentType : item));
         console.log('filteredbyCityType', filteredByCityType);
+        setNmbrCompaniesAfterCityType(filteredByCityType.length);
 
         const min = (() => {
             if (filteredByCityType.length === 0) {
@@ -300,7 +317,7 @@ const KartSida = () => {
         ));
 
         console.log('addresses length', filteredByRange.length, 'content', filteredByRange);
-        setNumberOfCompanies(filteredByRange.length);
+        setNmbrCompaniesAfterRange(filteredByRange.length);
         const pins = filteredByRange.map((item) => {
             const obj = {
                 position: [item.latitude, item.longitude],
@@ -333,11 +350,11 @@ const KartSida = () => {
 
             const someBounds = getBoundsOfDistance(
                 getCenterOfBounds(coordinates),
-                (distance * 1.3),
+                (distance * 1.5 + 1),
             );
             console.log('someBounds', someBounds);
             const someBoundsArray = [
-                [someBounds[0].latitude, someBounds[0].longitude],
+                [someBounds[0].latitude + 0.000000000001, someBounds[0].longitude + 0.000000000001],
                 [someBounds[1].latitude, someBounds[1].longitude],
             ];
             console.log('someBoundsArray', someBoundsArray);
@@ -350,34 +367,91 @@ const KartSida = () => {
 
     const changeActive = useCallback((company) => {
         // console.log('useCallback, this is', company);
-        if (company === '') {
-            setInfoTabOpen(false);
+        if (company === -1) {
+            setInfoTabOpen(0);
+            // setCurrentCompany(-1);
          } else {
             setCurrentCompany(company);
-            setInfoTabOpen(true);
+            setInfoTabOpen(1);
          }
     }, []);
+
+    const currentCompanyData = (currentCompany !== -1)
+    && withMinMaxData.find((item) => item.strapiId === currentCompany);
 
     return (
         <section className="section">
             <div className="columns is-centered">
                 <div className="column is-6 is-centered">
-                    <Range
-                        min={lowerMax}
-                        max={upperMax}
-                        defaultValue={[value1, value2]}
-                        tipFormatter={(value) => `${value}`}
-                        // onChange={((e) => {
-
-                        // })}
-                        onAfterChange={((e) => {
-                            console.log(e);
-                            setValue1(e[0]);
-                            setValue2(e[1]);
-                        })}
-                    />
                     <div
-                        id="kartaInfo"
+                        css={css`
+                            display: flex;
+                            justify-content: space-between;
+                            margin-bottom: 1rem;
+                        `}
+                    >
+                        <div
+                            className="select"
+                        >
+                            <select
+                                onChange={((e) => {
+                                    setCurrentCity(e.target.value);
+                                    setValue1(0);
+                                    setValue2(0);
+                                    setInfoTabOpen(0);
+                                })}
+                            >
+                                <option value="alla">Stad</option>
+                                <option value="savsjo">Sävsjö</option>
+                                <option value="vrigstad">Vrigstad</option>
+                                <option value="stockaryd">Stockaryd</option>
+                                <option value="rorvik">Rörvik</option>
+                                <option value="hultagard">Hultagård</option>
+                                <option value="hylletofta">Hylletofta</option>
+                            </select>
+                        </div>
+                        <div
+                            className="select"
+                        >
+                            <select
+                                onChange={((e) => {
+                                    setCurrentType(e.target.value);
+                                    setValue1(0);
+                                    setValue2(0);
+                                    setInfoTabOpen(0);
+                                })}
+                            >
+                                <option value="alla">Bransch</option>
+                                <option value="tra">Trä</option>
+                                <option value="metall">Metall</option>
+                                <option value="moblertraforadling">Möbler / Träförädling</option>
+                                <option value="livsmedel">Livsmedel</option>
+                                <option value="skorklader">Skor & Kläder</option>
+                                <option value="plastgummi">Plast / Gummi</option>
+                                <option value="ovrigtdiverse">Övrigt / Diverse</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <Range
+                            min={lowerMax}
+                            max={upperMax}
+                            disabled={nmbrCompaniesAfterCityType === 0}
+                            defaultValue={[value1, value2]}
+                            tipFormatter={(value) => `${value}`}
+                            // onChange={((e) => {
+
+                            // })}
+                            onAfterChange={((e) => {
+                                console.log(e);
+                                setValue1(e[0]);
+                                setValue2(e[1]);
+                                setInfoTabOpen(0);
+                            })}
+                        />
+
+                    </div>
+                    <div
                         css={css`
                             display: flex;
                             justify-content: space-between;
@@ -386,14 +460,16 @@ const KartSida = () => {
                         <span id="lowerMax">{lowerMax}</span>
                         <span id="upperMax">{upperMax}</span>
                     </div>
-                    <h3
-                        css={css`
-                            text-align: center;
-                            margin: 0;
-                        `}
-                    >
-                        {`${numberOfCompanies} företag hittades!`}
-                    </h3>
+                    <div>
+                        <h3
+                            css={css`
+                                text-align: center;
+                                margin: 0;
+                            `}
+                        >
+                            {`${nmbrCompaniesAfterCityType} företag ${nmbrCompaniesAfterRange > 1 ? (`på ${nmbrCompaniesAfterRange} platser hittades`) : ('hittades!')}`}
+                        </h3>
+                    </div>
                 </div>
             </div>
             <div className="columns is-centered">
@@ -404,12 +480,6 @@ const KartSida = () => {
                             width: 100%;
                             position: relative;
                             overflow: hidden;
-                            ${infoTabOpen && (`
-                                #map-overlay {
-                                    left: 80%;
-                                }
-                            `)}
-
                         `}
                     >
                         <LoadableComponent
@@ -423,35 +493,132 @@ const KartSida = () => {
                             id="map-overlay"
                             css={css`
                                 position: absolute;
-                                bottom: 70%;
+                                bottom: 0%;
                                 left: 100%;
-                                background-color: #008CBA;
-                                overflow: hidden;
-                                width: 20%;
-                                height: 15%;
-                                -webkit-transition: .5s ease;
+                                background-color: rgb(250, 250, 250);
+                                width: 100%;
+                                height: 100%;
                                 -webkit-transition: .5s ease;
                                 transition: .5s ease;
                                 z-index: 10000;
                                 display: flex;
                                 align-items: center;
+                                ${infoTabOpen === 2 && (`
+                                    left: 0%;
+                                `)}
                             `}
                         >
                             <div
-                                id="map-overlay-content"
+                                id="map-overlay-tab"
+                                onClick={(() => setInfoTabOpen(2))}
+                                onKeyDown={(event) => {
+                                    if (event.keycode === 13) {
+                                        setInfoTabOpen(2);
+                                    }
+                                }}
+                                role="button"
+                                tabIndex={0}
                                 css={css`
-                                    color: white;
-                                    text-align: center;
+                                    position: absolute;
+                                    bottom: 70%;
+                                    left: 1%;
+                                    background-color: rgb(250, 250, 250);
+                                    width: 25%;
+                                    height: 15%;
+                                    transition: .5s ease;
+                                    z-index: 20000;
+                                    ${infoTabOpen !== 0 && (`
+                                            left: -25%;
+
+                                    `)}
                                 `}
                             >
-                                Läs mer om
-                                {' '}
-                                {currentCompany
-                                    ? (
-                                        <b>
-                                        {currentCompany}
-                                        </b>
-                                    ) : 'ett företag?'}
+                                <div
+                                    id="map-overlay-tab-content"
+                                    css={css`
+                                        text-align: center;
+                                        height: 100%;
+                                        display: flex;
+                                        flex-direction: column;
+                                        justify-content: center;
+                                        align-self: center;
+                                        margin-right: 5px;
+                                        box-shadow: 0px 0px 3px 1px #000000b5;
+                                    `}
+                                >
+                                    Läs mer om
+                                    {' '}
+                                    {currentCompany !== -1
+                                        ? (
+                                            <b>
+                                            {currentCompanyData.name}
+                                            </b>
+                                        ) : 'ett företag?'}
+                                </div>
+                            </div>
+                            <div
+                                id="map-overlay-content"
+                                css={css`
+                                    width: 100%;
+                                    height: 100%;
+                                    padding: 50px 75px;
+                                    display: flex;
+                                    flex-wrap: wrap;
+                                `}
+                            >
+                                {currentCompany !== -1
+                                && (
+                                    <>
+                                    <h1
+                                        css={css`
+                                            flex: 1 1 100%;
+                                        `}
+                                    >
+                                        <Link to={`/industri/${currentCompanyData.fields.slug}`}>
+                                            {currentCompanyData.name}
+                                        </Link>
+                                    </h1>
+                                    <p
+                                        css={css`
+                                            flex: 1 0 50%;
+                                            padding-right: 1.5rem;
+                                        `}
+                                    >
+                                        {currentCompanyData.summary}
+                                    </p>
+                                    <Img
+                                        fluid={currentCompanyData.companyimage.childImageSharp.fluid}
+                                        alt={currentCompanyData.name}
+                                        title={currentCompanyData.name}
+                                        css={css`
+                                            flex: 0 1 50%;
+                                            max-height: 75%;
+                                        `}
+                                    />
+                                    </>
+                                )}
+
+                                <div
+                                    id="map-overlay-close"
+                                    onClick={(() => setInfoTabOpen(1))}
+                                    onKeyDown={(event) => {
+                                        if (event.keycode === 13) {
+                                            setInfoTabOpen(1);
+                                        }
+                                    }}
+                                    role="button"
+                                    tabIndex={0}
+                                    css={css`
+                                        position: absolute;
+                                        top: 1rem;
+                                        right: 1rem;
+                                        font-size: 2rem;
+                                        padding: 0px 10px;
+                                        cursor: pointer;
+                                    `}
+                                >
+                                    X
+                                </div>
                             </div>
                         </div>
                     </div>

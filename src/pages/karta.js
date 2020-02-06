@@ -228,7 +228,7 @@ const KartSida = () => {
     // }, [data.company.edges]);
     // // console.log('addressData', addressData);
 
-    const withMinMaxData = React.useMemo(() => {
+    const withMinMaxData = useMemo(() => {
         console.log('in withMinMaxData');
         const thedata = data.company.edges.map((item) => item.node);
         const result = thedata.map((item) => {
@@ -327,6 +327,7 @@ const KartSida = () => {
             return obj;
         });
         setMapPins(pins);
+        console.log('pins:', pins);
 
         if (filteredByRange.length > 0) {
             const coordinates = filteredByRange.map((item) => ({
@@ -339,27 +340,26 @@ const KartSida = () => {
             const coordsByDistance = orderByDistance(getCenterOfBounds(coordinates), coordinates);
             console.log('coordsByDistance', coordsByDistance);
 
-            const distance = getDistance(
+            // sätter minimum-värde på distance som 250 för att det inte
+            // ska bli för inzoomat när det bara är 1 träff
+            const distance = Math.max(getDistance(
                 getCenterOfBounds(coordinates),
                 coordsByDistance[coordsByDistance.length - 1],
-            );
+            ), 250);
             console.log('distance', distance);
 
-            const bounds = getBounds(coordinates);
-            console.log('bounds', bounds);
-
-            const someBounds = getBoundsOfDistance(
+            const bounds = getBoundsOfDistance(
                 getCenterOfBounds(coordinates),
                 (distance * 1.5 + 1),
             );
-            console.log('someBounds', someBounds);
-            const someBoundsArray = [
-                [someBounds[0].latitude + 0.000000000001, someBounds[0].longitude + 0.000000000001],
-                [someBounds[1].latitude, someBounds[1].longitude],
+            console.log('bounds', bounds);
+            const boundsArray = [
+                [bounds[0].latitude + 0.000000000001, bounds[0].longitude + 0.000000000001],
+                [bounds[1].latitude, bounds[1].longitude],
             ];
-            console.log('someBoundsArray', someBoundsArray);
+            console.log('boundsArray', boundsArray);
 
-            setMapBounds(someBoundsArray);
+            setMapBounds(boundsArray);
             setMapCenter(getCenterOfBounds(coordinates));
         }
     }, [currentCity, currentType, lowerMax, upperMax,
@@ -376,8 +376,28 @@ const KartSida = () => {
          }
     }, []);
 
-    const currentCompanyData = (currentCompany !== -1)
-    && withMinMaxData.find((item) => item.strapiId === currentCompany);
+    const currentCompanyData = useMemo(() => (
+    (currentCompany !== -1)
+    && withMinMaxData.find((item) => item.strapiId === currentCompany)
+    ), [currentCompany]);
+
+    const uniqueCompaniesInPins = useMemo(() => (
+        mapPins.reduce((acc, curr) => {
+            // Check if there exist an object in empty array whose CategoryId matches
+            let isElemExist = acc.findIndex((item) => item.name === curr.name);
+            if (isElemExist === -1) {
+              let obj = {};
+              obj.name = curr.name;
+              obj.count = 1;
+              obj.strapiId = curr.strapiId;
+              acc.push(obj);
+            } else {
+              acc[isElemExist].count += 1;
+            }
+            console.log('acc', acc);
+            return acc;
+        }, [])
+    ), [mapPins]);
 
     return (
         <section className="section">
@@ -467,7 +487,7 @@ const KartSida = () => {
                                 margin: 0;
                             `}
                         >
-                            {`${nmbrCompaniesAfterCityType} företag ${nmbrCompaniesAfterRange > 1 ? (`på ${nmbrCompaniesAfterRange} platser hittades`) : ('hittades!')}`}
+                            {(uniqueCompaniesInPins && uniqueCompaniesInPins.length > 0) && `${uniqueCompaniesInPins.length} företag ${(uniqueCompaniesInPins.length > 1 && (uniqueCompaniesInPins.length !== nmbrCompaniesAfterRange)) ? (`på ${nmbrCompaniesAfterRange} platser hittades!`) : ('hittades!')}`}
                         </h3>
                     </div>
                 </div>

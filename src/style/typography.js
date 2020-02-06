@@ -12,7 +12,8 @@ twintheme.overrideThemeStyles = ({ rhythm }, options, styles) => ({
     a: {
 		color: 'inherit',
 		textShadow: 'none',
-		backgroundImage: 'none',
+        backgroundImage: 'none',
+        textDecoration: 'underline',
     },
     'a:hover, a:focus': {
         color: '#25347f',

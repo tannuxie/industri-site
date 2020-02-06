@@ -60,6 +60,7 @@ button, select {
 // ****************
 // *** Navbar ***
 // ****************
+
 a.navbar-item:focus,
 a.navbar-item:focus-within,
 a.navbar-item:hover,
@@ -71,6 +72,10 @@ a.navbar-item.is-active,
     box-shadow: none;
     color: #25347f;
 }
+a.navbar-item, .navbar-link {
+    text-decoration: none;
+}
+
 .navbarFixed {
 	position: fixed;
 	top: 0px;

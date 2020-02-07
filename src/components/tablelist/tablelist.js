@@ -567,9 +567,9 @@ const TableList = ({ data }) => {
         (item.city === 'hylletofta') && (current.city = 'Hylletofta');
 
         return current;
-    })), []);
+    })), [data]);
 
-    const sortedData = React.useMemo(() => fixedNameData.sort(compareValues('name', 'asc')), []);
+    const sortedData = React.useMemo(() => fixedNameData.sort(compareValues('name', 'asc')), [fixedNameData]);
     console.log(sortedData);
 
     const columns = React.useMemo(

@@ -487,7 +487,7 @@ const KartSida = () => {
                                 margin: 0;
                             `}
                         >
-                            {(uniqueCompaniesInPins && uniqueCompaniesInPins.length > 0) && `${uniqueCompaniesInPins.length} företag ${(uniqueCompaniesInPins.length > 1 && (uniqueCompaniesInPins.length !== nmbrCompaniesAfterRange)) ? (`på ${nmbrCompaniesAfterRange} platser hittades!`) : ('hittades!')}`}
+                            {(uniqueCompaniesInPins && uniqueCompaniesInPins.length > 0) && `${uniqueCompaniesInPins.length} företag ${(uniqueCompaniesInPins.length < nmbrCompaniesAfterRange) ? (`på ${nmbrCompaniesAfterRange} platser hittades!`) : ('hittades!')}`}
                         </h3>
                     </div>
                 </div>

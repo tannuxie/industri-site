@@ -44,17 +44,17 @@ const ImgBox = ({ images, undertext }) => {
         element.classList.toggle('right-scroll-bar-position');
     }
 
-    const openOverlay = () => {
+    function openOverlay() {
         console.log('in openOverlay');
         setIsOpen(true);
         toggleRightScroll();
-    };
+    }
 
-    const closeOverlay = () => {
+    function closeOverlay() {
         console.log('in closeOverlay');
         setIsOpen(false);
         toggleRightScroll();
-    };
+    }
 
     const chunkedImages = useMemo(() => {
         const aspectRatioImages = images.map(((item) => {
@@ -63,7 +63,8 @@ const ImgBox = ({ images, undertext }) => {
             return current;
         }));
         console.log('aspectRatioImages', aspectRatioImages);
-        const aspectSortedImages = aspectRatioImages.sort(compareValues('aspectRatio', 'asc'));
+        // const aspectSortedImages = aspectRatioImages.sort(compareValues('aspectRatio', 'asc'));
+        const aspectSortedImages = aspectRatioImages;
         console.log('aspectSortedImages', aspectSortedImages);
 
         const newImagesArray = [];
@@ -123,6 +124,16 @@ const ImgBox = ({ images, undertext }) => {
                             tabIndex={0}
                             onClick={() => {
                                 console.log('chunk', (chunkIndex * 2) + index);
+                                console.log('chunk data', chunk);
+                                console.log('all chunks', chunkedImages);
+                                // console.log('test1', chunkedImages[1][0]);
+                                // console.log('test2', chunkedImages[1]['0']);
+                                // console.log('test1', chunkedImages[0][0].beskrivning);
+                                // console.log('test2', chunkedImages[0][1].beskrivning);
+                                // console.log('test3', chunkedImages[1][0].beskrivning);
+                                // console.log('test4', chunkedImages[1][1].beskrivning);
+                                console.log('test5', chunkedImages[Math.floor(((chunkIndex * 2) + index) / 2)][((chunkIndex * 2) + index) % 2].beskrivning);
+
                                 openOverlay();
                                 setPhotoIndex((chunkIndex * 2) + index);
                             }}
@@ -166,7 +177,7 @@ const ImgBox = ({ images, undertext }) => {
                         align-items: center;
                     `}
                     isOpen={isOpen}
-                    onDismiss={closeOverlay()}
+                    onDismiss={() => closeOverlay()}
                     onClick={() => openOverlay()}
                 >
                     <DialogContent

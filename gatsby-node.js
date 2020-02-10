@@ -1,6 +1,7 @@
 const path = require('path');
 const { createFilePath } = require('gatsby-source-filesystem');
 const createMDXNode = require('gatsby-plugin-mdx/utils/create-mdx-node');
+const fs = require('fs');
 const text = require('./src/components/text.json');
 
 const CITYCONST = text.cities;
@@ -71,15 +72,22 @@ exports.onCreateNode = async ({
     || node.internal.type === 'StrapiStaticContent') {
         const textObjects = [];
 
+        // fs.writeFile(`${node.internal.type} - ${node.id}.txt`, JSON.stringify(node.content, undefined, 2), (err) => {
+        //     // Deal with possible error here.
+        //     console.log(`error, type: ${node.internal.type} id ${node.id}: `, err);
+        // });
+
         Object.keys(node.content).forEach((item) => {
             // console.log('item: ', item);
             // console.log('item.content[item]: ', node.content[item]);
             Object.keys(node.content[item]).forEach((item2) => {
                 // console.log('item2: ', item2);
                 // console.log('node.content[item][item2]: ', node.content[item][item2]);
-                if (item2 === 'textfield') {
-                    textObjects.push(node.content[item][item2]);
-                }
+
+                // borde inte behövas mer med nya strukturen?
+                // if (item2 === 'textfield') {
+                //     textObjects.push(node.content[item][item2]);
+                // }
                 if (item2 === 'text' || item2 === 'text_vanster' || item2 === 'text_hoger') {
                     // console.log('textobject: ', node.content[item][item2][textfield]);
                     Object.keys(node.content[item][item2]).forEach((item3) => {

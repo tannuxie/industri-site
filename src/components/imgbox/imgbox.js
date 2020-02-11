@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
 import Img from 'gatsby-image';
@@ -17,6 +17,7 @@ const ImgBox = ({ images, undertext }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     const [imgBoxWidth, setImgBoxWidth] = useState(0);
+    const imageContainer = useRef(null);
 
     function getAspectRatioSum(imagesToSum) {
         console.log('in getAspectRatio');
@@ -25,12 +26,13 @@ const ImgBox = ({ images, undertext }) => {
         const aspectSum = imagesToSum.map((currentImg) => (
         currentImg.bildfil.childImageSharp.fluid.aspectRatio))
         .reduce((accumulator, currentValue) => accumulator + currentValue);
+        console.log('aspectSum', aspectSum);
 
         return aspectSum;
     }
 
     function getContainerWidth() {
-        const element = document.getElementById('image-container');
+        const element = imageContainer.current;
         console.log('getContainerWidth: ', element);
 
         if (element) {
@@ -69,7 +71,7 @@ const ImgBox = ({ images, undertext }) => {
 
         const newImagesArray = [];
         if (aspectSortedImages.length === 1) {
-            newImagesArray.push([aspectSortedImages]);
+            newImagesArray.push(aspectSortedImages);
         } else {
             let lastElement = null;
             if (aspectSortedImages.length % 2 !== 0) {
@@ -84,6 +86,7 @@ const ImgBox = ({ images, undertext }) => {
                 newImagesArray.push([lastElement]);
             }
         }
+        console.log('newImagesArray', newImagesArray);
 
         return newImagesArray;
     }, [images]);
@@ -104,6 +107,7 @@ const ImgBox = ({ images, undertext }) => {
     return (isMounted && chunkedImages.length > 0) && (
         <div
             id="image-container"
+            ref={imageContainer}
             css={css`
                 display: flex;
                 justify-content: center;
@@ -111,9 +115,12 @@ const ImgBox = ({ images, undertext }) => {
                 flex-wrap: wrap;
             `}
         >
-            {chunkedImages.map((chunk, index) => {
-                const chunkIndex = index;
-                return chunk.map((item, index) => {
+            {chunkedImages.map((chunk, chunkIndex) => {
+                console.log('chunk nr', chunkIndex);
+                console.log('all chunks', chunkedImages);
+                console.log('chunk data', chunk);
+
+                return chunk.map((item, imageIndex) => {
                     const {
                         beskrivning, bildfil,
                     } = item;
@@ -123,7 +130,7 @@ const ImgBox = ({ images, undertext }) => {
                             key={`${beskrivning}`}
                             tabIndex={0}
                             onClick={() => {
-                                console.log('chunk', (chunkIndex * 2) + index);
+                                console.log('chunk', (chunkIndex * 2) + imageIndex);
                                 console.log('chunk data', chunk);
                                 console.log('all chunks', chunkedImages);
                                 // console.log('test1', chunkedImages[1][0]);
@@ -132,10 +139,10 @@ const ImgBox = ({ images, undertext }) => {
                                 // console.log('test2', chunkedImages[0][1].beskrivning);
                                 // console.log('test3', chunkedImages[1][0].beskrivning);
                                 // console.log('test4', chunkedImages[1][1].beskrivning);
-                                console.log('test5', chunkedImages[Math.floor(((chunkIndex * 2) + index) / 2)][((chunkIndex * 2) + index) % 2].beskrivning);
+                                console.log('test5', chunkedImages[Math.floor(((chunkIndex * 2) + imageIndex) / 2)][((chunkIndex * 2) + imageIndex) % 2].beskrivning);
 
                                 openOverlay();
-                                setPhotoIndex((chunkIndex * 2) + index);
+                                setPhotoIndex((chunkIndex * 2) + imageIndex);
                             }}
                             css={css`
                                 width: ${(bildfil.childImageSharp.fluid.aspectRatio / getAspectRatioSum(chunk)) * 100}%;
@@ -143,7 +150,7 @@ const ImgBox = ({ images, undertext }) => {
                             onKeyDown={(event) => {
                                 if (event.keycode === 13) {
                                     openOverlay();
-                                    setPhotoIndex((chunkIndex * 2) + index);
+                                    setPhotoIndex((chunkIndex * 2) + imageIndex);
                                 }
                             }}
                         >

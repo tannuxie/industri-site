@@ -7,11 +7,9 @@ import getDistance from 'geolib/es/getDistance';
 import getCenterOfBounds from 'geolib/es/getCenterOfBounds';
 import orderByDistance from 'geolib/es/orderByDistance';
 import getBoundsOfDistance from 'geolib/es/getBoundsOfDistance';
-import getBounds from 'geolib/es/getBounds';
-import computeDestinationPoint from 'geolib/es/computeDestinationPoint';
 import Loadable from 'react-loadable';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import L from 'leaflet';
+import Loading from '~components/loading/loading';
 import '~style/slider.css';
 
 // getDistance(start, end, accuracy = 1)
@@ -35,24 +33,24 @@ import '~style/slider.css';
 
 // computeDestinationPoint(point, distance, bearing, radius = earthRadius)
 
-const Loading = () => (
-    <div css={css`
-        width: 100%
-        height: 500px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    `}
-    >
-        <h1
-            css={css`text-align: center;`}
-        >
-            Laddar karta...
-        </h1>
-        <CircularProgress />
-    </div>
-);
+// const Loading = () => (
+//     <div css={css`
+//         width: 100%
+//         height: 500px;
+//         display: flex;
+//         flex-direction: column;
+//         justify-content: center;
+//         align-items: center;
+//     `}
+//     >
+//         <h1
+//             css={css`text-align: center;`}
+//         >
+//             Laddar karta...
+//         </h1>
+//         <CircularProgress />
+//     </div>
+// );
 
 // pins ska vara en array med objekt som har
 // name, position(array med lat, lng), subtitle(array av textrader)
@@ -86,6 +84,7 @@ const LoadableComponent = Loadable.Map({
                     zoom={zoom && zoom}
                     maxZoom={17}
                     minZoom={10}
+                    scrollWheelZoom={false}
                     style={{
                         height: '600px',
                     }}

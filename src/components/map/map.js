@@ -1,30 +1,30 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 // import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import { css } from '@emotion/core';
 import Loadable from 'react-loadable';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Loading from '~components/loading/loading';
 
-const Loading = () => {
-    return (
-        <div css={css`
-            width: 100%
-            height: 500px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        `}
-        >
-            <h1
-                css={css`text-align: center;`}
-            >
-                Laddar karta...
-            </h1>
-            <CircularProgress />
-        </div>
-    );
-};
+// const Loading = () => {
+//     return (
+//         <div css={css`
+//             width: 100%
+//             height: 500px;
+//             display: flex;
+//             flex-direction: column;
+//             justify-content: center;
+//             align-items: center;
+//         `}
+//         >
+//             <h1
+//                 css={css`text-align: center;`}
+//             >
+//                 Laddar karta...
+//             </h1>
+//             <CircularProgress />
+//         </div>
+//     );
+// };
 
 const LoadableComponent = Loadable.Map({
     loader: {
@@ -35,13 +35,17 @@ const LoadableComponent = Loadable.Map({
         const {
           Map, Marker, Popup, TileLayer,
         } = loaded.leaf;
-        const { address, zoom, thePins } = props;
+        const {
+            address, zoom, thePins, isActive, setActive,
+        } = props;
         return (
             <div>
                 {(typeof window !== 'undefined') && (
                 <Map
                         center={address}
                         zoom={zoom}
+                        scrollWheelZoom={isActive}
+                        onFocus={() => setActive(true)}
                         style={{
                             height: '500px',
                         }}
@@ -83,7 +87,6 @@ const MyMap = ({
     address, pins, undertext, zoom,
     }) => {
 		console.log('MyMap', address, pins, undertext, zoom);
-
         // addresses shape
         // pins: PropTypes.arrayOf(PropTypes.shape({
         // name: PropTypes.string,
@@ -94,6 +97,11 @@ const MyMap = ({
         // })).isRequired,
         // undertext: PropTypes.string,
         // zoom: PropTypes.number,
+
+        const [isActive, setIsActive] = useState(false);
+        const setActive = useCallback((boolean) => {
+            setIsActive(boolean);
+        }, []);
 
 		const thePins = pins.map((pin) => {
 			console.log('pins element', pin);
@@ -116,7 +124,7 @@ const MyMap = ({
                     }
                     element.subtitle = temp;
                 }
-            } else {
+            } else if (!Array.isArray(element.subtitle)) {
                 const text = element.subtitle.split(/[\r\n]/g).filter(Boolean);
                 element.subtitle = text;
             }
@@ -132,11 +140,12 @@ const MyMap = ({
                     width: 100%;
                 `}
             >
-                <>
                     <LoadableComponent
                         address={address}
                         zoom={zoom}
                         thePins={thePins}
+                        isActive={isActive}
+                        setActive={setActive}
                     />
                     {undertext.length > 0 && (
                         <p
@@ -150,7 +159,6 @@ const MyMap = ({
                             {undertext}
                         </p>
                     )}
-                </>
             </div>
         );
 };

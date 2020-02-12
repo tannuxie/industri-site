@@ -17,28 +17,17 @@ const ImgBox = ({ images, undertext }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     const [imgBoxWidth, setImgBoxWidth] = useState(0);
-    const imageContainer = useRef(null);
 
     function getAspectRatioSum(imagesToSum) {
-        console.log('in getAspectRatio');
-        console.log('aspect images: ', imagesToSum);
+        // console.log('in getAspectRatio');
+        // console.log('aspect images: ', imagesToSum);
 
         const aspectSum = imagesToSum.map((currentImg) => (
         currentImg.bildfil.childImageSharp.fluid.aspectRatio))
         .reduce((accumulator, currentValue) => accumulator + currentValue);
-        console.log('aspectSum', aspectSum);
+        // console.log('aspectSum', aspectSum);
 
         return aspectSum;
-    }
-
-    function getContainerWidth() {
-        const element = imageContainer.current;
-        console.log('getContainerWidth: ', element);
-
-        if (element) {
-            return element.getBoundingClientRect().width;
-        }
-        return 0;
     }
 
     function toggleRightScroll() {
@@ -96,7 +85,6 @@ const ImgBox = ({ images, undertext }) => {
         console.log('chunkedImages', chunkedImages);
 
         setIsMounted(true);
-        setImgBoxWidth(getContainerWidth());
 
         return () => {
             console.log('in UseEffect, unmounting');
@@ -106,19 +94,26 @@ const ImgBox = ({ images, undertext }) => {
 
     return (isMounted && chunkedImages.length > 0) && (
         <div
-            id="image-container"
-            ref={imageContainer}
+            className="image-container"
             css={css`
                 display: flex;
                 justify-content: center;
                 flex-direction: row;
                 flex-wrap: wrap;
+
+                ${chunkedImages.length > 1 && (`
+                    @media (min-width: 1024px) {
+                        .gatsby-image-wrapper {
+                            max-height: 40vh;
+                        }
+                    }
+                `)}
             `}
         >
             {chunkedImages.map((chunk, chunkIndex) => {
-                console.log('chunk nr', chunkIndex);
-                console.log('all chunks', chunkedImages);
-                console.log('chunk data', chunk);
+                // console.log('chunk nr', chunkIndex);
+                // console.log('all chunks', chunkedImages);
+                // console.log('chunk data', chunk);
 
                 return chunk.map((item, imageIndex) => {
                     const {
@@ -133,12 +128,6 @@ const ImgBox = ({ images, undertext }) => {
                                 console.log('chunk', (chunkIndex * 2) + imageIndex);
                                 console.log('chunk data', chunk);
                                 console.log('all chunks', chunkedImages);
-                                // console.log('test1', chunkedImages[1][0]);
-                                // console.log('test2', chunkedImages[1]['0']);
-                                // console.log('test1', chunkedImages[0][0].beskrivning);
-                                // console.log('test2', chunkedImages[0][1].beskrivning);
-                                // console.log('test3', chunkedImages[1][0].beskrivning);
-                                // console.log('test4', chunkedImages[1][1].beskrivning);
                                 console.log('test5', chunkedImages[Math.floor(((chunkIndex * 2) + imageIndex) / 2)][((chunkIndex * 2) + imageIndex) % 2].beskrivning);
 
                                 openOverlay();

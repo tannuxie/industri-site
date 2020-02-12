@@ -11,7 +11,7 @@
 @import "~bulma/sass/layout/_all.sass";
 
 img {
-	object-fit: contain!important;
+	object-fit: cover!important;
 }
 
 .gatsby-image-wrapper {
@@ -23,8 +23,6 @@ img {
 	display: flex;
 	background: linear-gradient(to right, $primary-color, $secondary-color);
 }
-
-
 
 .center {
 	display: flex;

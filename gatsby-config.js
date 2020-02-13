@@ -43,7 +43,37 @@ module.exports = {
 				name: 'Om oss',
 				link: '/omoss',
 			},
-		],
+        ],
+        companyTypes: [
+            {
+                name: 'Trä',
+                color: '#bf7754',
+            },
+            {
+                name: 'Metall',
+                color: '#7b7b7b',
+            },
+            {
+                name: 'Möbler / Träförädling',
+                color: '#ff6846',
+            },
+            {
+                name: 'Livsmedel',
+                color: '#ff89aa',
+            },
+            {
+                name: 'Skor & Kläder',
+                color: '#ec2929',
+            },
+            {
+                name: 'Plast / Gummi',
+                color: '#e8e8e8',
+            },
+            {
+                name: 'Övrigt / Diverse',
+                color: '#3bc7ce',
+            },
+        ],
 	},
 	plugins: [
         'gatsby-plugin-react-helmet',

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { graphql, Link, useStaticQuery } from 'gatsby';
-import { css } from '@emotion/core';
+import { css, keyframes } from '@emotion/core';
 import Img from 'gatsby-image';
 import Slider from 'rc-slider';
 import getDistance from 'geolib/es/getDistance';
@@ -33,25 +33,6 @@ import '~style/slider.css';
 
 // computeDestinationPoint(point, distance, bearing, radius = earthRadius)
 
-// const Loading = () => (
-//     <div css={css`
-//         width: 100%
-//         height: 500px;
-//         display: flex;
-//         flex-direction: column;
-//         justify-content: center;
-//         align-items: center;
-//     `}
-//     >
-//         <h1
-//             css={css`text-align: center;`}
-//         >
-//             Laddar karta...
-//         </h1>
-//         <CircularProgress />
-//     </div>
-// );
-
 // pins ska vara en array med objekt som har
 // name, position(array med lat, lng), subtitle(array av textrader)
 
@@ -67,11 +48,12 @@ const LoadableComponent = Loadable.Map({
         const {
             center, bounds, pins, zoom, changeActive,
         } = props;
-        const myIcon = ((year) => {
+        const myIcon = ((year, type) => {
             const icon = L.divIcon({
-                        className: 'year-icon',
-                        html: `<span>${year}</span>`,
+                        className: `year-icon ${type}`,
+                        html: `<div><span>${year}</span></div>`,
                         });
+            console.log(icon);
             return icon;
         });
 
@@ -103,6 +85,21 @@ const LoadableComponent = Loadable.Map({
                         .year-icon span {
                             font-size: 0.9rem;
                         }
+                        .year-icon.metall {
+                            background-color: #7b7b7b;
+                            color: white;
+                            text-shadow: 0px 0px 4px black;
+                        }
+                        .year-icon.moblertraforadling {
+                            background-color: #bf7754;
+                            color: white;
+                            text-shadow: 0px 0px 4px black;
+                        }
+                        .year-icon.livsmedel {
+                            background-color: #ff89aa;
+                            color: white;
+                            text-shadow: 0px 0px 4px black;
+                        }
                     `}
                 >
                     <TileLayer
@@ -116,8 +113,11 @@ const LoadableComponent = Loadable.Map({
                         <Marker
                             key={`${element.name } ${ element.position[0]}`}
                             position={element.position}
-                            icon={myIcon(element.startdate)}
+                            icon={myIcon(element.startdate, element.type)}
                             data-company={element.name}
+                            css={css`
+                                color: white;
+                            `}
                             // onClick={((e) => {
                             //     console.log(e);
                             //     changeActive(e.target.options['data-company']);
@@ -185,6 +185,8 @@ const KartSida = () => {
     // aktuellt företag
     const [currentCompany, setCurrentCompany] = useState(-1);
     const [infoTabOpen, setInfoTabOpen] = useState(0);
+
+    const [colorTabOpen, setColorTabOpen] = useState(false);
 
     const data = useStaticQuery(graphql`
         query AddressQuery {
@@ -401,93 +403,279 @@ const KartSida = () => {
     return (
         <section className="section">
             <div className="columns is-centered">
-                <div className="column is-6 is-centered">
-                    <div
-                        css={css`
-                            display: flex;
-                            justify-content: space-between;
-                            margin-bottom: 1rem;
-                        `}
-                    >
-                        <div
-                            className="select"
-                        >
-                            <select
-                                onChange={((e) => {
-                                    setCurrentCity(e.target.value);
-                                    setValue1(0);
-                                    setValue2(0);
-                                    setInfoTabOpen(0);
-                                })}
-                            >
-                                <option value="alla">Stad</option>
-                                <option value="savsjo">Sävsjö</option>
-                                <option value="vrigstad">Vrigstad</option>
-                                <option value="stockaryd">Stockaryd</option>
-                                <option value="rorvik">Rörvik</option>
-                                <option value="hultagard">Hultagård</option>
-                                <option value="hylletofta">Hylletofta</option>
-                            </select>
-                        </div>
-                        <div
-                            className="select"
-                        >
-                            <select
-                                onChange={((e) => {
-                                    setCurrentType(e.target.value);
-                                    setValue1(0);
-                                    setValue2(0);
-                                    setInfoTabOpen(0);
-                                })}
-                            >
-                                <option value="alla">Bransch</option>
-                                <option value="tra">Trä</option>
-                                <option value="metall">Metall</option>
-                                <option value="moblertraforadling">Möbler / Träförädling</option>
-                                <option value="livsmedel">Livsmedel</option>
-                                <option value="skorklader">Skor & Kläder</option>
-                                <option value="plastgummi">Plast / Gummi</option>
-                                <option value="ovrigtdiverse">Övrigt / Diverse</option>
-                            </select>
-                        </div>
-                    </div>
+                <div className="column is-10 is-centered">
                     <div>
-                        <Range
-                            min={lowerMax}
-                            max={upperMax}
-                            disabled={nmbrCompaniesAfterCityType === 0}
-                            defaultValue={[value1, value2]}
-                            tipFormatter={(value) => `${value}`}
-                            // onChange={((e) => {
-
-                            // })}
-                            onAfterChange={((e) => {
-                                console.log(e);
-                                setValue1(e[0]);
-                                setValue2(e[1]);
-                                setInfoTabOpen(0);
-                            })}
-                        />
-
-                    </div>
-                    <div
-                        css={css`
-                            display: flex;
-                            justify-content: space-between;
-                        `}
-                    >
-                        <span id="lowerMax">{lowerMax}</span>
-                        <span id="upperMax">{upperMax}</span>
-                    </div>
-                    <div>
-                        <h3
+                        <div
                             css={css`
-                                text-align: center;
-                                margin: 0;
+                                display: flex;
+                                justify-content: space-between;
+                                margin-bottom: 1rem;
                             `}
                         >
-                            {(uniqueCompaniesInPins && uniqueCompaniesInPins.length > 0) && `${uniqueCompaniesInPins.length} företag ${(uniqueCompaniesInPins.length < nmbrCompaniesAfterRange) ? (`på ${nmbrCompaniesAfterRange} platser hittades!`) : ('hittades!')}`}
-                        </h3>
+                            <div
+                                className="select"
+                            >
+                                <select
+                                    onChange={((e) => {
+                                        setCurrentCity(e.target.value);
+                                        setValue1(0);
+                                        setValue2(0);
+                                        setInfoTabOpen(0);
+                                    })}
+                                >
+                                    <option value="alla">Stad</option>
+                                    <option value="savsjo">Sävsjö</option>
+                                    <option value="vrigstad">Vrigstad</option>
+                                    <option value="stockaryd">Stockaryd</option>
+                                    <option value="rorvik">Rörvik</option>
+                                    <option value="hultagard">Hultagård</option>
+                                    <option value="hylletofta">Hylletofta</option>
+                                </select>
+                            </div>
+                            <div
+                                className="select"
+                            >
+                                <select
+                                    onChange={((e) => {
+                                        setCurrentType(e.target.value);
+                                        setValue1(0);
+                                        setValue2(0);
+                                        setInfoTabOpen(0);
+                                    })}
+                                >
+                                    <option value="alla">Bransch</option>
+                                    <option value="tra">Trä</option>
+                                    <option value="metall">Metall</option>
+                                    <option value="moblertraforadling">Möbler / Träförädling</option>
+                                    <option value="livsmedel">Livsmedel</option>
+                                    <option value="skorklader">Skor & Kläder</option>
+                                    <option value="plastgummi">Plast / Gummi</option>
+                                    <option value="ovrigtdiverse">Övrigt / Diverse</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <Range
+                                min={lowerMax}
+                                max={upperMax}
+                                disabled={nmbrCompaniesAfterCityType === 0}
+                                defaultValue={[value1, value2]}
+                                tipFormatter={(value) => `${value}`}
+                                // onChange={((e) => {
+
+                                // })}
+                                onAfterChange={((e) => {
+                                    console.log(e);
+                                    setValue1(e[0]);
+                                    setValue2(e[1]);
+                                    setInfoTabOpen(0);
+                                })}
+                            />
+
+                        </div>
+                        <div
+                            css={css`
+                                display: flex;
+                                justify-content: space-between;
+                            `}
+                        >
+                            <span id="lowerMax">{lowerMax}</span>
+                            <span id="upperMax">{upperMax}</span>
+                        </div>
+                        <div>
+                            <h3
+                                css={css`
+                                    text-align: center;
+                                    margin: 0;
+                                `}
+                            >
+                                {(uniqueCompaniesInPins && uniqueCompaniesInPins.length > 0) && `${uniqueCompaniesInPins.length} företag ${(uniqueCompaniesInPins.length < nmbrCompaniesAfterRange) ? (`på ${nmbrCompaniesAfterRange} platser hittades!`) : ('hittades!')}`}
+                            </h3>
+                        </div>
+                    </div>
+                    <div
+                        css={css`
+                        display: flex;
+                        justify-content: center;
+                        position: relative;
+                            .tabOpened {
+                                opacity: 1;
+                            }
+                        `}
+                    >
+                        <div>
+                            <h4>
+                                <span
+                                    css={css`
+                                        position: relative;
+                                    `}
+                                >
+                                    Vad betyder färgerna?
+                                    <div
+                                        role="button"
+                                        tabIndex={0}
+                                        css={css`
+                                            position: absolute;
+                                            top: 0rem;
+                                            right: -35px;
+                                            width: 25px;
+                                            height: 100%;
+                                            display: flex;
+                                            justify-content: center;
+                                            align-items: center;
+                                        `}
+                                        onClick={() => setColorTabOpen(!colorTabOpen)}
+                                        onKeyDown={(event) => {
+                                            if (event.keycode === 13) {
+                                                setColorTabOpen(!colorTabOpen);
+                                            }
+                                        }}
+                                    >
+                                        <span
+                                            className={`${!colorTabOpen ? 'closed' : 'opened'}`}
+                                            css={css`
+                                                display: block;
+                                                width: 0;
+                                                height: 0;
+                                                border-left: 8px solid transparent;
+                                                border-right: 8px solid transparent;
+                                                border-top: 8px solid #565656;
+                                                transform:rotate(0deg);
+                                                transition: transform 0.4s ease-out;
+                                                ${!colorTabOpen && `
+                                                    transform:rotate(180deg);
+                                                `}
+
+                                            `}
+                                        />
+                                    </div>
+                                </span>
+                            </h4>
+                        </div>
+                        <div
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => setColorTabOpen(!colorTabOpen)}
+                            onKeyDown={(event) => {
+                                if (event.keycode === 13) {
+                                    setColorTabOpen(!colorTabOpen);
+                                }
+                            }}
+                            className={`${colorTabOpen === true ? 'tabOpened' : null}`}
+                            css={css`
+                                display: flex;
+                                flex-wrap: wrap;
+                                justify-content: center;
+                                transition: opacity 0.4s ease-in;
+                                opacity: 0;
+                                position: absolute;
+                                bottom: -100%;
+                                @media (max-width: 1200px){
+                                    bottom: -200%;
+                                }
+                                z-index: 10000;
+                                background-color: white;
+                                box-shadow: 0px 0px 4px 1px black;
+                                padding: 10px;
+                                > div:first-child {
+                                    margin-left: 10px;
+                                }
+                                > div:not(:first-child) {
+                                    margin-left: 20px;
+                                }
+                                > div:not(:last-child) {
+                                    margin-right: 20px;
+                                }
+                                > div:last-child {
+                                    margin-right: 10px;
+                                }
+                                > div {
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    > div:first-child {
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        width: 45px!important;
+                                        height: 45px!important;
+                                        opacity: 0.8;
+                                        border-radius: 50%;
+                                        box-shadow: 0px 0px 3px 1px #000000b5;
+                                        text-shadow: 0px 0px 4px black;
+                                    }
+                                    > div:last-child {
+                                        text-align: center;
+                                        margin-left: -10px;
+                                        margin-right: -10px;
+                                    }
+                                }
+                            `}
+                        >
+                            <div>
+                                <div
+                                    css={css`
+                                        background-color: #bf7754;
+                                        color: white;
+                                    `}
+                                />
+                                <div><span>Trä</span></div>
+                            </div>
+                            <div>
+                                <div
+                                    css={css`
+                                        background-color: #7b7b7b;
+                                        color: white;
+                                    `}
+                                />
+                                <div><span>Metall</span></div>
+                            </div>
+                            <div>
+                                <div
+                                    css={css`
+                                        background-color: #ff6846;
+                                        color: white;
+                                    `}
+                                />
+                                <div><span>Möbler / Träförädling</span></div>
+                            </div>
+                            <div>
+                                <div
+                                    css={css`
+                                        background-color: #ff89aa;
+                                        color: white;
+                                    `}
+                                />
+                                <div><span>Livsmedel</span></div>
+                            </div>
+                            <div>
+                                <div
+                                    css={css`
+                                        background-color: #ec2929;
+                                        color: white;
+                                    `}
+                                />
+                                <div><span>Skor & Kläder</span></div>
+                            </div>
+                            <div>
+                                <div
+                                    css={css`
+                                        background-color: #e8e8e8;
+                                        color: black;
+                                    `}
+                                />
+                                <div><span>Plast / Gummi</span></div>
+                            </div>
+                            <div>
+                                <div
+                                    css={css`
+                                        background-color: #3bc7ce;
+                                        color: white;
+                                    `}
+                                />
+                                <div><span>Övrigt / Diverse</span></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,12 +1,47 @@
 {
     "cities":  [
-        "sävsjö", 
-        "vrigstad", 
-        "stockaryd", 
-        "rörvik", 
-        "hultagård", 
+        "sävsjö",
+        "vrigstad",
+        "stockaryd",
+        "rörvik",
+        "hultagård",
         "hylletofta"
     ],
-    "vandraText": "Här har vi sammanställt speciella vandringar där du kan utforska historiska gator och svunna tiders företag och organisationer.",
-    "midSectionText": "Aenean placerat venenatis velit, eget gravida mauris tempor id. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nunc id ante sed massa fermentum bibendum. Morbi mollis facilisis rhoncus. Nulla faucibus ligula eget urna euismod dictum. Curabitur porta nisi non pretium mattis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi luctus vehicula lectus, non aliquam lacus sollicitudin eu. Nullam vestibulum ultricies mi efficitur efficitur. Aenean iaculis mi quam, sed interdum ante cursus sed."
+    "companyTypes": [
+        {
+            "name": "Trä",
+            "slug": "tra",
+            "color": "#bf7754"
+        },
+        {
+            "name": "Metall",
+            "slug": "metall",
+            "color": "#7b7b7b"
+        },
+        {
+            "name": "Möbler / Träförädling",
+            "slug": "moblertraforadling",
+            "color": "#ff6846"
+        },
+        {
+            "name": "Livsmedel",
+            "slug": "livsmedel",
+            "color": "#ff89aa"
+        },
+        {
+            "name": "Skor & Kläder",
+            "slug": "skorklader",
+            "color": "#ec2929"
+        },
+        {
+            "name": "Plast / Gummi",
+            "slug": "plastgummi",
+            "color": "#e8e8e8"
+        },
+        {
+            "name": "Övrigt / Diverse",
+            "slug": "ovrigtdiverse",
+            "color": "#3bc7ce"
+        }
+    ]
 }

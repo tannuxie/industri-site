@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { graphql, Link, useStaticQuery } from 'gatsby';
 import { css, keyframes } from '@emotion/core';
 import Img from 'gatsby-image';
@@ -11,6 +11,7 @@ import Loadable from 'react-loadable';
 import L from 'leaflet';
 import Loading from '~components/loading/loading';
 import '~style/slider.css';
+import text from '~components/text.json';
 
 // getDistance(start, end, accuracy = 1)
 // By default the accuracy is 1 meter. If you need a more accurate result,
@@ -53,7 +54,7 @@ const LoadableComponent = Loadable.Map({
                         className: `year-icon ${type}`,
                         html: `<div><span>${year}</span></div>`,
                         });
-            console.log(icon);
+            // console.log(icon);
             return icon;
         });
 
@@ -65,7 +66,7 @@ const LoadableComponent = Loadable.Map({
                     bounds={bounds && bounds}
                     zoom={zoom && zoom}
                     maxZoom={17}
-                    minZoom={10}
+                    minZoom={7}
                     scrollWheelZoom={false}
                     style={{
                         height: '600px',
@@ -85,18 +86,17 @@ const LoadableComponent = Loadable.Map({
                         .year-icon span {
                             font-size: 0.9rem;
                         }
-                        .year-icon.metall {
-                            background-color: #7b7b7b;
-                            color: white;
-                            text-shadow: 0px 0px 4px black;
-                        }
-                        .year-icon.moblertraforadling {
-                            background-color: #bf7754;
-                            color: white;
-                            text-shadow: 0px 0px 4px black;
-                        }
-                        .year-icon.livsmedel {
-                            background-color: #ff89aa;
+                        ${text.companyTypes.map((type) => {
+                            const typeSlug = type.slug;
+                            const typeColor = type.color;
+
+                            return (
+                                `.year-icon.${typeSlug} {
+                                    background-color: ${typeColor};
+                                }`
+                            );
+                        })}
+                        .year-icon {
                             color: white;
                             text-shadow: 0px 0px 4px black;
                         }
@@ -111,7 +111,7 @@ const LoadableComponent = Loadable.Map({
                     />
                     {pins && pins.map((element) => (
                         <Marker
-                            key={`${element.name } ${ element.position[0]}`}
+                            key={`${element.id} ${element.name } ${ element.position[0]}`}
                             position={element.position}
                             icon={myIcon(element.startdate, element.type)}
                             data-company={element.name}
@@ -187,10 +187,11 @@ const KartSida = () => {
     const [infoTabOpen, setInfoTabOpen] = useState(0);
 
     const [colorTabOpen, setColorTabOpen] = useState(false);
+    const colorTab = useRef();
 
     const data = useStaticQuery(graphql`
         query AddressQuery {
-            company: allStrapiCompany {
+            company: allStrapiCompany(filter: {published: {eq: true}}) {
                 edges {
                     node {
                         id
@@ -341,6 +342,13 @@ const KartSida = () => {
             const coordsByDistance = orderByDistance(getCenterOfBounds(coordinates), coordinates);
             console.log('coordsByDistance', coordsByDistance);
 
+            coordsByDistance.forEach((element) => {
+                console.log('byDistObj', element);
+                console.log('distToCenter', getDistance(element, getCenterOfBounds(coordinates)));
+
+
+            });
+
             // sätter minimum-värde på distance som 250 för att det inte
             // ska bli för inzoomat när det bara är 1 träff
             const distance = Math.max(getDistance(
@@ -403,7 +411,7 @@ const KartSida = () => {
     return (
         <section className="section">
             <div className="columns is-centered">
-                <div className="column is-10 is-centered">
+                <div className="column is-6 is-centered">
                     <div>
                         <div
                             css={css`
@@ -489,7 +497,10 @@ const KartSida = () => {
                                     margin: 0;
                                 `}
                             >
-                                {(uniqueCompaniesInPins && uniqueCompaniesInPins.length > 0) && `${uniqueCompaniesInPins.length} företag ${(uniqueCompaniesInPins.length < nmbrCompaniesAfterRange) ? (`på ${nmbrCompaniesAfterRange} platser hittades!`) : ('hittades!')}`}
+                                {(uniqueCompaniesInPins)
+                                && (uniqueCompaniesInPins.length === 0)
+                                ? `Här var det tomt på företag!`
+                                : `${uniqueCompaniesInPins.length} företag ${(uniqueCompaniesInPins.length < nmbrCompaniesAfterRange) ? (`på ${nmbrCompaniesAfterRange} platser hittades!`) : ('hittades!')}`}
                             </h3>
                         </div>
                     </div>
@@ -498,8 +509,15 @@ const KartSida = () => {
                         display: flex;
                         justify-content: center;
                         position: relative;
+                        height: 4rem;
                             .tabOpened {
                                 opacity: 1;
+                                height: 100px;
+                                padding: 10px;
+                                @media (max-width: 1200px){
+                                    bottom: -205%;
+                                    height: 180px;
+                                }
                             }
                         `}
                     >
@@ -512,6 +530,7 @@ const KartSida = () => {
                                 >
                                     Vad betyder färgerna?
                                     <div
+                                        id="colorBtn"
                                         role="button"
                                         tabIndex={0}
                                         css={css`
@@ -524,7 +543,11 @@ const KartSida = () => {
                                             justify-content: center;
                                             align-items: center;
                                         `}
-                                        onClick={() => setColorTabOpen(!colorTabOpen)}
+                                        onClick={() => {
+                                            setColorTabOpen(!colorTabOpen);
+                                            // colorTab.current.style.display = 'flex';
+                                            // colorTab.current.style.opacity = 0;
+                                        }}
                                         onKeyDown={(event) => {
                                             if (event.keycode === 13) {
                                                 setColorTabOpen(!colorTabOpen);
@@ -553,6 +576,13 @@ const KartSida = () => {
                             </h4>
                         </div>
                         <div
+                            id="colorTab"
+                            ref={colorTab}
+                            // onTransitionEnd={() => {
+                            //     if (!colorTabOpen) {
+                            //         colorTab.current.style.display = 'none';
+                            //     }
+                            // }}
                             role="button"
                             tabIndex={0}
                             onClick={() => setColorTabOpen(!colorTabOpen)}
@@ -566,34 +596,33 @@ const KartSida = () => {
                                 display: flex;
                                 flex-wrap: wrap;
                                 justify-content: center;
-                                transition: opacity 0.4s ease-in;
+                                transition: all .3s ease .15s;
+                                height: 0px;
+                                overflow: hidden;
                                 opacity: 0;
                                 position: absolute;
-                                bottom: -100%;
-                                @media (max-width: 1200px){
-                                    bottom: -200%;
-                                }
-                                z-index: 10000;
+                                bottom: -105%;
+                                z-index: 10001;
                                 background-color: white;
-                                box-shadow: 0px 0px 4px 1px black;
-                                padding: 10px;
-                                > div:first-child {
+                                box-shadow: 0px 0px 5px 0px #0000004d;
+                                padding: 0px 10px;
+                                > div:first-of-type {
                                     margin-left: 10px;
                                 }
-                                > div:not(:first-child) {
+                                > div:not(:first-of-type) {
                                     margin-left: 20px;
                                 }
-                                > div:not(:last-child) {
+                                > div:not(:last-of-type) {
                                     margin-right: 20px;
                                 }
-                                > div:last-child {
+                                > div:last-of-type {
                                     margin-right: 10px;
                                 }
                                 > div {
                                     display: flex;
                                     flex-direction: column;
                                     align-items: center;
-                                    > div:first-child {
+                                    > div:first-of-type {
                                         display: flex;
                                         justify-content: center;
                                         align-items: center;
@@ -604,7 +633,7 @@ const KartSida = () => {
                                         box-shadow: 0px 0px 3px 1px #000000b5;
                                         text-shadow: 0px 0px 4px black;
                                     }
-                                    > div:last-child {
+                                    > div:last-of-type {
                                         text-align: center;
                                         margin-left: -10px;
                                         margin-right: -10px;

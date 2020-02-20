@@ -70,6 +70,7 @@ class Header extends Component {
                                             font-size: 2rem;
                                             background-color: #ffffffde;
                                             padding: 5px;
+                                            box-shadow: 0px 0px 2px 0px #0000004d;
                                         `}
                                     >
                                         Sävsjö kommuns
@@ -81,6 +82,7 @@ class Header extends Component {
                                             font-size: 3rem;
                                             background-color: #ffffffde;
                                             padding: 5px;
+                                            box-shadow: 0px 0px 2px 0px #0000004d;
                                         `}
                                     >
                                         Industrihistoria

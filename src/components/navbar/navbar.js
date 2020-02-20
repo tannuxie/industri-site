@@ -83,23 +83,36 @@ class Navbar extends Component {
                     <Helmet>
                         <body
                             className={
-                                fixMenu && store.size
-                                ? 'sizeUp has-navbar-fixed-top'
-                                : fixMenu
-                                ? 'has-navbar-fixed-top'
-                                : store.size
+                                store.size
                                 ? 'sizeUp'
                                 : ''
                             }
                         />
                     </Helmet>
-                    <div className="hero-foot is-hidden-mobile">
+                    <div
+                        className="hero-foot is-hidden-mobile"
+                        css={css`
+                            position: relative;
+                            height: 3.25rem;
+                        `}
+                    >
                         <nav
                             className={fixMenu ? 'navbar navbarFixed' : 'navbar'}
                             role="navigation"
                             aria-label="main navigation"
                             css={css`
-                            justify-content: center;
+                                justify-content: center;
+                                @media (min-width: 1024px) {
+                                    box-shadow: inset 0px -1px 1px 0px #0000004d;
+                                }
+                                ${!fixMenu && (`
+                                    @media (max-width: 1023px) {
+                                        position: absolute;
+                                        z-index: 20000;
+                                        width: 100%;
+                                    }
+                                `)}
+
                             `}
                         >
                             <div className="navbar-brand">
@@ -114,9 +127,11 @@ class Navbar extends Component {
                                     }}
                                     className="navbar-burger burger"
                                     css={css`
-                                        @media (max-width: 1023px) {
-                                            background: linear-gradient(to right,#f7f7f7,#f3f3f3) !important;
-                                        }
+                                    ${!fixMenu && (`
+                                    @media (max-width: 1023px) {
+                                        background: linear-gradient(to right,#f9f9f9,#ffffff) !important;
+                                    }
+                                    `)}
                                     `}
                                     role="button"
                                     data-target="navMenu"
@@ -137,15 +152,16 @@ class Navbar extends Component {
                                 css={css`
                                     flex-grow: 0;
                                     @media (min-width: 1024px) {
-                                        background: linear-gradient(to right,#bdbdbd,#fdfdfd) !important;
+                                        box-shadow: 0px -1px 1px 0px #0000004d;
                                     }
-                                    @media (min-width: 1280px) {
-                                        background: linear-gradient(to right,#c3c3c3,#f7f7f7) !important;
+                                    ${!fixMenu && (`
+                                    @media (min-width: 1024px) {
+                                        background-color: white;
                                     }
-                                    @media (min-width: 1366px) {
-                                        background: linear-gradient(to right,#c5c5c5,#f5f5f5) !important
+                                    `)}
+                                    @media (max-width: 1023px) {
+                                        background-color: white;
                                     }
-
                                 `}
                             >
                                 <div className="navbar-start">

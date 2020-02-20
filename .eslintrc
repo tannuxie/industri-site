@@ -407,7 +407,7 @@
     'no-ternary': 'off',
 
     // disallow trailing whitespace at the end of lines
-    'no-trailing-spaces': ['error', {
+    'no-trailing-spaces': [0, {
       skipBlankLines: false,
       ignoreComments: false,
     }],

@@ -101,19 +101,37 @@ const ZoneParser = ({
             }
             if (item.text && item.imgbox) {
                 key = item.text.textfield;
+                const textboxSize = (() => {
+                    switch (item.bredd_bildbox) {
+                        case 'tva_tredjedelar':
+                            return 'is-4';
+                        case 'halv':
+                            return 'is-6';
+                        case 'en_tredjedel':
+                            return 'is-8';
+                        case 'en_fjardedel':
+                            return 'is-9';
+                        default:
+                            return 'is-6';
+                    }
+                })();
                 const imgboxSizeClass = (() => {
-                    const sizeTypes = {
-                        tva_tredjedelar: 'is-8',
-                        halv: 'is-6',
-                        en_tredjedel: 'is-4',
-                        en_fjardedel: 'is-3',
-                        undefined: 'is-6',
-                    };
-                    return sizeTypes[item.bredd_bildbox];
+                    switch (item.bredd_bildbox) {
+                        case 'tva_tredjedelar':
+                            return 'is-8';
+                        case 'halv':
+                            return 'is-6';
+                        case 'en_tredjedel':
+                            return 'is-4';
+                        case 'en_fjardedel':
+                            return 'is-3';
+                        default:
+                            return 'is-6';
+                    }
                 })();
                 return (
                     <div className="columns is-centered is-vcentered">
-                        <div className={item.layout !== 'bild_hoger' ? (`column ${ imgboxSizeClass}`) : 'column'}>
+                        <div className={item.layout !== 'bild_hoger' ? (`column ${ imgboxSizeClass}`) : `column ${textboxSize}`}>
                             {item.layout === 'bild_hoger' ? (
                                 <div className='zone-text' css={css`@media (max-width: 1023px) {padding: 0 0.5rem;}`}>
                                     <MdxRender mdxBody={item.text.textfield} />
@@ -126,7 +144,7 @@ const ZoneParser = ({
                             />
                             )}
                         </div>
-                        <div className={item.layout === 'bild_hoger' ? (`column ${ imgboxSizeClass}`) : 'column'}>
+                        <div className={item.layout === 'bild_hoger' ? (`column ${ imgboxSizeClass}`) : `column ${textboxSize}`}>
                             {item.layout === 'bild_hoger' ? (
                             <ImgBox
                                 images={item.imgbox}

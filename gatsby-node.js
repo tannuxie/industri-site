@@ -1,5 +1,5 @@
 const path = require('path');
-const { createFilePath } = require('gatsby-source-filesystem');
+const { createFilePath, createRemoteFileNode } = require('gatsby-source-filesystem');
 const createMDXNode = require('gatsby-plugin-mdx/utils/create-mdx-node');
 const fs = require('fs');
 const text = require('./src/components/text.json');
@@ -25,6 +25,139 @@ function convertToSlug(Text) {
 		.replace(/[^\w ]+/g, '')
 		.replace(/ +/g, '-');
 }
+
+exports.createResolvers = ({
+    actions,
+    cache,
+    createNodeId,
+    createResolvers,
+    store,
+    reporter,
+}) => {
+    const { createNode } = actions;
+    createResolvers({
+        StrapiArticleContentBild: {
+            bildfil: {
+                type: 'File',
+                resolve(source, args, context, info) {
+                    return createRemoteFileNode({
+                        url: `http://localhost:1337${source.bildfil.url}`,
+                        store,
+                        cache,
+                        createNode,
+                        createNodeId,
+                        reporter,
+                    });
+                },
+            },
+        },
+        StrapiArticleContentImgbox: {
+            bildfil: {
+                type: 'File',
+                resolve(source, args, context, info) {
+                    return createRemoteFileNode({
+                        url: `http://localhost:1337${source.bildfil.url}`,
+                        store,
+                        cache,
+                        createNode,
+                        createNodeId,
+                        reporter,
+                    });
+                },
+            },
+        },
+        StrapiCompanyContentBild: {
+            bildfil: {
+                type: 'File',
+                resolve(source, args, context, info) {
+                    return createRemoteFileNode({
+                        url: `http://localhost:1337${source.bildfil.url}`,
+                        store,
+                        cache,
+                        createNode,
+                        createNodeId,
+                        reporter,
+                    });
+                },
+            },
+        },
+        StrapiCompanyContentImgbox: {
+            bildfil: {
+                type: 'File',
+                resolve(source, args, context, info) {
+                    return createRemoteFileNode({
+                        url: `http://localhost:1337${source.bildfil.url}`,
+                        store,
+                        cache,
+                        createNode,
+                        createNodeId,
+                        reporter,
+                    });
+                },
+            },
+        },
+        StrapiStreetContentBild: {
+            bildfil: {
+                type: 'File',
+                resolve(source, args, context, info) {
+                    return createRemoteFileNode({
+                        url: `http://localhost:1337${source.bildfil.url}`,
+                        store,
+                        cache,
+                        createNode,
+                        createNodeId,
+                        reporter,
+                    });
+                },
+            },
+        },
+        StrapiStreetContentImgbox: {
+            bildfil: {
+                type: 'File',
+                resolve(source, args, context, info) {
+                    return createRemoteFileNode({
+                        url: `http://localhost:1337${source.bildfil.url}`,
+                        store,
+                        cache,
+                        createNode,
+                        createNodeId,
+                        reporter,
+                    });
+                },
+            },
+        },
+        StrapiStaticContentContentBild: {
+            bildfil: {
+                type: 'File',
+                resolve(source, args, context, info) {
+                    return createRemoteFileNode({
+                        url: `http://localhost:1337${source.bildfil.url}`,
+                        store,
+                        cache,
+                        createNode,
+                        createNodeId,
+                        reporter,
+                    });
+                },
+            },
+        },
+        StrapiStaticContentContentImgbox: {
+            bildfil: {
+                type: 'File',
+                resolve(source, args, context, info) {
+                    return createRemoteFileNode({
+                        url: `http://localhost:1337${source.bildfil.url}`,
+                        store,
+                        cache,
+                        createNode,
+                        createNodeId,
+                        reporter,
+                    });
+                },
+            },
+        },
+    });
+};
 
 exports.onCreateNode = async ({
 	node,

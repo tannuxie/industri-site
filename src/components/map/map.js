@@ -9,27 +9,6 @@ import orderByDistance from 'geolib/es/orderByDistance';
 import getBoundsOfDistance from 'geolib/es/getBoundsOfDistance';
 import Loading from '~components/loading/loading';
 
-// const Loading = () => {
-//     return (
-//         <div css={css`
-//             width: 100%
-//             height: 500px;
-//             display: flex;
-//             flex-direction: column;
-//             justify-content: center;
-//             align-items: center;
-//         `}
-//         >
-//             <h1
-//                 css={css`text-align: center;`}
-//             >
-//                 Laddar karta...
-//             </h1>
-//             <CircularProgress />
-//         </div>
-//     );
-// };
-
 const LoadableComponent = Loadable.Map({
     loader: {
       leaf: () => import('react-leaflet'),
@@ -61,7 +40,7 @@ const LoadableComponent = Loadable.Map({
                         attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                     />
                     {thePins && thePins.map((element) => (
-                        <Marker key={`${element.name } ${ element.position[0]}`} position={element.position}>
+                        <Marker key={`${element.id} ${element.name} ${element.position[0]}`} position={element.position}>
                             <Popup>
                                 <b>{element.name}</b>
                                 {element.subtitle && (

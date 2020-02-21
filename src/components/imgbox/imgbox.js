@@ -4,6 +4,7 @@ import { StaticQuery, graphql } from 'gatsby';
 import Img from 'gatsby-image';
 import { css } from '@emotion/core';
 import { Helmet } from 'react-helmet';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { Dialog, DialogOverlay, DialogContent } from '@reach/dialog';
 import '@reach/dialog/styles.css';
 import _ from 'lodash';
@@ -17,6 +18,7 @@ const ImgBox = ({ images, undertext }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     const [imgBoxWidth, setImgBoxWidth] = useState(0);
+    const overlayImageOverlay = useRef(null);
 
     function getAspectRatioSum(imagesToSum) {
         // console.log('in getAspectRatio');
@@ -30,21 +32,23 @@ const ImgBox = ({ images, undertext }) => {
         return aspectSum;
     }
 
-    function toggleRightScroll() {
-        const element = document.getElementsByTagName('body')[0];
-        element.classList.toggle('right-scroll-bar-position');
+    function fadeImageOverlay() {
+            setTimeout(() => {
+                if (overlayImageOverlay.current !== null) {
+                    overlayImageOverlay.current.style.opacity = '1';
+                }
+            }, 5);
     }
 
     function openOverlay() {
         console.log('in openOverlay');
         setIsOpen(true);
-        toggleRightScroll();
+        fadeImageOverlay();
     }
 
     function closeOverlay() {
         console.log('in closeOverlay');
         setIsOpen(false);
-        toggleRightScroll();
     }
 
     const chunkedImages = useMemo(() => {
@@ -117,12 +121,12 @@ const ImgBox = ({ images, undertext }) => {
 
                 return chunk.map((item, imageIndex) => {
                     const {
-                        beskrivning, bildfil,
+                        id, beskrivning, bildfil,
                     } = item;
                     return (
                         <div
                             role="button"
-                            key={`${beskrivning}`}
+                            key={`${id} ${beskrivning}`}
                             tabIndex={0}
                             onClick={() => {
                                 console.log('chunk', (chunkIndex * 2) + imageIndex);
@@ -171,17 +175,24 @@ const ImgBox = ({ images, undertext }) => {
                         z-index: 9999;
                         display: flex;
                         align-items: center;
+                        opacity: 0;
+                        transition: opacity 0.4s ease-out;
                     `}
+                    ref={overlayImageOverlay}
                     isOpen={isOpen}
                     onDismiss={() => closeOverlay()}
                     onClick={() => openOverlay()}
                 >
                     <DialogContent
                         css={css`
-                            position: relative;
                             margin: 2vh auto 0;
                             padding: 15px;
                             width: 70vw;
+                            min-height: 70vh;
+                            position: relative;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
                             @media (max-width: 1680px) {
                                 width: 90vw;
                             }
@@ -190,15 +201,160 @@ const ImgBox = ({ images, undertext }) => {
                                 margin: 0;
                                 padding: 0;
                             }
+                            .react-transform-component {
+                                align-self: center;
+                            }
+                            .gatsby-image-wrapper img {
+                                object-fit: contain !important;
+                            }
                         `}
                         aria-label={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
                     >
-                        <Img
-                            fluid={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2]
-                                .bildfil.childImageSharp.fluid}
-                            alt={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
-                            style={{ maxHeight: '80vh' }}
-                        />
+                        <TransformWrapper
+                            defaultScale={1}
+                            scale={1}
+                            defaultPositionX={0}
+                            defaultPositionY={0}
+                            positionX={0}
+                            positionY={0}
+                            options={{
+                                    limitToWrapper: true,
+                            }}
+                            scalePadding={{
+                                    size: 0.2,
+                            }}
+                            pan={{
+                                    velocitySensitivity: 0.5,
+                                    velocity: false,
+                            }}
+                        >
+                            {({
+                                zoomIn, zoomOut, resetTransform, ...rest
+                            }) => (
+                                <>
+                                    <div
+                                        className='tools'
+                                        css={css`
+                                            position: absolute;
+                                            top: 1.2rem;
+                                            right: 1.2rem;
+                                            z-index: 100;
+                                            background-color: white;
+                                            overflow: hidden;
+                                            @media (max-width: 769px) {
+                                                right: 10px;
+                                                display: none;
+                                            }
+                                            button:not(:last-of-type) {
+                                                margin-right: 0.5rem;
+                                            }
+                                            button {
+                                                padding: 0 10px;
+                                                vertical-align: middle;
+                                                max-height: calc(35px + 1.25rem);
+                                                color: transparent;
+                                                text-shadow: 0 0 0 #4e4e4e;
+                                                border-width: 0;
+                                                background-color: transparent;
+                                                @media (max-width: 769px) {
+                                                    top: auto;
+                                                    right: 5px;
+                                                    bottom: 0;
+                                                }
+                                                span {
+                                                    height: 50px;
+                                                    width: 100%;
+                                                    display: flex;
+                                                    align-items: center;
+                                                    justify-content: center;
+
+                                                    :before {
+                                                        font-weight: 300;
+                                                        font-family: Arial, sans-serif;
+                                                        font-size: 3rem;
+                                                        cursor: pointer;
+                                                    }
+                                                }
+                                            }
+
+                                            #imgbox-zoomin {
+                                                span {
+                                                    :before {
+                                                        content: '+';
+                                                    }
+                                                }
+                                            }
+                                            #imgbox-zoomout {
+                                                padding: 0 5px 12px;
+                                                span {
+                                                    :before {
+                                                        content: '-';
+                                                    }
+                                                }
+                                            }
+                                            #imgbox-zoomreset {
+                                                span {
+                                                    :before {
+                                                        content: '0';
+                                                    }
+                                                }
+                                            }
+                                        `}
+                                    >
+                                        <button
+                                            id="imgbox-zoomin"
+                                            tabIndex={0}
+                                            onClick={zoomIn}
+                                            onKeyDown={(event) => {
+                                                if (event.keycode === 13) {
+                                                    zoomIn();
+                                                }
+                                            }}
+                                        >
+                                            <span />
+                                        </button>
+                                        <button
+                                            id="imgbox-zoomout"
+                                            tabIndex={0}
+                                            onClick={zoomOut}
+                                            onKeyDown={(event) => {
+                                                if (event.keycode === 13) {
+                                                    zoomOut();
+                                                }
+                                            }}
+                                        >
+                                            <span />
+                                        </button>
+                                        <button
+                                            id="imgbox-zoomreset"
+                                            tabIndex={0}
+                                            onClick={resetTransform}
+                                            onKeyDown={(event) => {
+                                                if (event.keycode === 13) {
+                                                    resetTransform();
+                                                }
+                                            }}
+                                        >
+                                            <span />
+                                        </button>
+                                    </div>
+                                    <TransformComponent>
+                                        <Img
+                                            fluid={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2]
+                                                .bildfil.childImageSharp.fluid}
+                                            alt={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
+                                            css={css`
+                                                min-width: 88vw;
+                                                @media (max-width: 769px) {
+                                                    min-width: 100vw;
+                                                }
+                                            `}
+                                        />
+
+                                    </TransformComponent>
+                                </>
+                            )}
+                        </TransformWrapper>
                         <div
                             css={css`
                                 display: flex;
@@ -209,8 +365,10 @@ const ImgBox = ({ images, undertext }) => {
                             <h2
                                 css={css`
                                     margin-top: 1.25rem;
+                                    flex-grow: 1;
+                                    text-align: center;
                                     @media (max-width: 769px) {
-                                        padding-left: 5px;
+                                        padding-left: 10px;
                                     }
                                 `}
                             >
@@ -227,9 +385,7 @@ const ImgBox = ({ images, undertext }) => {
                                     border-width: 0;
                                     background-color: transparent;
                                     @media (max-width: 769px) {
-                                        top: auto;
-                                        right: 5px;
-                                        bottom: 0;
+                                        margin-right: 10px;
                                     }
                                 `}
                                 tabIndex={0}

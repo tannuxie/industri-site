@@ -84,8 +84,8 @@ class Navbar extends Component {
                         <body
                             className={
                                 store.size
-                                ? 'sizeUp'
-                                : ''
+                                ? 'body sizeUp'
+                                : 'body'
                             }
                         />
                     </Helmet>
@@ -102,15 +102,16 @@ class Navbar extends Component {
                             aria-label="main navigation"
                             css={css`
                                 justify-content: center;
+
+                                ${!fixMenu && (`
                                 @media (min-width: 1024px) {
                                     box-shadow: inset 0px -1px 1px 0px #0000004d;
                                 }
-                                ${!fixMenu && (`
-                                    @media (max-width: 1023px) {
-                                        position: absolute;
-                                        z-index: 20000;
-                                        width: 100%;
-                                    }
+                                @media (max-width: 1023px) {
+                                    position: absolute;
+                                    z-index: 20000;
+                                    width: 100%;
+                                }
                                 `)}
 
                             `}
@@ -151,12 +152,10 @@ class Navbar extends Component {
                                 className={showMenu ? 'navbar-menu is-active' : 'navbar-menu'}
                                 css={css`
                                     flex-grow: 0;
-                                    @media (min-width: 1024px) {
-                                        box-shadow: 0px -1px 1px 0px #0000004d;
-                                    }
                                     ${!fixMenu && (`
                                     @media (min-width: 1024px) {
                                         background-color: white;
+                                        box-shadow: 0px -1px 1px 0px #0000004d;
                                     }
                                     `)}
                                     @media (max-width: 1023px) {

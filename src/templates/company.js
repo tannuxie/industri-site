@@ -118,7 +118,7 @@ export const companyQuery = graphql`
                     beskrivning
                     bildfil {
                         childImageSharp {
-                            fluid(maxWidth: 1360) {
+                            fluid(maxWidth: 1920) {
                                 ...GatsbyImageSharpFluid
                                 aspectRatio
                             }
@@ -133,7 +133,7 @@ export const companyQuery = graphql`
                     beskrivning
                     bildfil {
                         childImageSharp {
-                            fluid(maxWidth: 1360) {
+                            fluid(maxWidth: 1920) {
                                 ...GatsbyImageSharpFluid
                                 aspectRatio
                             }

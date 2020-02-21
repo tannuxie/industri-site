@@ -557,14 +557,16 @@ const TableList = ({ data }) => {
         item.type === 'livsmedel' ? current.type = 'Livsmedel' :
         item.type === 'skorklader' ? current.type = 'Skor & Kläder' :
         item.type === 'plastgummi' ? current.type = 'Plast / Gummi' :
-        (item.type === 'ovrigtdiverse') && (current.type = 'Övrigt / Diverse');
+        (item.type === 'ovrigtdiverse') ? (current.type = 'Övrigt / Diverse') :
+        current.type = item.type;
 
         item.city === 'savsjo' ? current.city = 'Sävsjö' :
         item.city === 'vrigstad' ? current.city = 'Vrigstad' :
         item.city === 'stockaryd' ? current.city = 'Stockaryd' :
         item.city === 'rorvik' ? current.city = 'Rörvik' :
         item.city === 'hultagard' ? current.city = 'Hultagård' :
-        (item.city === 'hylletofta') && (current.city = 'Hylletofta');
+        (item.city === 'hylletofta') ? (current.city = 'Hylletofta') :
+        current.city = item.city;
 
         return current;
     })), [data]);

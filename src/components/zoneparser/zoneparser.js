@@ -21,7 +21,7 @@ const ZoneParser = ({
 
     const contentWithMdx = content.map((item) => {
         const current = item;
-        console.log('before contentWithMdx', current);
+        // console.log('before contentWithMdx', current);
 
         // textfield = vanlig textkolumn
         // if (current.textfield) {
@@ -46,7 +46,7 @@ const ZoneParser = ({
     // console.log('contentWithMdx', contentWithMdx);
 
     return contentWithMdx.map((item, index) => {
-        console.log('after contentwithMdx', index, item);
+        // console.log('after contentwithMdx', index, item);
         let key = '';
         const result = (() => {
             if (item.text && !item.imgbox && !item.karta) {
@@ -161,23 +161,52 @@ const ZoneParser = ({
             }
             if (item.text && item.karta) {
                 key = item.text.textfield;
-                const kartaSizeClass = (() => {
-                    const sizeTypes = {
-                        tva_tredjedelar: 'is-8',
-                        halv: 'is-6',
-                        en_tredjedel: 'is-4',
-                        en_fjardedel: 'is-3',
-                        undefined: 'is-6',
-                    };
-                    return sizeTypes[item.bredd_karta];
-                })();
+                let textboxSize; let kartaSize;
+                (function sizes() {
+                    switch (item.bredd_karta) {
+                        case 'tva_tredjedelar':
+                            textboxSize = 'is-4';
+                            kartaSize = 'is-8';
+                            break;
+                        case 'halv':
+                            textboxSize = 'is-6';
+                            kartaSize = 'is-6';
+                            break;
+                        case 'en_tredjedel':
+                            textboxSize = 'is-8';
+                            kartaSize = 'is-4';
+                            break;
+                        case 'en_fjardedel':
+                            textboxSize = 'is-9';
+                            kartaSize = 'is-3';
+                            break;
+                        default:
+                            textboxSize = 'is-6';
+                            kartaSize = 'is-6';
+                            break;
+                    }
+                }());
+                // const kartaSizeClass = (() => {
+                //     switch (item.bredd_karta) {
+                //         case 'tva_tredjedelar':
+                //             return 'is-8';
+                //         case 'halv':
+                //             return 'is-6';
+                //         case 'en_tredjedel':
+                //             return 'is-4';
+                //         case 'en_fjardedel':
+                //             return 'is-3';
+                //         default:
+                //             return 'is-6';
+                //     }
+                // })();
                 const pins = item.karta.map_pins.map((pin) => ({
                     name: pin.beskrivning,
                     position: [pin.latitude, pin.longitude],
                 }));
                 return (
                     <div className="columns is-centered is-vcentered">
-                        <div className={item.layout !== 'karta_hoger' ? (`column ${ kartaSizeClass}`) : 'column'}>
+                        <div className={item.layout !== 'karta_hoger' ? (`column ${ kartaSize}`) : `column ${ textboxSize}`}>
                             {item.layout === 'karta_hoger' ? (
                                 <div
                                     className='zone-text'
@@ -194,7 +223,7 @@ const ZoneParser = ({
                                 />
                             )}
                         </div>
-                        <div className={item.layout === 'karta_hoger' ? (`column ${ kartaSizeClass}`) : 'column'}>
+                        <div className={item.layout === 'karta_hoger' ? (`column ${ kartaSize}`) : `column ${ textboxSize}`}>
                             {item.layout === 'karta_hoger' ? (
                                 <MyMap
                                     address={[item.karta.latitude, item.karta.longitude]}

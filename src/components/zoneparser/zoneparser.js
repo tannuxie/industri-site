@@ -101,37 +101,34 @@ const ZoneParser = ({
             }
             if (item.text && item.imgbox) {
                 key = item.text.textfield;
-                const textboxSize = (() => {
+                let textBoxSize;
+                let imgBoxSize;
+                (() => {
                     switch (item.bredd_bildbox) {
                         case 'tva_tredjedelar':
-                            return 'is-4';
+                            textBoxSize = 'is-4';
+                            imgBoxSize = 'is-8';
+                            break;
                         case 'halv':
-                            return 'is-6';
+                            textBoxSize = 'is-6';
+                            imgBoxSize = 'is-6';
+                            break;
                         case 'en_tredjedel':
-                            return 'is-8';
+                            textBoxSize = 'is-8';
+                            imgBoxSize = 'is-4';
+                            break;
                         case 'en_fjardedel':
-                            return 'is-9';
+                            textBoxSize = 'is-9';
+                            imgBoxSize = 'is-3';
+                            break;
                         default:
-                            return 'is-6';
-                    }
-                })();
-                const imgboxSizeClass = (() => {
-                    switch (item.bredd_bildbox) {
-                        case 'tva_tredjedelar':
-                            return 'is-8';
-                        case 'halv':
-                            return 'is-6';
-                        case 'en_tredjedel':
-                            return 'is-4';
-                        case 'en_fjardedel':
-                            return 'is-3';
-                        default:
-                            return 'is-6';
+                            textBoxSize = 'is-6';
+                            imgBoxSize = 'is-6';
                     }
                 })();
                 return (
                     <div className="columns is-centered is-vcentered">
-                        <div className={item.layout !== 'bild_hoger' ? (`column ${ imgboxSizeClass}`) : `column ${textboxSize}`}>
+                        <div className={item.layout !== 'bild_hoger' ? (`column ${ imgBoxSize}`) : `column ${textBoxSize}`}>
                             {item.layout === 'bild_hoger' ? (
                                 <div className='zone-text' css={css`@media (max-width: 1023px) {padding: 0 0.5rem;}`}>
                                     <MdxRender mdxBody={item.text.textfield} />
@@ -144,7 +141,7 @@ const ZoneParser = ({
                             />
                             )}
                         </div>
-                        <div className={item.layout === 'bild_hoger' ? (`column ${ imgboxSizeClass}`) : `column ${textboxSize}`}>
+                        <div className={item.layout === 'bild_hoger' ? (`column ${ imgBoxSize}`) : `column ${textBoxSize}`}>
                             {item.layout === 'bild_hoger' ? (
                             <ImgBox
                                 images={item.imgbox}
@@ -161,52 +158,38 @@ const ZoneParser = ({
             }
             if (item.text && item.karta) {
                 key = item.text.textfield;
-                let textboxSize; let kartaSize;
+                let textBoxSize; let kartaSize;
                 (function sizes() {
                     switch (item.bredd_karta) {
                         case 'tva_tredjedelar':
-                            textboxSize = 'is-4';
+                            textBoxSize = 'is-4';
                             kartaSize = 'is-8';
                             break;
                         case 'halv':
-                            textboxSize = 'is-6';
+                            textBoxSize = 'is-6';
                             kartaSize = 'is-6';
                             break;
                         case 'en_tredjedel':
-                            textboxSize = 'is-8';
+                            textBoxSize = 'is-8';
                             kartaSize = 'is-4';
                             break;
                         case 'en_fjardedel':
-                            textboxSize = 'is-9';
+                            textBoxSize = 'is-9';
                             kartaSize = 'is-3';
                             break;
                         default:
-                            textboxSize = 'is-6';
+                            textBoxSize = 'is-6';
                             kartaSize = 'is-6';
                             break;
                     }
                 }());
-                // const kartaSizeClass = (() => {
-                //     switch (item.bredd_karta) {
-                //         case 'tva_tredjedelar':
-                //             return 'is-8';
-                //         case 'halv':
-                //             return 'is-6';
-                //         case 'en_tredjedel':
-                //             return 'is-4';
-                //         case 'en_fjardedel':
-                //             return 'is-3';
-                //         default:
-                //             return 'is-6';
-                //     }
-                // })();
                 const pins = item.karta.map_pins.map((pin) => ({
                     name: pin.beskrivning,
                     position: [pin.latitude, pin.longitude],
                 }));
                 return (
                     <div className="columns is-centered is-vcentered">
-                        <div className={item.layout !== 'karta_hoger' ? (`column ${ kartaSize}`) : `column ${ textboxSize}`}>
+                        <div className={item.layout !== 'karta_hoger' ? (`column ${ kartaSize}`) : `column ${ textBoxSize}`}>
                             {item.layout === 'karta_hoger' ? (
                                 <div
                                     className='zone-text'
@@ -223,7 +206,7 @@ const ZoneParser = ({
                                 />
                             )}
                         </div>
-                        <div className={item.layout === 'karta_hoger' ? (`column ${ kartaSize}`) : `column ${ textboxSize}`}>
+                        <div className={item.layout === 'karta_hoger' ? (`column ${ kartaSize}`) : `column ${ textBoxSize}`}>
                             {item.layout === 'karta_hoger' ? (
                                 <MyMap
                                     address={[item.karta.latitude, item.karta.longitude]}

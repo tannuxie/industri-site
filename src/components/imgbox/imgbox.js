@@ -32,23 +32,30 @@ const ImgBox = ({ images, undertext }) => {
         return aspectSum;
     }
 
-    function fadeImageOverlay() {
-            setTimeout(() => {
-                if (overlayImageOverlay.current !== null) {
+    function fadeImageOverlay(boolean) {
+        setTimeout(() => {
+            if (overlayImageOverlay.current !== null) {
+                if (boolean) {
                     overlayImageOverlay.current.style.opacity = '1';
+                } else {
+                    overlayImageOverlay.current.style.opacity = '0';
                 }
-            }, 5);
+            }
+        }, 5);
     }
 
     function openOverlay() {
         console.log('in openOverlay');
         setIsOpen(true);
-        fadeImageOverlay();
+        fadeImageOverlay(true);
     }
 
     function closeOverlay() {
         console.log('in closeOverlay');
-        setIsOpen(false);
+        fadeImageOverlay(false);
+        setTimeout(() => {
+            setIsOpen(false);
+        }, 500);
     }
 
     const chunkedImages = useMemo(() => {

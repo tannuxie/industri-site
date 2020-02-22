@@ -40,7 +40,7 @@ const LoadableComponent = Loadable.Map({
                         attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                     />
                     {thePins && thePins.map((element) => (
-                        <Marker key={`${element.id} ${element.name} ${element.position[0]} ${element.subtitle[0]}`} position={element.position}>
+                        <Marker key={`${element.id && element.id} ${element.name} ${element.position[0]} ${element.subtitle && element.subtitle[0]}`} position={element.position}>
                             <Popup>
                                 <b>{element.name}</b>
                                 {element.subtitle && (

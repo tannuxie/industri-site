@@ -33,6 +33,9 @@ img {
 body.sizeUp .zone-text  {
     font-size: 1.5rem;
 }
+.zone-text > * {
+    white-space: normal;
+}
 
 body.body {
     right: 0px !important;

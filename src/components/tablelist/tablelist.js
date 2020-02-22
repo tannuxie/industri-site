@@ -551,22 +551,55 @@ const TableList = ({ data }) => {
     console.log('typography', rhythm, scale);
     const fixedNameData = React.useMemo(() => data.map(((item) => {
         const current = item;
-        item.type === 'tra' ? current.type = 'Trä' :
-        item.type === 'metall' ? current.type = 'Metall' :
-        item.type === 'moblertraforadling' ? current.type = 'Möbler / Träförädling' :
-        item.type === 'livsmedel' ? current.type = 'Livsmedel' :
-        item.type === 'skorklader' ? current.type = 'Skor & Kläder' :
-        item.type === 'plastgummi' ? current.type = 'Plast / Gummi' :
-        (item.type === 'ovrigtdiverse') ? (current.type = 'Övrigt / Diverse') :
-        current.type = item.type;
 
-        item.city === 'savsjo' ? current.city = 'Sävsjö' :
-        item.city === 'vrigstad' ? current.city = 'Vrigstad' :
-        item.city === 'stockaryd' ? current.city = 'Stockaryd' :
-        item.city === 'rorvik' ? current.city = 'Rörvik' :
-        item.city === 'hultagard' ? current.city = 'Hultagård' :
-        (item.city === 'hylletofta') ? (current.city = 'Hylletofta') :
-        current.city = item.city;
+        switch (item.type) {
+            case 'tra':
+                current.type = 'Trä';
+                break;
+            case 'metall':
+                current.type = 'Metall';
+                break;
+            case 'moblertraforadling':
+                current.type = 'Möbler / Träförädling';
+                break;
+            case 'livsmedel':
+                current.type = 'Livsmedel';
+                break;
+            case 'skorklader':
+                current.type = 'Skor & Kläder';
+                break;
+            case 'plastgummi':
+                current.type = 'Plast / Gummi';
+                break;
+            case 'ovrigtdiverse':
+                current.type = 'Övrigt / Diverse';
+                break;
+            default:
+                current.type = item.type;
+        }
+
+        switch (item.city) {
+            case 'savsjo':
+                current.type = 'Sävsjö';
+                break;
+            case 'vrigstad':
+                current.type = 'Vrigstad';
+                break;
+            case 'stockaryd':
+                current.type = 'Stockaryd';
+                break;
+            case 'rorvik':
+                current.type = 'Rörvik';
+                break;
+            case 'hultagard':
+                current.type = 'Hultagård';
+                break;
+            case 'hylletofta':
+                current.type = 'Hylletofta';
+                break;
+            default:
+                current.type = item.type;
+        }
 
         return current;
     })), [data]);
@@ -640,7 +673,7 @@ const TableList = ({ data }) => {
                             </p>
                             <p
                                 css={css`
-                                    white-space: pre-wrap;
+                                    white-space: normal;
                                     margin-bottom: 0;
                                     position: relative;
                                     padding-right: calc(${rhythm} / 2);

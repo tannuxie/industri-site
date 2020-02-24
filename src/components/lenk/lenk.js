@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import { css } from '@emotion/core';
 import { Link, StaticQuery, graphql } from 'gatsby';
 
-const Linky = ({
+const Lenk = ({
     data, id, type, children,
 }) => {
     // beroende på type, iterera igenom och hitta slug, generera link
-    console.log('in Linky');
+    console.log('in Lenk');
     console.log('id: ', id, 'type: ', type, 'children: ', children);
     console.log('data: ', data);
 
@@ -98,7 +98,7 @@ export default (props) => (
             }
 		`}
 		render={(data) => (
-			<Linky data={data} {...props} />
+			<Lenk data={data} {...props} />
 		)}
 	/>
 );

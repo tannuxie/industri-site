@@ -3,10 +3,10 @@ import { MDXProvider, mdx } from '@mdx-js/react';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 import MyMap from '~components/map/map';
 import ImgBox from '~components/imgbox/imgbox';
-import Linky from '~components/linky/linky';
+import Lenk from '~components/lenk/lenk';
 
 const shortcodes = {
-    Linky,
+    Lenk,
 };
 
 const MdxRender = ({ mdxBody }) => (

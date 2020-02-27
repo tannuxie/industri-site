@@ -10,18 +10,23 @@
 @import "~bulma/sass/grid/_all.sass";
 @import "~bulma/sass/layout/_all.sass";
 
+[data-reach-dialog-overlay] {
+    background-color: transparent;
+    overflow: hidden;
+    contain: strict style;
+  }
+
+[data-reach-dialog-content] {
+    overflow: hidden;
+}
+
 img {
-	object-fit: cover!important;
+	object-fit: cover;
 }
 
 .gatsby-image-wrapper {
 	width: 100%;
 	max-height: 700px;
-}
-
-.gradientBg {
-	display: flex;
-	background: linear-gradient(to right, $primary-color, $secondary-color);
 }
 
 .center {

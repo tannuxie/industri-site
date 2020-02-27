@@ -1,23 +1,27 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { StaticQuery, graphql } from 'gatsby';
 import Img from 'gatsby-image';
 import { css } from '@emotion/core';
-import { Helmet } from 'react-helmet';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { Dialog, DialogOverlay, DialogContent } from '@reach/dialog';
-import '@reach/dialog/styles.css';
-import _ from 'lodash';
+import { useSpring, useTransition, animated } from 'react-spring';
+import { AnimatePresence, motion } from 'framer-motion';
 import CompareValues, { compareValues } from '../functions';
 
-// import { zeroRightClassName,fullWidthClassName, noScrollbarsClassName }
-// from 'react-remove-scroll-bar';
-
 const ImgBox = ({ images, undertext }) => {
-    const [photoIndex, setPhotoIndex] = useState(0);
+    const [photoIndex, setPhotoIndex] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
-    const [imgBoxWidth, setImgBoxWidth] = useState(0);
+    // const [currImg, setCurrImg] = useState(null);
+
+    const AnimatedDialogOverlay = animated(DialogOverlay);
+    const AnimatedDialogContent = animated(DialogContent);
+    const transitions = useTransition(isOpen, null, {
+        from: { opacity: 0 },
+        enter: { opacity: 1 },
+        leave: { opacity: 0 },
+      });
+    const fadeInProps = useSpring({ opacity: 1, from: { opacity: 0 } });
     const overlayImageOverlay = useRef(null);
 
     function getAspectRatioSum(imagesToSum) {
@@ -42,20 +46,6 @@ const ImgBox = ({ images, undertext }) => {
                 }
             }
         }, 5);
-    }
-
-    function openOverlay() {
-        console.log('in openOverlay');
-        setIsOpen(true);
-        fadeImageOverlay(true);
-    }
-
-    function closeOverlay() {
-        console.log('in closeOverlay');
-        fadeImageOverlay(false);
-        setTimeout(() => {
-            setIsOpen(false);
-        }, 500);
     }
 
     const chunkedImages = useMemo(() => {
@@ -91,19 +81,52 @@ const ImgBox = ({ images, undertext }) => {
         return newImagesArray;
     }, [images]);
 
-    useEffect(() => {
-        console.log('in UseEffect');
-        console.log('chunkedImages', chunkedImages);
+    function openOverlay(number) {
+        console.log('in openOverlay', number);
+        setPhotoIndex(number);
+        setIsOpen(true);
+        // setCurrImg(chunkedImages[Math.floor(number / 2)][number % 2]);
+        // setIsOpen(true);
+        // fadeImageOverlay(true);
+    }
 
-        setIsMounted(true);
+    function closeOverlay() {
+        console.log('in closeOverlay');
+        setIsOpen(false);
+        // fadeImageOverlay(false);
+        // setTimeout(() => {
+        //     setIsOpen(false);
+        // }, 500);
+    }
 
-        return () => {
-            console.log('in UseEffect, unmounting');
-            setIsMounted(false);
-        };
-    }, [chunkedImages]);
+    // useLayoutEffect(() => {
+    //     console.log('in UseEffect');
+    //     console.log('photoIndex', photoIndex);
 
-    return (isMounted && chunkedImages.length > 0) && (
+    //     // setCurrImg(chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2]);
+    //     setIsMounted(true);
+
+    //     return () => {
+    //         console.log('in UseEffect, unmounting');
+    //         setIsMounted(false);
+    //     };
+    // }, [photoIndex, isOpen, chunkedImages]);
+
+    // useLayoutEffect(() => {
+    //     console.log('in LayoutEffect');
+
+    //     if (photoIndex !== null) {
+    //         // setCurrImg(chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2]);
+    //         setIsOpen(true);
+    //     }
+    // }, [photoIndex]);
+
+    const variants = {
+        visible: { opacity: 1 },
+        hidden: { opacity: 0 },
+    };
+
+    return (
         <div
             className="image-container"
             css={css`
@@ -112,6 +135,9 @@ const ImgBox = ({ images, undertext }) => {
                 flex-direction: row;
                 flex-wrap: wrap;
 
+                .imgBox {
+                    cursor: pointer;
+                }
                 ${chunkedImages.length > 1 && (`
                     @media (min-width: 1024px) {
                         .gatsby-image-wrapper {
@@ -132,6 +158,7 @@ const ImgBox = ({ images, undertext }) => {
                     } = item;
                     return (
                         <div
+                            className="imgBox"
                             role="button"
                             key={`${id} ${beskrivning}`}
                             tabIndex={0}
@@ -141,16 +168,16 @@ const ImgBox = ({ images, undertext }) => {
                                 console.log('all chunks', chunkedImages);
                                 console.log('test5', chunkedImages[Math.floor(((chunkIndex * 2) + imageIndex) / 2)][((chunkIndex * 2) + imageIndex) % 2].beskrivning);
 
-                                openOverlay();
-                                setPhotoIndex((chunkIndex * 2) + imageIndex);
+                                // setPhotoIndex((chunkIndex * 2) + imageIndex);
+                                openOverlay((chunkIndex * 2) + imageIndex);
                             }}
                             css={css`
                                 width: ${(bildfil.childImageSharp.fluid.aspectRatio / getAspectRatioSum(chunk)) * 100}%;
                             `}
                             onKeyDown={(event) => {
                                 if (event.keycode === 13) {
-                                    openOverlay();
-                                    setPhotoIndex((chunkIndex * 2) + imageIndex);
+                                    // setPhotoIndex((chunkIndex * 2) + imageIndex);
+                                    openOverlay((chunkIndex * 2) + imageIndex);
                                 }
                             }}
                         >
@@ -176,30 +203,66 @@ const ImgBox = ({ images, undertext }) => {
                 </p>
             )}
 
-            {isOpen && (
+
+            {/* {transitions.map(({ item, key, props: styles }) => item && ( */}
+            <AnimatePresence>
+            {(isOpen) && (
                 <DialogOverlay
+                    id="imgOverlay"
+                    // initial="hidden"
+                    // animate="visible"
+                    // variants={variants}
+                    // key={key}
                     css={css`
                         z-index: 9999;
                         display: flex;
                         align-items: center;
-                        opacity: 0;
-                        transition: opacity 0.4s ease-out;
                     `}
-                    ref={overlayImageOverlay}
-                    isOpen={isOpen}
+                    // style={{ opacity: styles.opacity }}
                     onDismiss={() => closeOverlay()}
-                    onClick={() => openOverlay()}
+                    // onClick={() => openOverlay()}
                 >
+                    <motion.div
+                        className="motion-div"
+                        css={css`
+                            position: fixed;
+                            top: 0;
+                            bottom: 0;
+                            right: 0;
+                            left: 0;
+                            contain: strict;
+                            z-index: 20000;
+                            display: flex;
+                        `}
+                        exit={{ opacity: 0 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ type: 'spring', stiffness: 150, damping: 50, mass: 0.7 }}
+                    >
+                    <div
+                        className="background"
+                        css={css`
+                            position: absolute;
+                            top: 0;
+                            bottom: 0;
+                            left: 0;
+                            right: 0;
+                            background-color: rgba(0, 0, 0, 0.2);
+                        `}
+                    />
                     <DialogContent
                         css={css`
                             margin: 2vh auto 0;
                             padding: 15px;
                             width: 70vw;
-                            min-height: 70vh;
+                            max-height: 95vh;
                             position: relative;
                             display: flex;
-                            flex-direction: column;
-                            justify-content: space-between;
+                            flex-direction: row;
+                            flex-wrap: wrap;
+                            justify-content: center;
+                            background-color: white;
+                            align-self: center;
                             @media (max-width: 1680px) {
                                 width: 90vw;
                             }
@@ -208,9 +271,8 @@ const ImgBox = ({ images, undertext }) => {
                                 margin: 0;
                                 padding: 0;
                             }
-                            .react-transform-component {
-                                align-self: center;
-                            }
+
+
                             .gatsby-image-wrapper img {
                                 object-fit: contain !important;
                             }
@@ -350,10 +412,12 @@ const ImgBox = ({ images, undertext }) => {
                                             fluid={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2]
                                                 .bildfil.childImageSharp.fluid}
                                             alt={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
+                                            imgStyle={{ objectFit: 'contain' }}
+                                            style={{ width: '100%', maxHeight: '700px'}}
                                             css={css`
-                                                min-width: 88vw;
+                                                min-width: 80vw;
                                                 @media (max-width: 769px) {
-                                                    min-width: 100vw;
+                                                    min-width: 95vw;
                                                 }
                                             `}
                                         />
@@ -367,6 +431,7 @@ const ImgBox = ({ images, undertext }) => {
                                 display: flex;
                                 justify-content: space-between;
                                 align-items: stretch;
+                                width: 100%;
                             `}
                         >
                             <h2
@@ -423,8 +488,11 @@ const ImgBox = ({ images, undertext }) => {
                             </button>
                         </div>
                     </DialogContent>
+                    </motion.div>
                 </DialogOverlay>
-            )}
+                )}
+            </AnimatePresence>
+                {/* ))} */}
         </div>
     );
 };

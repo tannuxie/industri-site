@@ -256,15 +256,6 @@ function Table({ columns, data }) {
     )(), []);
     console.log('typeSearchString', typeSearchString);
 
-    // const typeSearchString = (parsed.bransch === 'trä'
-    // || parsed.bransch === 'metall'
-    // || parsed.bransch === 'möbler / träförädling'
-    // || parsed.bransch === 'livsmedel'
-    // || parsed.bransch === 'skor & kläder'
-    // || parsed.bransch === 'hylletofta'
-    // || parsed.bransch === 'hylletofta'
-    // ) ? 'parsed.stad' : '';
-
     const scrollToTable = (() => {
             const element = document.getElementsByTagName('h1')[0];
             if (element) element.scrollIntoView();
@@ -580,25 +571,25 @@ const TableList = ({ data }) => {
 
         switch (item.city) {
             case 'savsjo':
-                current.type = 'Sävsjö';
+                current.city = 'Sävsjö';
                 break;
             case 'vrigstad':
-                current.type = 'Vrigstad';
+                current.city = 'Vrigstad';
                 break;
             case 'stockaryd':
-                current.type = 'Stockaryd';
+                current.city = 'Stockaryd';
                 break;
             case 'rorvik':
-                current.type = 'Rörvik';
+                current.city = 'Rörvik';
                 break;
             case 'hultagard':
-                current.type = 'Hultagård';
+                current.city = 'Hultagård';
                 break;
             case 'hylletofta':
-                current.type = 'Hylletofta';
+                current.city = 'Hylletofta';
                 break;
             default:
-                current.type = item.type;
+                current.city = item.city;
         }
 
         return current;

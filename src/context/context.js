@@ -42,7 +42,7 @@ class ContextProviderComponent extends React.Component {
         console.log('in toggleSize');
         this.setState((state) => ({
             store: {
-                size: !this.state.store.size,
+                size: !state.store.size,
             },
         }));
     }

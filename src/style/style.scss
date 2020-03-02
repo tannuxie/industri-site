@@ -10,29 +10,14 @@
 @import "~bulma/sass/grid/_all.sass";
 @import "~bulma/sass/layout/_all.sass";
 
-[data-reach-dialog-overlay] {
-    background-color: transparent;
-    overflow: hidden;
-    contain: strict style;
-  }
 
-[data-reach-dialog-content] {
-    overflow: hidden;
-}
+// ****************
+// Body / Main content
+// ****************
 
-img {
-	object-fit: cover;
-}
-
-.gatsby-image-wrapper {
-	width: 100%;
-	max-height: 700px;
-}
-
-.center {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+body.body {
+    right: 0px !important;
+    margin-right: 0px!important;
 }
 
 body.sizeUp .zone-text  {
@@ -40,11 +25,6 @@ body.sizeUp .zone-text  {
 }
 .zone-text > * {
     white-space: normal;
-}
-
-body.body {
-    right: 0px !important;
-    margin-right: 0px!important;
 }
 
 button, input {
@@ -64,7 +44,37 @@ button, select {
 }
 
 // ****************
-// *** Navbar ***
+// Images
+// ****************
+
+img {
+	object-fit: cover;
+}
+
+.gatsby-image-wrapper {
+	width: 100%;
+	max-height: 700px;
+}
+
+// ****************
+// Image overlay
+// ****************
+
+:root {
+  --reach-dialog: 1;
+}
+[data-reach-dialog-overlay] {
+    background-color: transparent;
+    overflow: hidden;
+    contain: strict style;
+  }
+
+[data-reach-dialog-content] {
+    overflow: hidden;
+}
+
+// ****************
+// Navbar 
 // ****************
 
 a.navbar-item:focus,
@@ -87,8 +97,6 @@ a.navbar-item, .navbar-link {
 	top: 0px;
 	left: 0px;
 	z-index: 30;
-	//background-color:#57b9e5!important;
-    //background: linear-gradient(to right, #2980b9, #6dd5fa)!important;
     background: linear-gradient(to right, #bbbbbb, #ffffff)!important;
 	width: 100%;
 	z-index: 9998;

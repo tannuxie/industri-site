@@ -4,7 +4,6 @@ import Img from 'gatsby-image';
 import { css } from '@emotion/core';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { Dialog, DialogOverlay, DialogContent } from '@reach/dialog';
-import { useSpring, useTransition, animated } from 'react-spring';
 import { AnimatePresence, motion } from 'framer-motion';
 import CompareValues, { compareValues } from '../functions';
 
@@ -12,16 +11,7 @@ const ImgBox = ({ images, undertext }) => {
     const [photoIndex, setPhotoIndex] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
-    // const [currImg, setCurrImg] = useState(null);
 
-    const AnimatedDialogOverlay = animated(DialogOverlay);
-    const AnimatedDialogContent = animated(DialogContent);
-    const transitions = useTransition(isOpen, null, {
-        from: { opacity: 0 },
-        enter: { opacity: 1 },
-        leave: { opacity: 0 },
-      });
-    const fadeInProps = useSpring({ opacity: 1, from: { opacity: 0 } });
     const overlayImageOverlay = useRef(null);
 
     function getAspectRatioSum(imagesToSum) {
@@ -34,18 +24,6 @@ const ImgBox = ({ images, undertext }) => {
         // console.log('aspectSum', aspectSum);
 
         return aspectSum;
-    }
-
-    function fadeImageOverlay(boolean) {
-        setTimeout(() => {
-            if (overlayImageOverlay.current !== null) {
-                if (boolean) {
-                    overlayImageOverlay.current.style.opacity = '1';
-                } else {
-                    overlayImageOverlay.current.style.opacity = '0';
-                }
-            }
-        }, 5);
     }
 
     const chunkedImages = useMemo(() => {
@@ -85,18 +63,11 @@ const ImgBox = ({ images, undertext }) => {
         console.log('in openOverlay', number);
         setPhotoIndex(number);
         setIsOpen(true);
-        // setCurrImg(chunkedImages[Math.floor(number / 2)][number % 2]);
-        // setIsOpen(true);
-        // fadeImageOverlay(true);
     }
 
     function closeOverlay() {
         console.log('in closeOverlay');
         setIsOpen(false);
-        // fadeImageOverlay(false);
-        // setTimeout(() => {
-        //     setIsOpen(false);
-        // }, 500);
     }
 
     // useLayoutEffect(() => {
@@ -168,7 +139,6 @@ const ImgBox = ({ images, undertext }) => {
                                 console.log('all chunks', chunkedImages);
                                 console.log('test5', chunkedImages[Math.floor(((chunkIndex * 2) + imageIndex) / 2)][((chunkIndex * 2) + imageIndex) % 2].beskrivning);
 
-                                // setPhotoIndex((chunkIndex * 2) + imageIndex);
                                 openOverlay((chunkIndex * 2) + imageIndex);
                             }}
                             css={css`
@@ -176,7 +146,6 @@ const ImgBox = ({ images, undertext }) => {
                             `}
                             onKeyDown={(event) => {
                                 if (event.keycode === 13) {
-                                    // setPhotoIndex((chunkIndex * 2) + imageIndex);
                                     openOverlay((chunkIndex * 2) + imageIndex);
                                 }
                             }}
@@ -202,23 +171,15 @@ const ImgBox = ({ images, undertext }) => {
                     {undertext}
                 </p>
             )}
-
-
-            {/* {transitions.map(({ item, key, props: styles }) => item && ( */}
             <AnimatePresence>
             {(isOpen) && (
                 <DialogOverlay
                     id="imgOverlay"
-                    // initial="hidden"
-                    // animate="visible"
-                    // variants={variants}
-                    // key={key}
                     css={css`
                         z-index: 9999;
                         display: flex;
                         align-items: center;
                     `}
-                    // style={{ opacity: styles.opacity }}
                     onDismiss={() => closeOverlay()}
                     // onClick={() => openOverlay()}
                 >
@@ -239,260 +200,259 @@ const ImgBox = ({ images, undertext }) => {
                         animate={{ opacity: 1 }}
                         transition={{ type: 'spring', stiffness: 150, damping: 50, mass: 0.7 }}
                     >
-                    <div
-                        className="background"
-                        css={css`
-                            position: absolute;
-                            top: 0;
-                            bottom: 0;
-                            left: 0;
-                            right: 0;
-                            background-color: rgba(0, 0, 0, 0.2);
-                        `}
-                    />
-                    <DialogContent
-                        css={css`
-                            margin: 2vh auto 0;
-                            padding: 15px;
-                            width: 70vw;
-                            max-height: 95vh;
-                            position: relative;
-                            display: flex;
-                            flex-direction: row;
-                            flex-wrap: wrap;
-                            justify-content: center;
-                            background-color: white;
-                            align-self: center;
-                            @media (max-width: 1680px) {
-                                width: 90vw;
-                            }
-                            @media (max-width: 769px) {
-                                width: 100%;
-                                margin: 0;
-                                padding: 0;
-                            }
-
-
-                            .gatsby-image-wrapper img {
-                                object-fit: contain !important;
-                            }
-                        `}
-                        aria-label={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
-                    >
-                        <TransformWrapper
-                            defaultScale={1}
-                            scale={1}
-                            defaultPositionX={0}
-                            defaultPositionY={0}
-                            positionX={0}
-                            positionY={0}
-                            options={{
-                                    limitToWrapper: true,
-                            }}
-                            scalePadding={{
-                                    size: 0.2,
-                            }}
-                            pan={{
-                                    velocitySensitivity: 0.5,
-                                    velocity: false,
-                            }}
-                        >
-                            {({
-                                zoomIn, zoomOut, resetTransform, ...rest
-                            }) => (
-                                <>
-                                    <div
-                                        className='tools'
-                                        css={css`
-                                            position: absolute;
-                                            top: 1.2rem;
-                                            right: 1.2rem;
-                                            z-index: 100;
-                                            background-color: white;
-                                            overflow: hidden;
-                                            @media (max-width: 769px) {
-                                                right: 10px;
-                                                display: none;
-                                            }
-                                            button:not(:last-of-type) {
-                                                margin-right: 0.5rem;
-                                            }
-                                            button {
-                                                padding: 0 10px;
-                                                vertical-align: middle;
-                                                max-height: calc(35px + 1.25rem);
-                                                color: transparent;
-                                                text-shadow: 0 0 0 #4e4e4e;
-                                                border-width: 0;
-                                                background-color: transparent;
-                                                @media (max-width: 769px) {
-                                                    top: auto;
-                                                    right: 5px;
-                                                    bottom: 0;
-                                                }
-                                                span {
-                                                    height: 50px;
-                                                    width: 100%;
-                                                    display: flex;
-                                                    align-items: center;
-                                                    justify-content: center;
-
-                                                    :before {
-                                                        font-weight: 300;
-                                                        font-family: Arial, sans-serif;
-                                                        font-size: 3rem;
-                                                        cursor: pointer;
-                                                    }
-                                                }
-                                            }
-
-                                            #imgbox-zoomin {
-                                                span {
-                                                    :before {
-                                                        content: '+';
-                                                    }
-                                                }
-                                            }
-                                            #imgbox-zoomout {
-                                                padding: 0 5px 12px;
-                                                span {
-                                                    :before {
-                                                        content: '-';
-                                                    }
-                                                }
-                                            }
-                                            #imgbox-zoomreset {
-                                                span {
-                                                    :before {
-                                                        content: '0';
-                                                    }
-                                                }
-                                            }
-                                        `}
-                                    >
-                                        <button
-                                            id="imgbox-zoomin"
-                                            tabIndex={0}
-                                            onClick={zoomIn}
-                                            onKeyDown={(event) => {
-                                                if (event.keycode === 13) {
-                                                    zoomIn();
-                                                }
-                                            }}
-                                        >
-                                            <span />
-                                        </button>
-                                        <button
-                                            id="imgbox-zoomout"
-                                            tabIndex={0}
-                                            onClick={zoomOut}
-                                            onKeyDown={(event) => {
-                                                if (event.keycode === 13) {
-                                                    zoomOut();
-                                                }
-                                            }}
-                                        >
-                                            <span />
-                                        </button>
-                                        <button
-                                            id="imgbox-zoomreset"
-                                            tabIndex={0}
-                                            onClick={resetTransform}
-                                            onKeyDown={(event) => {
-                                                if (event.keycode === 13) {
-                                                    resetTransform();
-                                                }
-                                            }}
-                                        >
-                                            <span />
-                                        </button>
-                                    </div>
-                                    <TransformComponent>
-                                        <Img
-                                            fluid={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2]
-                                                .bildfil.childImageSharp.fluid}
-                                            alt={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
-                                            imgStyle={{ objectFit: 'contain' }}
-                                            style={{ width: '100%', maxHeight: '700px'}}
-                                            css={css`
-                                                min-width: 80vw;
-                                                @media (max-width: 769px) {
-                                                    min-width: 95vw;
-                                                }
-                                            `}
-                                        />
-
-                                    </TransformComponent>
-                                </>
-                            )}
-                        </TransformWrapper>
                         <div
+                            className="background"
                             css={css`
-                                display: flex;
-                                justify-content: space-between;
-                                align-items: stretch;
-                                width: 100%;
+                                position: absolute;
+                                top: 0;
+                                bottom: 0;
+                                left: 0;
+                                right: 0;
+                                background-color: rgba(0, 0, 0, 0.2);
                             `}
+                        />
+                        <DialogContent
+                            css={css`
+                                margin: 2vh auto 0;
+                                padding: 15px;
+                                width: 70vw;
+                                max-height: 95vh;
+                                position: relative;
+                                display: flex;
+                                flex-direction: row;
+                                flex-wrap: wrap;
+                                justify-content: center;
+                                background-color: white;
+                                align-self: center;
+                                @media (max-width: 1680px) {
+                                    width: 90vw;
+                                }
+                                @media (max-width: 769px) {
+                                    width: 100%;
+                                    margin: 0;
+                                    padding: 0;
+                                }
+
+
+                                .gatsby-image-wrapper img {
+                                    object-fit: contain !important;
+                                }
+                            `}
+                            aria-label={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
                         >
-                            <h2
-                                css={css`
-                                    margin-top: 1.25rem;
-                                    flex-grow: 1;
-                                    text-align: center;
-                                    @media (max-width: 769px) {
-                                        padding-left: 10px;
-                                    }
-                                `}
-                            >
-                                {chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
-                            </h2>
-                            <button
-                                id="imgbox-close"
-                                css={css`
-                                    margin-top: 0.5rem;
-                                    padding: 0 5px;
-                                    max-height: calc(35px + 1.25rem);
-                                    color: transparent;
-                                    text-shadow: 0 0 0 #4e4e4e;
-                                    border-width: 0;
-                                    background-color: transparent;
-                                    @media (max-width: 769px) {
-                                        margin-right: 10px;
-                                    }
-                                `}
-                                tabIndex={0}
-                                onClick={() => closeOverlay()}
-                                onKeyDown={(event) => {
-                                    if (event.keycode === 13) {
-                                        closeOverlay();
-                                    }
+                            <TransformWrapper
+                                defaultScale={1}
+                                scale={1}
+                                defaultPositionX={0}
+                                defaultPositionY={0}
+                                positionX={0}
+                                positionY={0}
+                                options={{
+                                        limitToWrapper: true,
+                                }}
+                                scalePadding={{
+                                        size: 0.2,
+                                }}
+                                pan={{
+                                        velocitySensitivity: 0.5,
+                                        velocity: false,
                                 }}
                             >
-                                <span
-                                    css={css`
-                                        height: 50px;
-                                        width: 100%;
-                                        display: flex;
-                                        align-items: center;
-                                        justify-content: center;
+                                {({
+                                    zoomIn, zoomOut, resetTransform, ...rest
+                                }) => (
+                                    <>
+                                        <div
+                                            className='tools'
+                                            css={css`
+                                                position: absolute;
+                                                top: 1.2rem;
+                                                right: 1.2rem;
+                                                z-index: 100;
+                                                background-color: white;
+                                                overflow: hidden;
+                                                @media (max-width: 769px) {
+                                                    right: 10px;
+                                                    display: none;
+                                                }
+                                                button:not(:last-of-type) {
+                                                    margin-right: 0.5rem;
+                                                }
+                                                button {
+                                                    padding: 0 10px;
+                                                    vertical-align: middle;
+                                                    max-height: calc(35px + 1.25rem);
+                                                    color: transparent;
+                                                    text-shadow: 0 0 0 #4e4e4e;
+                                                    border-width: 0;
+                                                    background-color: transparent;
+                                                    @media (max-width: 769px) {
+                                                        top: auto;
+                                                        right: 5px;
+                                                        bottom: 0;
+                                                    }
+                                                    span {
+                                                        height: 50px;
+                                                        width: 100%;
+                                                        display: flex;
+                                                        align-items: center;
+                                                        justify-content: center;
 
-                                        :before {
-                                            content: 'x';
-                                            font-weight: 300;
-                                            font-family: Arial, sans-serif;
-                                            font-size: 3rem;
-                                            cursor: pointer;
+                                                        :before {
+                                                            font-weight: 300;
+                                                            font-family: Arial, sans-serif;
+                                                            font-size: 3rem;
+                                                            cursor: pointer;
+                                                        }
+                                                    }
+                                                }
+
+                                                #imgbox-zoomin {
+                                                    span {
+                                                        :before {
+                                                            content: '+';
+                                                        }
+                                                    }
+                                                }
+                                                #imgbox-zoomout {
+                                                    padding: 0 5px 12px;
+                                                    span {
+                                                        :before {
+                                                            content: '-';
+                                                        }
+                                                    }
+                                                }
+                                                #imgbox-zoomreset {
+                                                    span {
+                                                        :before {
+                                                            content: '0';
+                                                        }
+                                                    }
+                                                }
+                                            `}
+                                        >
+                                            <button
+                                                id="imgbox-zoomin"
+                                                tabIndex={0}
+                                                onClick={zoomIn}
+                                                onKeyDown={(event) => {
+                                                    if (event.keycode === 13) {
+                                                        zoomIn();
+                                                    }
+                                                }}
+                                            >
+                                                <span />
+                                            </button>
+                                            <button
+                                                id="imgbox-zoomout"
+                                                tabIndex={0}
+                                                onClick={zoomOut}
+                                                onKeyDown={(event) => {
+                                                    if (event.keycode === 13) {
+                                                        zoomOut();
+                                                    }
+                                                }}
+                                            >
+                                                <span />
+                                            </button>
+                                            <button
+                                                id="imgbox-zoomreset"
+                                                tabIndex={0}
+                                                onClick={resetTransform}
+                                                onKeyDown={(event) => {
+                                                    if (event.keycode === 13) {
+                                                        resetTransform();
+                                                    }
+                                                }}
+                                            >
+                                                <span />
+                                            </button>
+                                        </div>
+                                        <TransformComponent>
+                                            <Img
+                                                fluid={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2]
+                                                    .bildfil.childImageSharp.fluid}
+                                                alt={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
+                                                imgStyle={{ objectFit: 'contain' }}
+                                                style={{ maxHeight: '75vh'}}
+                                                css={css`
+                                                    min-width: 80vw;
+                                                    @media (max-width: 769px) {
+                                                        min-width: 95vw;
+                                                    }
+                                                `}
+                                            />
+
+                                        </TransformComponent>
+                                    </>
+                                )}
+                            </TransformWrapper>
+                            <div
+                                css={css`
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: stretch;
+                                    width: 100%;
+                                `}
+                            >
+                                <h2
+                                    css={css`
+                                        margin-top: 1.25rem;
+                                        flex-grow: 1;
+                                        text-align: center;
+                                        @media (max-width: 769px) {
+                                            padding-left: 10px;
                                         }
                                     `}
-                                />
-                            </button>
-                        </div>
-                    </DialogContent>
+                                >
+                                    {chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
+                                </h2>
+                                <button
+                                    id="imgbox-close"
+                                    css={css`
+                                        margin-top: 0.5rem;
+                                        padding: 0 5px;
+                                        max-height: calc(35px + 1.25rem);
+                                        color: transparent;
+                                        text-shadow: 0 0 0 #4e4e4e;
+                                        border-width: 0;
+                                        background-color: transparent;
+                                        @media (max-width: 769px) {
+                                            margin-right: 10px;
+                                        }
+                                    `}
+                                    tabIndex={0}
+                                    onClick={() => closeOverlay()}
+                                    onKeyDown={(event) => {
+                                        if (event.keycode === 13) {
+                                            closeOverlay();
+                                        }
+                                    }}
+                                >
+                                    <span
+                                        css={css`
+                                            height: 50px;
+                                            width: 100%;
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+
+                                            :before {
+                                                content: 'x';
+                                                font-weight: 300;
+                                                font-family: Arial, sans-serif;
+                                                font-size: 3rem;
+                                                cursor: pointer;
+                                            }
+                                        `}
+                                    />
+                                </button>
+                            </div>
+                        </DialogContent>
                     </motion.div>
                 </DialogOverlay>
                 )}
             </AnimatePresence>
-                {/* ))} */}
         </div>
     );
 };

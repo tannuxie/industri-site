@@ -1,6 +1,4 @@
-/* eslint-disable no-nested-ternary */
 import React from 'react';
-// import '~style/style.scss';
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import {
@@ -10,10 +8,9 @@ import {
     useFilters,
     useGlobalFilter,
 } from 'react-table';
-import { Link, graphql } from 'gatsby';
+import { Link } from 'gatsby';
 import Img from 'gatsby-image';
 import queryString from 'query-string';
-import Emoji from '~components/emoji';
 import { rhythm, scale } from '../../style/typography';
 import { compareValues } from '~components/functions';
 
@@ -348,7 +345,6 @@ function Table({ columns, data }) {
             <tr>
                 <th
                     id="table-results"
-                    colSpan={flatColumns.length}
                 >
                     <GlobalFilter
                         preGlobalFilteredRows={preGlobalFilteredRows}
@@ -376,8 +372,7 @@ function Table({ columns, data }) {
         </tbody>
       </table>
       {/*
-        Pagination can be built however you'd like.
-        This is just a very basic UI implementation:
+        Pagination
       */}
       <div className="pagination">
         <a

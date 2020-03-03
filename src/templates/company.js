@@ -48,7 +48,7 @@ const CompanyTemplate = ({ data }) => {
                             css={css`
                                 margin: 1.5rem 0;
                                 img {
-                                    object-fit: cover!important;
+                                    object-fit: contain!important;
                                 }
                             `}
                         />

@@ -106,9 +106,6 @@ const ImgBox = ({ images, undertext }) => {
                 flex-direction: row;
                 flex-wrap: wrap;
 
-                .imgBox {
-                    cursor: pointer;
-                }
                 ${chunkedImages.length > 1 && (`
                     @media (min-width: 1024px) {
                         .gatsby-image-wrapper {
@@ -230,7 +227,7 @@ const ImgBox = ({ images, undertext }) => {
                                 @media (max-width: 769px) {
                                     width: 100%;
                                     margin: 0;
-                                    padding: 0;
+                                    padding: 62px 0px 0px 0px;
                                 }
 
 
@@ -273,7 +270,7 @@ const ImgBox = ({ images, undertext }) => {
                                                 overflow: hidden;
                                                 @media (max-width: 769px) {
                                                     right: 10px;
-                                                    display: none;
+                                                    top: 0px;
                                                 }
                                                 button:not(:last-of-type) {
                                                     margin-right: 0.5rem;

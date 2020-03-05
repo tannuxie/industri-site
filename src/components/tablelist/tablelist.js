@@ -270,6 +270,8 @@ function Table({ columns, data }) {
         [],
     );
 
+    const autoResetFilters = false;
+
     // Use the state and functions returned from useTable to build your UI
     const {
       getTableProps,
@@ -313,6 +315,7 @@ function Table({ columns, data }) {
             ],
          },
       },
+      autoResetFilters,
       useFlexLayout,
       useFilters, // useFilters!
       useGlobalFilter,
@@ -532,10 +535,10 @@ function Table({ columns, data }) {
   );
 }
 
-const TableList = ({ data }) => {
-    console.log('table data', data);
+const TableList = ({ companyData }) => {
+    console.log('table data', companyData);
     console.log('typography', rhythm, scale);
-    const fixedNameData = React.useMemo(() => data.map(((item) => {
+    const fixedNameData = React.useMemo(() => companyData.map((item) => {
         const current = item;
 
         switch (item.type) {
@@ -562,6 +565,7 @@ const TableList = ({ data }) => {
                 break;
             default:
                 current.type = item.type;
+                break;
         }
 
         switch (item.city) {
@@ -585,10 +589,11 @@ const TableList = ({ data }) => {
                 break;
             default:
                 current.city = item.city;
+                break;
         }
 
         return current;
-    })), [data]);
+    }), [companyData]);
 
     const sortedData = React.useMemo(() => fixedNameData.sort(compareValues('name', 'asc')), [fixedNameData]);
     console.log(sortedData);
@@ -600,23 +605,31 @@ const TableList = ({ data }) => {
                 accessor: 'companyimage.id',
                 Header: (() => null),
                 Cell: ({ row }) => {
-                    console.log(row);
+                    // console.log(row);
                     return (
                         <div css={css`
-                            max-height: 500px;
+                            max-height: 45vh;
+                            height: 100%;
                             overflow: hidden;
-                            display: flex;
-                            flex-grow: 1;
                             @media (max-width: 769px) {
-                                max-height: 300px;
+                                max-height: 320px;
                             }
                         `}
                         >
+                            <Link to={`/industri/${row.original.fields.slug}`}>
                             <Img
                                 fluid={row.original.companyimage.childImageSharp.fluid}
                                 alt={row.original.name}
                                 title={row.original.name}
+                                style={{
+                                    height: '100%',
+                                }}
+                                imgStyle={{
+                                    objectFit: 'cover',
+                                    objectPosition: 'top center',
+                                }}
                             />
+                            </Link>
                         </div>
                     );
                 },
@@ -627,7 +640,7 @@ const TableList = ({ data }) => {
                 Header: 'Sök på namn...',
                 Filter: DefaultColumnFilter,
                 Cell: ({ row }) => {
-                    console.log(row);
+                    // console.log(row);
                     return (
                         <div
                             css={css`
@@ -669,14 +682,14 @@ const TableList = ({ data }) => {
                                     :before {
                                         content: "...";
                                         position: absolute;
-                                        bottom: 0;
-                                        right: 0;
+                                        bottom: 3px;
+                                        right: -1px;
                                         width: 1rem;
                                     }
                                     :after {
                                         content: "";
                                         position: absolute;
-                                        right: 0;
+                                        right: -1px;
                                         width: 1rem;
                                         height: ${rhythm};
                                         background: white;

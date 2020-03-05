@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 // import '~style/style.scss';
 import { css } from '@emotion/core';
 import { Link, StaticQuery, graphql } from 'gatsby';
@@ -9,17 +9,35 @@ const FilterCompanyList = ({ data, city }) => {
     console.log('filtercompanylist data', data);
     console.log('filtercompanylist city', city);
 
-    const companies = data.company.edges.filter((item) => {
-        return item.node.city.toLowerCase() === city.replace(/å/g, 'a')
-		.replace(/ä/g, 'a')
-        .replace(/ö/g, 'o')
-        .toLowerCase();
-    }).map((item) => item.node);
+    const companies = useMemo(() => data.company.edges.filter((item) => {
+        switch (item.node.city) {
+            case 'savsjo':
+            case 'Sävsjö':
+                return city === 'Sävsjö';
+            case 'vrigstad':
+            case 'Vrigstad':
+                return city === 'Vrigstad';
+            case 'stockaryd':
+            case 'Stockaryd':
+                return city === 'Stockaryd';
+            case 'rorvik':
+            case 'Rörvik':
+                return city === 'Rörvik';
+            case 'hultagard':
+            case 'Hultagård':
+                return city === 'Hultagård';
+            case 'hylletofta':
+            case 'Hylletofta':
+                return city === 'Hylletofta';
+            default:
+                return false;
+        }
+    }).map((item) => item.node), [data]);
 
     console.log('filtercompanylist companies', companies);
 
 	return (
-        <TableList data={companies} />
+        <TableList companyData={companies} />
 	);
 };
 

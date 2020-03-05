@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import Img from 'gatsby-image';
 import { css } from '@emotion/core';
@@ -10,9 +10,6 @@ import CompareValues, { compareValues } from '../functions';
 const ImgBox = ({ images, undertext }) => {
     const [photoIndex, setPhotoIndex] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
-    const [isMounted, setIsMounted] = useState(false);
-
-    const overlayImageOverlay = useRef(null);
 
     function getAspectRatioSum(imagesToSum) {
         // console.log('in getAspectRatio');
@@ -69,33 +66,6 @@ const ImgBox = ({ images, undertext }) => {
         console.log('in closeOverlay');
         setIsOpen(false);
     }
-
-    // useLayoutEffect(() => {
-    //     console.log('in UseEffect');
-    //     console.log('photoIndex', photoIndex);
-
-    //     // setCurrImg(chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2]);
-    //     setIsMounted(true);
-
-    //     return () => {
-    //         console.log('in UseEffect, unmounting');
-    //         setIsMounted(false);
-    //     };
-    // }, [photoIndex, isOpen, chunkedImages]);
-
-    // useLayoutEffect(() => {
-    //     console.log('in LayoutEffect');
-
-    //     if (photoIndex !== null) {
-    //         // setCurrImg(chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2]);
-    //         setIsOpen(true);
-    //     }
-    // }, [photoIndex]);
-
-    const variants = {
-        visible: { opacity: 1 },
-        hidden: { opacity: 0 },
-    };
 
     return (
         <div
@@ -195,7 +165,9 @@ const ImgBox = ({ images, undertext }) => {
                         exit={{ opacity: 0 }}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ type: 'spring', stiffness: 150, damping: 50, mass: 0.7 }}
+                        transition={{
+                            type: 'spring', stiffness: 150, damping: 50, mass: 0.7,
+                        }}
                     >
                         <div
                             className="background"
@@ -371,7 +343,7 @@ const ImgBox = ({ images, undertext }) => {
                                                     .bildfil.childImageSharp.fluid}
                                                 alt={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
                                                 imgStyle={{ objectFit: 'contain' }}
-                                                style={{ maxHeight: '75vh'}}
+                                                style={{ maxHeight: '75vh' }}
                                                 css={css`
                                                     min-width: 80vw;
                                                     @media (max-width: 769px) {

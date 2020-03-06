@@ -2,14 +2,25 @@ import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import Img from 'gatsby-image';
 import { css } from '@emotion/core';
+import styled from '@emotion/styled';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { Dialog, DialogOverlay, DialogContent } from '@reach/dialog';
 import { AnimatePresence, motion } from 'framer-motion';
+import { rhythm, scale } from '../../style/typography';
 import CompareValues, { compareValues } from '../functions';
+
+const StyleI = styled.i`
+    border: solid #397790;
+    border-width: 0 5px 5px 0;
+    display: inline-block;
+    padding: 15px;
+`;
 
 const ImgBox = ({ images, undertext }) => {
     const [photoIndex, setPhotoIndex] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
+    const [canPrev, setCanPrev] = useState(false);
+    const [canNext, setCanNext] = useState(false);
 
     function getAspectRatioSum(imagesToSum) {
         // console.log('in getAspectRatio');
@@ -59,12 +70,26 @@ const ImgBox = ({ images, undertext }) => {
     function openOverlay(number) {
         console.log('in openOverlay', number);
         setPhotoIndex(number);
+        if (number > 0) {
+            setCanPrev(true);
+        }
+        if (number < images.length) {
+            setCanNext(true);
+        }
         setIsOpen(true);
     }
 
     function closeOverlay() {
         console.log('in closeOverlay');
         setIsOpen(false);
+    }
+
+    function prevImg() {
+        console.log('in prevImg');
+    }
+
+    function nextImg() {
+        console.log('in nextImg');
     }
 
     return (
@@ -146,6 +171,11 @@ const ImgBox = ({ images, undertext }) => {
                         z-index: 9999;
                         display: flex;
                         align-items: center;
+                        ${chunkedImages[0].length === 1 && (`
+                            #prevImg, #nextImg {
+                                display: none;
+                            }
+                        `)}
                     `}
                     onDismiss={() => closeOverlay()}
                     // onClick={() => openOverlay()}
@@ -207,8 +237,75 @@ const ImgBox = ({ images, undertext }) => {
                                     object-fit: contain !important;
                                 }
                             `}
-                            aria-label={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
+                            aria-label={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2]
+                                .beskrivning}
                         >
+                            <a
+                                id='prevImg'
+                                css={css`
+                                    position: absolute;
+                                    top: 50%;
+                                    left: 0px;
+                                    margin: 0 ${rhythm};
+                                    ${canPrev ? ('cursor: pointer;') : ('filter: saturate(0.25);')};
+                                `}
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => {
+                                    if (canPrev) {
+                                        prevImg();
+                                    }
+                                }}
+                                onKeyDown={(event) => {
+                                    if (event.keycode === 13 && canPrev) {
+                                        prevImg();
+                                    }
+                                }}
+                                disabled={!canPrev}
+                            >
+                                <span>
+                                    <StyleI
+                                        id="arrow-left"
+                                        css={css`
+                                            transform: rotate(135deg);
+                                            webkit-transform: rotate(135deg);
+                                        `}
+                                    />
+                                </span>
+                            </a>
+                            <a
+                                id='nextImg'
+                                css={css`
+                                    position: absolute;
+                                    top: 50%;
+                                    right: 0px;
+                                    margin: 0 ${rhythm};
+                                    ${canNext ? ('cursor: pointer') : ('filter: saturate(0.25);')};
+                                `}
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => {
+                                    if (canNext) {
+                                        nextImg();
+                                    }
+                                }}
+                                onKeyDown={(event) => {
+                                    if (event.keycode === 13 && canNext) {
+                                        nextImg();
+                                    }
+                                }}
+                                disabled={!canNext}
+                            >
+                                <span>
+                                    <StyleI
+                                        id="arrow-right"
+                                        css={css`
+                                            transform: rotate(-45deg);
+                                            webkit-transform: rotate(-45deg);
+                                        `}
+                                    />
+                                </span>
+                            </a>
                             <TransformWrapper
                                 defaultScale={1}
                                 scale={1}

@@ -66,8 +66,11 @@ const Lenk = ({
         case 'article':
         case 'artikel': {
             console.log('case article');
-            const object = data.allStrapiArticle.edges.find((item) => item.node.strapiId === Number(id));
+            const object = data.allStrapiArticle.edges.find((item) => (
+                item.node.strapiId === Number(id)
+            ));
             console.log('article object: ', object);
+
             if (object) {
                 theLink = (
                     <Link
@@ -83,9 +86,9 @@ const Lenk = ({
         case 'företag':
         case 'foretag': {
             console.log('case company');
-            const object = data.allStrapiCompany.edges.find((item) => {
-                return item.node.strapiId === Number(id);
-            });
+            const object = data.allStrapiCompany.edges.find((item) => (
+                item.node.strapiId === Number(id)
+            ));
             console.log('company object: ', object);
             if (object) {
                 theLink = (
@@ -102,11 +105,15 @@ const Lenk = ({
         case 'ljud':
         case 'ljudfil': {
             console.log('case sound');
-            const object = data.allStrapiMedia.edges.find((item) => {
-                return item.node.strapiId === Number(id);
-            });
+            const object = data.allStrapiMedia.edges.find((item) => (
+                item.node.strapiId === Number(id)
+            ));
             console.log('media object: ', object);
-            if (object) {
+            if (object
+                && (object.node.media.extension === 'wav'
+                || object.node.media.extension === 'mp3'
+                || object.node.media.extension === 'ogg')
+            ) {
                 theLink = (
                     <ReactAudioPlayer
                         src={object.node.media.publicURL}

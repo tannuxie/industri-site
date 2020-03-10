@@ -10,7 +10,7 @@ import { rhythm, scale } from '../../style/typography';
 import CompareValues, { compareValues } from '../functions';
 
 const StyleI = styled.i`
-    border: solid #397790;
+    border: solid #4e4e4e;
     border-width: 0 5px 5px 0;
     display: inline-block;
     padding: 15px;
@@ -73,7 +73,7 @@ const ImgBox = ({ images, undertext }) => {
         if (number > 0) {
             setCanPrev(true);
         }
-        if (number < images.length) {
+        if ((number + 1) < images.length) {
             setCanNext(true);
         }
         setIsOpen(true);
@@ -82,14 +82,30 @@ const ImgBox = ({ images, undertext }) => {
     function closeOverlay() {
         console.log('in closeOverlay');
         setIsOpen(false);
+        setCanPrev(false);
+        setCanNext(false);
     }
 
     function prevImg() {
         console.log('in prevImg');
+        const pIndex = photoIndex;
+        setPhotoIndex(pIndex - 1);
+
+        setCanNext(true);
+        if ((pIndex - 2) < 0) {
+            setCanPrev(false);
+        }
     }
 
     function nextImg() {
         console.log('in nextImg');
+        const pIndex = photoIndex;
+        setPhotoIndex(pIndex + 1);
+
+        setCanPrev(true);
+        if ((pIndex + 2) >= images.length) {
+            setCanNext(false);
+        }
     }
 
     return (
@@ -104,7 +120,7 @@ const ImgBox = ({ images, undertext }) => {
                 ${chunkedImages.length > 1 && (`
                     @media (min-width: 1024px) {
                         .gatsby-image-wrapper {
-                            max-height: 40vh;
+                            max-height: 65vh;
                         }
                     }
                 `)}
@@ -145,7 +161,7 @@ const ImgBox = ({ images, undertext }) => {
                             <Img
                                 fluid={bildfil.childImageSharp.fluid}
                                 alt={beskrivning}
-                                imgStyle={{ objectFit: 'contain' }}
+                                imgStyle={{ objectFit: 'cover' }}
                             />
                         </div>
                     );
@@ -172,7 +188,7 @@ const ImgBox = ({ images, undertext }) => {
                         display: flex;
                         align-items: center;
                         ${chunkedImages[0].length === 1 && (`
-                            #prevImg, #nextImg {
+                            #imgbox-previmg, #imgbox-nextimg {
                                 display: none;
                             }
                         `)}
@@ -214,98 +230,38 @@ const ImgBox = ({ images, undertext }) => {
                             css={css`
                                 margin: 2vh auto 0;
                                 padding: 15px;
-                                width: 70vw;
+                                width: 75vw;
                                 max-height: 95vh;
                                 position: relative;
                                 display: flex;
-                                flex-direction: row;
-                                flex-wrap: wrap;
-                                justify-content: center;
+                                flex-direction: column;
+                                justify-content: space-between;
                                 background-color: white;
                                 align-self: center;
+
                                 @media (max-width: 1680px) {
-                                    width: 90vw;
+                                    width: 95vw;
                                 }
                                 @media (max-width: 769px) {
                                     width: 100%;
                                     margin: 0;
                                     padding: 62px 0px 0px 0px;
+                                    height: 75vh;
                                 }
-
-
-                                .gatsby-image-wrapper img {
-                                    object-fit: contain !important;
+                                .react-transform-component {
+                                    flex-grow: 1;
+                                    width: 100%;
+                                    @media (max-width: 769px) {
+                                        align-self: center;
+                                    }
+                                }
+                                .react-transform-element {
+                                    height: 100%;
                                 }
                             `}
                             aria-label={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2]
                                 .beskrivning}
                         >
-                            <a
-                                id='prevImg'
-                                css={css`
-                                    position: absolute;
-                                    top: 50%;
-                                    left: 0px;
-                                    margin: 0 ${rhythm};
-                                    ${canPrev ? ('cursor: pointer;') : ('filter: saturate(0.25);')};
-                                `}
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => {
-                                    if (canPrev) {
-                                        prevImg();
-                                    }
-                                }}
-                                onKeyDown={(event) => {
-                                    if (event.keycode === 13 && canPrev) {
-                                        prevImg();
-                                    }
-                                }}
-                                disabled={!canPrev}
-                            >
-                                <span>
-                                    <StyleI
-                                        id="arrow-left"
-                                        css={css`
-                                            transform: rotate(135deg);
-                                            webkit-transform: rotate(135deg);
-                                        `}
-                                    />
-                                </span>
-                            </a>
-                            <a
-                                id='nextImg'
-                                css={css`
-                                    position: absolute;
-                                    top: 50%;
-                                    right: 0px;
-                                    margin: 0 ${rhythm};
-                                    ${canNext ? ('cursor: pointer') : ('filter: saturate(0.25);')};
-                                `}
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => {
-                                    if (canNext) {
-                                        nextImg();
-                                    }
-                                }}
-                                onKeyDown={(event) => {
-                                    if (event.keycode === 13 && canNext) {
-                                        nextImg();
-                                    }
-                                }}
-                                disabled={!canNext}
-                            >
-                                <span>
-                                    <StyleI
-                                        id="arrow-right"
-                                        css={css`
-                                            transform: rotate(-45deg);
-                                            webkit-transform: rotate(-45deg);
-                                        `}
-                                    />
-                                </span>
-                            </a>
                             <TransformWrapper
                                 defaultScale={1}
                                 scale={1}
@@ -340,6 +296,9 @@ const ImgBox = ({ images, undertext }) => {
                                                 @media (max-width: 769px) {
                                                     right: 10px;
                                                     top: 0px;
+                                                }
+                                                button:first-of-type {
+                                                    margin-left: 0.5rem;
                                                 }
                                                 button:not(:last-of-type) {
                                                     margin-right: 0.5rem;
@@ -398,6 +357,62 @@ const ImgBox = ({ images, undertext }) => {
                                             `}
                                         >
                                             <button
+                                                id='imgbox-previmg'
+                                                css={css`
+                                                    ${canPrev ? ('cursor: pointer;') : ('opacity: 0.3;')};
+                                                `}
+                                                tabIndex={0}
+                                                onClick={() => {
+                                                    if (canPrev) {
+                                                        prevImg();
+                                                    }
+                                                }}
+                                                onKeyDown={(event) => {
+                                                    if (event.keycode === 13 && canPrev) {
+                                                        prevImg();
+                                                    }
+                                                }}
+                                                disabled={!canPrev}
+                                            >
+                                                <span>
+                                                    <StyleI
+                                                        id="arrow-left"
+                                                        css={css`
+                                                            transform: rotate(135deg);
+                                                            webkit-transform: rotate(135deg);
+                                                        `}
+                                                    />
+                                                </span>
+                                            </button>
+                                            <button
+                                                id='imgbox-nextimg'
+                                                css={css`
+                                                    ${canNext ? ('cursor: pointer') : ('opacity: 0.3;')};
+                                                `}
+                                                tabIndex={0}
+                                                onClick={() => {
+                                                    if (canNext) {
+                                                        nextImg();
+                                                    }
+                                                }}
+                                                onKeyDown={(event) => {
+                                                    if (event.keycode === 13 && canNext) {
+                                                        nextImg();
+                                                    }
+                                                }}
+                                                disabled={!canNext}
+                                            >
+                                                <span>
+                                                    <StyleI
+                                                        id="arrow-right"
+                                                        css={css`
+                                                            transform: rotate(-45deg);
+                                                            webkit-transform: rotate(-45deg);
+                                                        `}
+                                                    />
+                                                </span>
+                                            </button>
+                                            <button
                                                 id="imgbox-zoomin"
                                                 tabIndex={0}
                                                 onClick={zoomIn}
@@ -440,11 +455,15 @@ const ImgBox = ({ images, undertext }) => {
                                                     .bildfil.childImageSharp.fluid}
                                                 alt={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
                                                 imgStyle={{ objectFit: 'contain' }}
-                                                style={{ maxHeight: '75vh' }}
                                                 css={css`
-                                                    min-width: 80vw;
+                                                    min-width: calc(75vw - 30px);
+                                                    max-height: 75vh;
+                                                    @media (max-width: 1680px) {
+                                                        min-width: calc(95vw - 30px);
+                                                    }
                                                     @media (max-width: 769px) {
-                                                        min-width: 95vw;
+                                                        min-width: calc(100vw - 17px);
+                                                        max-height: 50vh;
                                                     }
                                                 `}
                                             />
@@ -459,6 +478,9 @@ const ImgBox = ({ images, undertext }) => {
                                     justify-content: space-between;
                                     align-items: stretch;
                                     width: 100%;
+                                    @media (max-width: 769px) {
+                                        align-items: flex-end;
+                                    }
                                 `}
                             >
                                 <h2
@@ -485,6 +507,7 @@ const ImgBox = ({ images, undertext }) => {
                                         background-color: transparent;
                                         @media (max-width: 769px) {
                                             margin-right: 10px;
+                                            padding-bottom: 0.75rem;
                                         }
                                     `}
                                     tabIndex={0}

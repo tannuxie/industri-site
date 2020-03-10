@@ -60,7 +60,7 @@ const Styles = styled.div`
 `;
 
 const StyleI = styled.i`
-    border: solid #397790;
+    border: solid #4e4e4e;
     border-width: 0 5px 5px 0;
     display: inline-block;
     padding: 15px;
@@ -380,7 +380,7 @@ function Table({ columns, data }) {
       <div className="pagination">
         <a
             css={css`
-                ${canPreviousPage ? ('cursor: pointer') : ('filter: saturate(0.25);')};
+                ${canPreviousPage ? ('cursor: pointer') : ('opacity: 0.3;')};
             `}
             role="button"
             tabIndex={0}
@@ -419,7 +419,7 @@ function Table({ columns, data }) {
         <a
             css={css`
                 margin: 0 ${rhythm};
-                ${canPreviousPage ? ('cursor: pointer;') : ('filter: saturate(0.25);')};
+                ${canPreviousPage ? ('cursor: pointer;') : ('opacity: 0.3;')};
             `}
             role="button"
             tabIndex={0}
@@ -464,7 +464,7 @@ function Table({ columns, data }) {
         <a
             css={css`
                 margin: 0 ${rhythm};
-                ${canNextPage ? ('cursor: pointer') : ('filter: saturate(0.25);')};
+                ${canNextPage ? ('cursor: pointer') : ('opacity: 0.3;')};
             `}
             role="button"
             tabIndex={0}
@@ -495,7 +495,7 @@ function Table({ columns, data }) {
         {' '}
         <a
             css={css`
-                ${canNextPage ? ('cursor: pointer') : ('filter: saturate(0.25);')};
+                ${canNextPage ? ('cursor: pointer') : ('opacity: 0.3;')};
             `}
             role="button"
             tabIndex={0}

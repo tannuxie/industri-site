@@ -46,7 +46,12 @@ const Vandra = ({ data }) => {
                 <ExpansionPanel
                     key={city.name}
                     css={css`
-                        margin: 2rem 0rem;
+                        @media (min-width: 1024px) {
+                            margin: 2vh 0;
+                        }
+                        @media (max-width: 1023px) {
+                            margin: 2vh 1vw;
+                        }
                     `}
                 >
                     <ExpansionPanelSummary>
@@ -66,7 +71,7 @@ const Vandra = ({ data }) => {
                                     display: flex;
                                     padding-bottom: 30px;
                                     max-height: 400px;
-                                    align-items: stretch;
+                                    align-items: flex-end;
                                 `}
                             >
                                 <div
@@ -120,7 +125,7 @@ const Vandra = ({ data }) => {
                                     fluid={street.streetimage.childImageSharp.fluid}
                                     alt={street.name}
                                     style={{
-                                        maxHeight: '250px',
+                                        maxHeight: '300px',
                                     }}
                                 />
                             </div>

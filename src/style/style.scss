@@ -23,6 +23,10 @@ body.body {
 body.sizeUp .zone-text  {
     font-size: 1.5rem;
 }
+body.sizeUp .imgbox-subtitle {
+    font-size: 1.25rem;
+}
+
 .zone-text > * {
     white-space: normal;
 }
@@ -74,7 +78,7 @@ img {
 }
 
 // ****************
-// Navbar 
+// Navbar
 // ****************
 
 a.navbar-item:focus,

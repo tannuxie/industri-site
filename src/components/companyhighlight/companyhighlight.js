@@ -4,7 +4,7 @@ import { Link, StaticQuery, graphql } from 'gatsby';
 import Img from 'gatsby-image';
 import { rhythm, scale } from '../../style/typography';
 
-const CompanyHighlight = ({ data, filter = 1 }) => {
+const CompanyHighlight = ({ data, filter }) => {
     console.log('CompanyHighlight data', data);
 
     // filters: ett_eller_mer, tva_eller_tre, endast_tre
@@ -96,7 +96,7 @@ const CompanyHighlight = ({ data, filter = 1 }) => {
                 </Link>
                 <p
                     css={css`
-                        text-transform: capitalize;
+                        text-align: center;
                         font-style: italic;
                         margin-bottom: 0.125rem;
                     `}

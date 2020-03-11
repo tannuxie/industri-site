@@ -9,11 +9,21 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { rhythm, scale } from '../../style/typography';
 import CompareValues, { compareValues } from '../functions';
 
-const StyleI = styled.i`
+const ArrowBase = styled.i`
     border: solid #4e4e4e;
     border-width: 0 5px 5px 0;
     display: inline-block;
     padding: 15px;
+`;
+
+const ArrowLeft = css`
+    transform: rotate(135deg);
+    webkit-transform: rotate(135deg);
+`;
+
+const ArrowRight = css`
+    transform: rotate(-45deg);
+    webkit-transform: rotate(-45deg);
 `;
 
 const ImgboxSubtitle = styled.p`
@@ -57,12 +67,14 @@ const DialogStyles = css`
 
 	@media (max-width: 1680px) {
 		width: 95vw;
-	}
+    }
+    @media (max-width: 1023px) {
+        height: 60vh;
+    }
 	@media (max-width: 769px) {
 		width: 100%;
 		margin: 0;
 		padding: 62px 0px 0px 0px;
-		height: 75vh;
 	}
 	.react-transform-component {
 		flex-grow: 1;
@@ -122,14 +134,14 @@ const ToolsDiv = styled.div`
 		}
 	}
 
-	#imgbox-zoomin {
+	#imgOverlay-zoomin {
 		span {
 			:before {
 				content: '+';
 			}
 		}
 	}
-	#imgbox-zoomout {
+	#imgOverlay-zoomout {
 		padding: 0 5px 12px;
 		span {
 			:before {
@@ -137,7 +149,7 @@ const ToolsDiv = styled.div`
 			}
 		}
 	}
-	#imgbox-zoomreset {
+	#imgOverlay-zoomreset {
 		span {
 			:before {
 				content: '0';
@@ -358,7 +370,9 @@ const ImgBox = ({ images, undertext }) => {
                 });
             })}
             {undertext && undertext.length > 0 && (
-                <ImgboxSubtitle>
+                <ImgboxSubtitle
+                    className='imgbox-subtitle'
+                >
                     {undertext}
                 </ImgboxSubtitle>
             )}
@@ -380,7 +394,7 @@ const ImgBox = ({ images, undertext }) => {
                     // onClick={() => openOverlay()}
                 >
                     <motion.div
-                        className="motion-div"
+                        id="imgOverlay-motion"
                         css={MotionStyles}
                         exit={{ opacity: 0 }}
                         initial={{ opacity: 0 }}
@@ -418,10 +432,11 @@ const ImgBox = ({ images, undertext }) => {
                                 }) => (
                                     <>
                                         <ToolsDiv
-                                            className='tools'
+                                            id='imgOverlay-tools'
                                         >
                                             <button
-                                                id='imgbox-previmg'
+                                                id='imgOverlay-previmg'
+                                                aria-label="Visa föregående bild"
                                                 css={css`
                                                     ${canPrev ? ('cursor: pointer;') : ('opacity: 0.3;')};
                                                 `}
@@ -439,17 +454,15 @@ const ImgBox = ({ images, undertext }) => {
                                                 disabled={!canPrev}
                                             >
                                                 <span>
-                                                    <StyleI
-                                                        id="arrow-left"
-                                                        css={css`
-                                                            transform: rotate(135deg);
-                                                            webkit-transform: rotate(135deg);
-                                                        `}
+                                                    <ArrowBase
+                                                        className="arrow-left"
+                                                        css={ArrowLeft}
                                                     />
                                                 </span>
                                             </button>
                                             <button
-                                                id='imgbox-nextimg'
+                                                id='imgOverlay-nextimg'
+                                                aria-label="Visa nästa bild"
                                                 css={css`
                                                     ${canNext ? ('cursor: pointer') : ('opacity: 0.3;')};
                                                 `}
@@ -467,17 +480,15 @@ const ImgBox = ({ images, undertext }) => {
                                                 disabled={!canNext}
                                             >
                                                 <span>
-                                                    <StyleI
-                                                        id="arrow-right"
-                                                        css={css`
-                                                            transform: rotate(-45deg);
-                                                            webkit-transform: rotate(-45deg);
-                                                        `}
+                                                    <ArrowBase
+                                                        className="arrow-right"
+                                                        css={ArrowRight}
                                                     />
                                                 </span>
                                             </button>
                                             <button
-                                                id="imgbox-zoomin"
+                                                id="imgOverlay-zoomin"
+                                                aria-label="Zooma in på bilden"
                                                 tabIndex={0}
                                                 onClick={zoomIn}
                                                 onKeyDown={(event) => {
@@ -489,7 +500,8 @@ const ImgBox = ({ images, undertext }) => {
                                                 <span />
                                             </button>
                                             <button
-                                                id="imgbox-zoomout"
+                                                id="imgOverlay-zoomout"
+                                                aria-label="Zooma ut på bilden"
                                                 tabIndex={0}
                                                 onClick={zoomOut}
                                                 onKeyDown={(event) => {
@@ -501,7 +513,8 @@ const ImgBox = ({ images, undertext }) => {
                                                 <span />
                                             </button>
                                             <button
-                                                id="imgbox-zoomreset"
+                                                id="imgOverlay-zoomreset"
+                                                aria-label="Nollställ bilden"
                                                 tabIndex={0}
                                                 onClick={resetTransform}
                                                 onKeyDown={(event) => {
@@ -531,7 +544,7 @@ const ImgBox = ({ images, undertext }) => {
                                     {chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
                                 </OverlayBottomText>
                                 <OverlayCloseBtn
-                                    id="imgbox-close"
+                                    id="imgOverlay-close"
                                     tabIndex={0}
                                     onClick={() => closeOverlay()}
                                     onKeyDown={(event) => {

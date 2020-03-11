@@ -26,12 +26,18 @@ const Styles = styled.div`
       }
     }
 
+    tr:first-of-type {
+        th {
+            padding-bottom: 1rem;
+        }
+    }
+
     th {
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
         align-items: center;
-        padding: 0.5rem 0.5rem 1rem 0.5rem;
+        padding: 0.5rem;
     }
 
     th,
@@ -53,17 +59,23 @@ const Styles = styled.div`
         }
     }
   }
-
-  .pagination {
-    padding: 1rem;
-  }
 `;
 
-const StyleI = styled.i`
+const ArrowBase = styled.i`
     border: solid #4e4e4e;
     border-width: 0 5px 5px 0;
     display: inline-block;
     padding: 15px;
+`;
+
+const ArrowLeft = css`
+    transform: rotate(135deg);
+    webkit-transform: rotate(135deg);
+`;
+
+const ArrowRight = css`
+    transform: rotate(-45deg);
+    webkit-transform: rotate(-45deg);
 `;
 
 function GlobalFilter({
@@ -377,12 +389,26 @@ function Table({ columns, data }) {
       {/*
         Pagination
       */}
-      <div className="pagination">
+      <div
+        id="table-pagination"
+        role="navigation"
+        css={css`
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+
+            > a {
+                padding: 10px 5px;
+            }
+        `}
+      >
         <a
             css={css`
                 ${canPreviousPage ? ('cursor: pointer') : ('opacity: 0.3;')};
             `}
             role="button"
+            aria-label="Gå till sida 1"
             tabIndex={0}
             onClick={() => {
                 if (canPreviousPage) {
@@ -399,19 +425,13 @@ function Table({ columns, data }) {
             disabled={!canPreviousPage}
         >
             <span>
-                <StyleI
-                    id="arrow-left"
-                    css={css`
-                        transform: rotate(135deg);
-                        webkit-transform: rotate(135deg);
-                    `}
+                <ArrowBase
+                    className="arrow-left"
+                    css={ArrowLeft}
                 />
-                <StyleI
-                    id="arrow-left"
-                    css={css`
-                        transform: rotate(135deg);
-                        webkit-transform: rotate(135deg);
-                    `}
+                <ArrowBase
+                    className="arrow-left"
+                    css={ArrowLeft}
                 />
             </span>
         </a>
@@ -422,6 +442,7 @@ function Table({ columns, data }) {
                 ${canPreviousPage ? ('cursor: pointer;') : ('opacity: 0.3;')};
             `}
             role="button"
+            aria-label="Gå till föregående sida"
             tabIndex={0}
             onClick={() => {
                 if (canPreviousPage) {
@@ -438,35 +459,30 @@ function Table({ columns, data }) {
             disabled={!canPreviousPage}
         >
             <span>
-                <StyleI
-                    id="arrow-left"
-                    css={css`
-                        transform: rotate(135deg);
-                        webkit-transform: rotate(135deg);
-                    `}
+                <ArrowBase
+                    className="arrow-left"
+                    css={ArrowLeft}
                 />
             </span>
         </a>
-        {' '}
         <span>
-          Sida
-        {' '}
-          <strong>
-            {pageIndex + 1}
+            Sida
             {' '}
-            av
-            {' '}
-            {pageOptions.length}
-          </strong>
-        {' '}
+            <strong>
+                {pageIndex + 1}
+                {' '}
+                av
+                {' '}
+                {pageOptions.length}
+            </strong>
         </span>
-        {' '}
         <a
             css={css`
                 margin: 0 ${rhythm};
                 ${canNextPage ? ('cursor: pointer') : ('opacity: 0.3;')};
             `}
             role="button"
+            aria-label="Gå till nästa sida"
             tabIndex={0}
             onClick={() => {
                 if (canNextPage) {
@@ -483,12 +499,9 @@ function Table({ columns, data }) {
             disabled={!canNextPage}
         >
             <span>
-                <StyleI
-                    id="arrow-right"
-                    css={css`
-                        transform: rotate(-45deg);
-                        webkit-transform: rotate(-45deg);
-                    `}
+                <ArrowBase
+                    className="arrow-right"
+                    css={ArrowRight}
                 />
             </span>
         </a>
@@ -498,6 +511,7 @@ function Table({ columns, data }) {
                 ${canNextPage ? ('cursor: pointer') : ('opacity: 0.3;')};
             `}
             role="button"
+            aria-label="Gå till sista sidan"
             tabIndex={0}
             onClick={() => {
                 if (canNextPage) {
@@ -514,19 +528,13 @@ function Table({ columns, data }) {
             disabled={!canNextPage}
         >
             <span>
-                <StyleI
-                    id="arrow-right"
-                    css={css`
-                        transform: rotate(-45deg);
-                        webkit-transform: rotate(-45deg);
-                    `}
+                <ArrowBase
+                    className="arrow-right"
+                    css={ArrowRight}
                 />
-                <StyleI
-                    id="arrow-right"
-                    css={css`
-                        transform: rotate(-45deg);
-                        webkit-transform: rotate(-45deg);
-                    `}
+                <ArrowBase
+                    className="arrow-right"
+                    css={ArrowRight}
                 />
             </span>
         </a>
@@ -608,27 +616,33 @@ const TableList = ({ companyData }) => {
                     // console.log(row);
                     return (
                         <div css={css`
-                            max-height: 45vh;
+                            max-height: 40vh;
                             height: 100%;
                             overflow: hidden;
+                            @media (max-width: 1480px) {
+                                max-height: 35vh;
+                            }
+                            @media (max-width: 1023px) {
+                                max-height: 30vh;
+                            }
                             @media (max-width: 769px) {
                                 max-height: 320px;
                             }
                         `}
                         >
                             <Link to={`/industri/${row.original.fields.slug}`}>
-                            <Img
-                                fluid={row.original.companyimage.childImageSharp.fluid}
-                                alt={row.original.name}
-                                title={row.original.name}
-                                style={{
-                                    height: '100%',
-                                }}
-                                imgStyle={{
-                                    objectFit: 'cover',
-                                    objectPosition: 'top center',
-                                }}
-                            />
+                                <Img
+                                    fluid={row.original.companyimage.childImageSharp.fluid}
+                                    alt={row.original.name}
+                                    title={row.original.name}
+                                    style={{
+                                        maxHeight: '100%',
+                                    }}
+                                    imgStyle={{
+                                        objectFit: 'cover',
+                                        objectPosition: 'top center',
+                                    }}
+                                />
                             </Link>
                         </div>
                     );

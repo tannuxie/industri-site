@@ -68,12 +68,12 @@ const ArrowBase = styled.i`
     padding: 15px;
 `;
 
-const ArrowLeft = css`
+const ArrowLeftStyles = css`
     transform: rotate(135deg);
     webkit-transform: rotate(135deg);
 `;
 
-const ArrowRight = css`
+const ArrowRightStyles = css`
     transform: rotate(-45deg);
     webkit-transform: rotate(-45deg);
 `;
@@ -427,11 +427,11 @@ function Table({ columns, data }) {
             <span>
                 <ArrowBase
                     className="arrow-left"
-                    css={ArrowLeft}
+                    css={ArrowLeftStyles}
                 />
                 <ArrowBase
                     className="arrow-left"
-                    css={ArrowLeft}
+                    css={ArrowLeftStyles}
                 />
             </span>
         </a>
@@ -461,7 +461,7 @@ function Table({ columns, data }) {
             <span>
                 <ArrowBase
                     className="arrow-left"
-                    css={ArrowLeft}
+                    css={ArrowLeftStyles}
                 />
             </span>
         </a>
@@ -501,7 +501,7 @@ function Table({ columns, data }) {
             <span>
                 <ArrowBase
                     className="arrow-right"
-                    css={ArrowRight}
+                    css={ArrowRightStyles}
                 />
             </span>
         </a>
@@ -530,11 +530,11 @@ function Table({ columns, data }) {
             <span>
                 <ArrowBase
                     className="arrow-right"
-                    css={ArrowRight}
+                    css={ArrowRightStyles}
                 />
                 <ArrowBase
                     className="arrow-right"
-                    css={ArrowRight}
+                    css={ArrowRightStyles}
                 />
             </span>
         </a>

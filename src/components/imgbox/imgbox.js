@@ -16,12 +16,12 @@ const ArrowBase = styled.i`
     padding: 15px;
 `;
 
-const ArrowLeft = css`
+const ArrowLeftStyles = css`
     transform: rotate(135deg);
     webkit-transform: rotate(135deg);
 `;
 
-const ArrowRight = css`
+const ArrowRightStyles = css`
     transform: rotate(-45deg);
     webkit-transform: rotate(-45deg);
 `;
@@ -158,7 +158,7 @@ const ToolsDiv = styled.div`
 	}
 `;
 
-const OverlayImg = css`
+const OverlayImgStyles = css`
     min-width: calc(75vw - 30px);
     max-height: 75vh;
     @media (max-width: 1680px) {
@@ -180,7 +180,7 @@ const OverlayBottomDiv = styled.div`
 	}
 `;
 
-const OverlayBottomText = styled.h2`
+const OverlayBottomHeader = styled.h2`
 	margin-top: 1.25rem;
 	flex-grow: 1;
 	text-align: center;
@@ -456,7 +456,7 @@ const ImgBox = ({ images, undertext }) => {
                                                 <span>
                                                     <ArrowBase
                                                         className="arrow-left"
-                                                        css={ArrowLeft}
+                                                        css={ArrowLeftStyles}
                                                     />
                                                 </span>
                                             </button>
@@ -482,7 +482,7 @@ const ImgBox = ({ images, undertext }) => {
                                                 <span>
                                                     <ArrowBase
                                                         className="arrow-right"
-                                                        css={ArrowRight}
+                                                        css={ArrowRightStyles}
                                                     />
                                                 </span>
                                             </button>
@@ -532,7 +532,7 @@ const ImgBox = ({ images, undertext }) => {
                                                     .bildfil.childImageSharp.fluid}
                                                 alt={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
                                                 imgStyle={{ objectFit: 'contain' }}
-                                                css={OverlayImg}
+                                                css={OverlayImgStyles}
                                             />
 
                                         </TransformComponent>
@@ -540,9 +540,9 @@ const ImgBox = ({ images, undertext }) => {
                                 )}
                             </TransformWrapper>
                             <OverlayBottomDiv>
-                                <OverlayBottomText>
+                                <OverlayBottomHeader>
                                     {chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
-                                </OverlayBottomText>
+                                </OverlayBottomHeader>
                                 <OverlayCloseBtn
                                     id="imgOverlay-close"
                                     tabIndex={0}

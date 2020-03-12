@@ -130,7 +130,7 @@ const ZoneParser = ({
                     <div className="columns is-centered is-vcentered">
                         <div className={item.layout !== 'bild_hoger' ? (`column ${ imgBoxSize}`) : `column ${textBoxSize}`}>
                             {item.layout === 'bild_hoger' ? (
-                                <div className='zone-text' css={css`@media (max-width: 1023px) {padding: 0 0.5rem;}`}>
+                                <div className='zone-text'>
                                     <MdxRender mdxBody={item.text.textfield} />
                                 </div>
                             )
@@ -148,7 +148,7 @@ const ZoneParser = ({
                                 undertext={item.undertext_bildbox && item.undertext_bildbox}
                             />
                             ) : (
-                                <div className='zone-text' css={css`@media (max-width: 1023px) {padding: 0 0.5rem;}`}>
+                                <div className='zone-text'>
                                     <MdxRender mdxBody={item.text.textfield} />
                                 </div>
                             )}
@@ -193,7 +193,6 @@ const ZoneParser = ({
                             {item.layout === 'karta_hoger' ? (
                                 <div
                                     className='zone-text'
-                                    css={css`@media (max-width: 1023px) {padding: 0 0.5rem;}`}
                                 >
                                     <MdxRender mdxBody={item.text.textfield} />
                                 </div>
@@ -216,7 +215,6 @@ const ZoneParser = ({
                             ) : (
                                 <div
                                     className='zone-text'
-                                    css={css`@media (max-width: 1023px) {padding: 0 0.5rem;}`}
                                 >
                                     <MdxRender mdxBody={item.text.textfield} />
                                 </div>

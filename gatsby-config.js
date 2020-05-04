@@ -5,7 +5,7 @@ module.exports = {
 		author: 'J.C. Henriksson',
 		description: 'Ett projekt för att sammanställa berättelser om lokala företag, deras ursprung och historia.',
 		keywords: 'Sävsjö, Industri, Industrihistoria, Historia',
-		siteUrl: 'https://www.example.com',
+		siteUrl: 'https://www.savsjoindustrihistoria.se',
 		menuLinks: [
 			{
 				name: 'Hem',
@@ -34,10 +34,6 @@ module.exports = {
 			{
 				name: 'Hylletofta',
 				link: '/hylletofta',
-			},
-			{
-				name: 'Vandra',
-				link: '/vandra',
 			},
 			{
 				name: 'Om oss',
@@ -80,7 +76,7 @@ module.exports = {
 		{
 			resolve: 'gatsby-plugin-react-helmet-canonical-urls',
 			options: {
-				siteUrl: 'https://www.example.com',
+				siteUrl: 'https://www.savsjoindustrihistoria.se',
 			},
         },
         {
@@ -158,37 +154,50 @@ module.exports = {
 				linkStyles: true, // (default: true) Enable/disable loading stylesheets via CDN
 			},
 		},
+        {
+            resolve: 'gatsby-source-strapi',
+            options: {
+                apiURL: 'http://localhost:1337',
+                contentTypes: [
+                    'user',
+                    'article',
+                    'company',
+                    'tag',
+                    'static-content',
+                    'media',
+                ],
+                queryLimit: 2000,
+                loginData: {
+                    identifier: '',
+                    password: '',
+                },
+            },
+        },
 		{
 			resolve: 'gatsby-plugin-google-analytics',
 			options: {
-				trackingId: 'UA-XXXXXXXX-X',
+				trackingId: 'UA-164874945-1',
 				// Setting this parameter is optional (requried for some countries such as Germany)
 				anonymize: true,
 			},
         },
         {
-            resolve: 'gatsby-source-strapi',
-			options: {
-				apiURL: 'http://localhost:1337',
-				contentTypes: [
-					'user',
-					'article',
-					'company',
-					'street',
-                    'tag',
-                    'static-content',
-                    'media',
-				],
-				queryLimit: 2000,
-				loginData: {
-					identifier: '',
-					password: '',
-				},
-			},
-		},
+            resolve: `gatsby-plugin-manifest`,
+            options: {
+              name: `Sävsjö Industrihistoria`,
+              short_name: `savsjoindustrihistoria`,
+              start_url: `/`,
+              background_color: `#6b37bf`,
+              theme_color: `#6b37bf`,
+              // Enables "Add to Homescreen" prompt and disables browser UI (including back button)
+              // see https://developers.google.com/web/fundamentals/web-app-manifest/#display
+              display: `standalone`,
+              icon: `src/images/icon_file.png`, // This path is relative to the root of the site.
+            },
+          },
         'gatsby-plugin-sitemap',
 		// this (optional) plugin enables Progressive Web App + Offline functionality
 		// To learn more, visit: https://gatsby.app/offline
-		// `gatsby-plugin-offline`
+		'gatsby-plugin-offline',
 	],
 };

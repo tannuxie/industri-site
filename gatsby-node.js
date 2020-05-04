@@ -96,36 +96,6 @@ exports.createResolvers = ({
                 },
             },
         },
-        StrapiStreetContentBild: {
-            bildfil: {
-                type: 'File',
-                resolve(source, args, context, info) {
-                    return createRemoteFileNode({
-                        url: `http://localhost:1337${source.bildfil.url}`,
-                        store,
-                        cache,
-                        createNode,
-                        createNodeId,
-                        reporter,
-                    });
-                },
-            },
-        },
-        StrapiStreetContentImgbox: {
-            bildfil: {
-                type: 'File',
-                resolve(source, args, context, info) {
-                    return createRemoteFileNode({
-                        url: `http://localhost:1337${source.bildfil.url}`,
-                        store,
-                        cache,
-                        createNode,
-                        createNodeId,
-                        reporter,
-                    });
-                },
-            },
-        },
         StrapiStaticContentContentBild: {
             bildfil: {
                 type: 'File',
@@ -190,18 +160,9 @@ exports.onCreateNode = async ({
 			value: slug,
 		});
 	}
-	if (node.internal.type === 'StrapiStreet') {
-		const slug = convertToSlug(node.name);
-		createNodeField({
-			node,
-			name: 'slug',
-			value: slug,
-		});
-    }
 
     if (node.internal.type === 'StrapiCompany'
     || node.internal.type === 'StrapiArticle'
-    || node.internal.type === 'StrapiStreet'
     || node.internal.type === 'StrapiStaticContent') {
         const textObjects = [];
 
@@ -279,16 +240,6 @@ exports.createPages = ({ actions, graphql }) => {
         }
       }
     }
-    street: allStrapiStreet(filter: {published: {eq: true}}) {
-      edges {
-        node {
-          id
-          fields {
-            slug
-          }
-        }
-      }
-    }
   }
     `).then((result) => {
 		// Create pages for each article.
@@ -307,16 +258,6 @@ exports.createPages = ({ actions, graphql }) => {
 			createPage({
 				path: `/industri/${node.fields.slug}`,
 				component: path.resolve('src/templates/company.js'),
-				context: {
-					id: tempvar,
-				},
-			});
-		});
-		result.data.street.edges.forEach(({ node }) => {
-			const tempvar = Number(node.id.match(/\d+/)[0]);
-			createPage({
-				path: `/vandra/${node.fields.slug}`,
-				component: path.resolve('src/templates/street.js'),
 				context: {
 					id: tempvar,
 				},

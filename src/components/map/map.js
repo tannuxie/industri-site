@@ -71,7 +71,8 @@ const LoadableComponent = Loadable.Map({
 const MyMap = ({
     address, pins, undertext, zoom,
     }) => {
-		console.log('MyMap', address, pins, undertext, zoom);
+        // console.log('MyMap', address, pins, undertext, zoom);
+
         // addresses shape
         // pins: PropTypes.arrayOf(PropTypes.shape({
         // name: PropTypes.string,
@@ -89,11 +90,11 @@ const MyMap = ({
         }, []);
 
 		const thePins = pins.map((pin) => {
-			console.log('pins element', pin);
+			// console.log('pins element', pin);
             const element = pin;
             if (!element.subtitle) {
                 const text = element.name.split(/[\r\n]/g).filter(Boolean);
-                console.log('text', text);
+                // console.log('text', text);
                 // text = text[0].replace(/\r\n/g, '<br />').replace(/[\r\n]/g, '<br />');
                 // console.log(text);
                 if (text.length > 1) {
@@ -116,20 +117,20 @@ const MyMap = ({
 
             return element;
         });
-        console.log('thePins', thePins);
+        // console.log('thePins', thePins);
 
         const allCoordinates = [address].concat(thePins.map((pin) => pin.position));
-        console.log('allCoordinates', allCoordinates);
+        // console.log('allCoordinates', allCoordinates);
 
         const coordinates = allCoordinates.map((item) => ({
             latitude: item[0],
             longitude: item[1],
         }));
-        console.log('map coordinates', coordinates);
-        console.log('map center of coords', getCenterOfBounds(coordinates));
+        // console.log('map coordinates', coordinates);
+        // console.log('map center of coords', getCenterOfBounds(coordinates));
 
         const coordsByDistance = orderByDistance(getCenterOfBounds(coordinates), coordinates);
-        console.log('map coordsByDistance', coordsByDistance);
+        // console.log('map coordsByDistance', coordsByDistance);
 
         // sätter minimum-värde på distance som 250 för att det inte
         // ska bli för inzoomat när det bara är 1 träff
@@ -137,18 +138,18 @@ const MyMap = ({
             getCenterOfBounds(coordinates),
             coordsByDistance[coordsByDistance.length - 1],
         ), 250);
-        console.log('map distance', distance);
+        // console.log('map distance', distance);
 
         const bounds = getBoundsOfDistance(
             getCenterOfBounds(coordinates),
             (distance * 1.5 + 1),
         );
-        console.log('map bounds', bounds);
+        // console.log('map bounds', bounds);
         const boundsArray = [
             [bounds[0].latitude + 0.000000000001, bounds[0].longitude + 0.000000000001],
             [bounds[1].latitude, bounds[1].longitude],
         ];
-        console.log('map boundsArray', boundsArray);
+        // console.log('map boundsArray', boundsArray);
 
         return (
             <div

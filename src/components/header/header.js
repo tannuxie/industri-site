@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 // import '~style/style.scss';
-import Navbar from '../navbar/navbar';
 import { css } from '@emotion/core';
 import { StaticQuery, graphql } from 'gatsby';
 import BackgroundImage from 'gatsby-background-image';
 import styled from '@emotion/styled';
+import Navbar from '../navbar/navbar';
 
 class Header extends Component {
     constructor(props) {
@@ -65,24 +65,28 @@ class Header extends Component {
                                 >
                                     <h3
                                         id="header1"
-                                        className="is-size-2"
                                         css={css`
-                                            font-size: 2rem;
+                                            font-size: 3rem;
                                             background-color: #ffffffde;
                                             padding: 5px;
                                             box-shadow: 0px 0px 2px 0px #0000004d;
+                                            @media (max-width: 769px) {
+                                                font-size: 2rem;
+                                            }
                                         `}
                                     >
                                         Sävsjö kommuns
                                     </h3>
                                     <h1
                                         id="header2"
-                                        className="is-size-1"
                                         css={css`
                                             font-size: 3rem;
                                             background-color: #ffffffde;
                                             padding: 5px;
                                             box-shadow: 0px 0px 2px 0px #0000004d;
+                                            @media (max-width: 769px) {
+                                                font-size: 2rem;
+                                            }
                                         `}
                                     >
                                         Industrihistoria

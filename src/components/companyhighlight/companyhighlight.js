@@ -5,16 +5,16 @@ import Img from 'gatsby-image';
 import { rhythm, scale } from '../../style/typography';
 
 const CompanyHighlight = ({ data, filter }) => {
-    console.log('CompanyHighlight data', data);
+    // console.log('CompanyHighlight data', data);
 
     // filters: ett_eller_mer, tva_eller_tre, endast_tre
     const filterValue = filter === 'ett_eller_mer' ? '1'
     : filter === 'tva_eller_tre' ? '2'
     : filter === 'endast_tre' && '3';
 
-    console.log('CompanyHighlight filter', filterValue);
+    // console.log('CompanyHighlight filter', filterValue);
     const companies = data.allStrapiCompany.edges.map((item) => item.node);
-    console.log('CompanyHighlight companies', companies);
+    // console.log('CompanyHighlight companies', companies);
 
     const filteredCompanies = React.useMemo(() => (
         () => {
@@ -25,7 +25,7 @@ const CompanyHighlight = ({ data, filter }) => {
                 return filtered;
         }
     )(), [filterValue]);
-    console.log(filteredCompanies);
+    // console.log(filteredCompanies);
 
     const randomCompany = React.useMemo(() => (
         () => {
@@ -48,7 +48,7 @@ const CompanyHighlight = ({ data, filter }) => {
         }
     )(), [filterValue]);
 
-    console.log('randomCompany', randomCompany);
+    // console.log('randomCompany', randomCompany);
 
     return (
         <>
@@ -107,7 +107,7 @@ const CompanyHighlight = ({ data, filter }) => {
                 </p>
                 <p
                     css={css`
-                        white-space: pre-wrap;
+                        white-space: normal;
                         margin-bottom: 0;
                         position: relative;
                         padding-right: calc(${rhythm} / 2);

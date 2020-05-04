@@ -7,7 +7,7 @@ import Helmet from '~components/helmet/helmet';
 import ZoneParser from '~components/zoneparser/zoneparser';
 
 const ArticleTemplate = ({ data }) => {
-    console.log(data);
+    // console.log(data);
     const article = data.strapiArticle;
 
     return (

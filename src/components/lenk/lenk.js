@@ -54,22 +54,22 @@ const Lenk = ({
         }
     `);
     // beroende på type, iterera igenom och hitta slug, generera link
-    console.log('in Lenk');
-    console.log('id: ', id, 'type: ', type, 'children: ', children);
-    console.log('number id', Number(id));
+    // console.log('in Lenk');
+    // console.log('id: ', id, 'type: ', type, 'children: ', children);
+    // console.log('number id', Number(id));
 
-    console.log('data: ', data);
+    // console.log('data: ', data);
 
     let theLink = null;
 
     switch (type) {
         case 'article':
         case 'artikel': {
-            console.log('case article');
+            // console.log('case article');
             const object = data.allStrapiArticle.edges.find((item) => (
                 item.node.strapiId === Number(id)
             ));
-            console.log('article object: ', object);
+            // console.log('article object: ', object);
 
             if (object) {
                 theLink = (
@@ -85,11 +85,11 @@ const Lenk = ({
         case 'company':
         case 'företag':
         case 'foretag': {
-            console.log('case company');
+            // console.log('case company');
             const object = data.allStrapiCompany.edges.find((item) => (
                 item.node.strapiId === Number(id)
             ));
-            console.log('company object: ', object);
+            // console.log('company object: ', object);
             if (object) {
                 theLink = (
                     <Link
@@ -104,11 +104,11 @@ const Lenk = ({
         case 'sound':
         case 'ljud':
         case 'ljudfil': {
-            console.log('case sound');
+            // console.log('case sound');
             const object = data.allStrapiMedia.edges.find((item) => (
                 item.node.strapiId === Number(id)
             ));
-            console.log('media object: ', object);
+            // console.log('media object: ', object);
             if (object
                 && (object.node.media.extension === 'wav'
                 || object.node.media.extension === 'mp3'

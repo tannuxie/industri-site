@@ -8,12 +8,9 @@ import CompanyHighlight from '~components/companyhighlight/companyhighlight';
 const ZoneParser = ({
     content,
     childMdx,
-    mainimage,
-    layout = 'fullbredd',
 }) => {
-    console.log('ZoneParser content: ', content);
-    console.log('ZoneParser childMdx: ', childMdx);
-    console.log('ZoneParser source: ', layout);
+    // console.log('ZoneParser content: ', content);
+    // console.log('ZoneParser childMdx: ', childMdx);
 
     // layouts:
 
@@ -75,7 +72,7 @@ const ZoneParser = ({
                      </div>
                  );
             }
-            if (item.bild) {
+            if (item.bild && item.bild.length > 0) {
                 key = `${item.bild[0].beskrivning} + ${item.bild[0].bildfil.childImageSharp.fluid.aspectRatio}`;
                 const bildboxSizeClass = (() => {
                     const sizeTypes = {
@@ -280,6 +277,7 @@ const ZoneParser = ({
                     </>
                 );
             }
+            return null;
         })();
 
         return (result) && (

@@ -25,20 +25,20 @@ class Navbar extends Component {
 
     // provar med att försöka binda getparentelem vid mount...? kanske kan placera i render?
     componentDidMount() {
-        console.log('Navbar mounting...');
+        // console.log('Navbar mounting...');
         // console.log(this.context);
         // const elem = this.getParentElem;
         // här måste man setta headerHeight-staten...
         // this.setState({ headerHeight: this.getParentElem().current.clientHeight });
         // this.getParentElem = this.props.getParentElem.bind(this);
         window.addEventListener('scroll', this.listenToScroll);
-        console.log('Navbar mounted');
+        // console.log('Navbar mounted');
     }
 
     componentWillUnmount() {
-        console.log('Navbar unmounting...');
+        // console.log('Navbar unmounting...');
         window.removeEventListener('scroll', this.listenToScroll);
-        console.log('Navbar unmounted');
+        // console.log('Navbar unmounted');
     }
 
     getParentHeight() {
@@ -63,12 +63,12 @@ class Navbar extends Component {
             && winScroll > (this.getParentHeight() + 1)
         ) {
             this.setState({ fixMenu: true });
-            console.log('setting fixMenu: true');
+            // console.log('setting fixMenu: true');
         } else if (fixMenu === true
             && winScroll < this.getParentHeight()
         ) {
             this.setState({ fixMenu: false });
-            console.log('setting fixMenu: false');
+            // console.log('setting fixMenu: false');
         }
     }
 
@@ -188,13 +188,13 @@ class Navbar extends Component {
                                         tabIndex={0}
                                         onClick={() => {
                                             // dispatch({ type: 'TOGGLE_SIZE' });
-                                            console.log(store.size);
+                                            // console.log(store.size);
                                             toggleSize();
-                                            console.log(store.size);
+                                            // console.log(store.size);
                                         }}
                                         onKeyDown={(event) => {
                                             if (event.keycode === 13) {
-                                                console.log(store.size);
+                                                // console.log(store.size);
                                             }
                                         }}
                                         css={css`

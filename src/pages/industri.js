@@ -14,7 +14,7 @@ const ListAll = ({ data }) => {
             <Helmet childTitle="Alla företag" />
             <h1 css={css`text-align: center;`}>Alla företag</h1>
             <TableList
-                data={companies}
+                companyData={companies}
             />
         </>
     );

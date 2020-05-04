@@ -6,13 +6,13 @@ import { compareValues } from '~components/functions';
 import ZoneParser from '~components/zoneparser/zoneparser';
 
 const Footer = ({ data }) => {
-    console.log('footer data', data);
+    // console.log('footer data', data);
     const footerData = data.allStrapiStaticContent.edges.filter((item) => {
         return item.node.role.startsWith('footer') === true;
     }).map((item) => item.node);
-    console.log('filtered footer data', footerData);
+    // console.log('filtered footer data', footerData);
     const sortedFooterData = React.useMemo(() => footerData.sort(compareValues('role', 'asc')), []);
-    console.log('sorted footer data', sortedFooterData);
+    // console.log('sorted footer data', sortedFooterData);
 
     return (
         <footer

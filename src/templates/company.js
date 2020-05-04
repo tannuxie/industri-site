@@ -10,14 +10,14 @@ import MdxRender from '~components/mdxrender/mdxrender';
 import ZoneParser from '~components/zoneparser/zoneparser';
 
 const CompanyTemplate = ({ data }) => {
-	console.log('data', data);
+	// console.log('data', data);
     const company = data.strapiCompany;
-    console.log('company', company);
-    console.log(company.address[0]);
+    // console.log('company', company);
+    // console.log(company.address[0]);
 
     // pins ska ha formen name(string), position[number,number], subtitle(string)
 	const pins = company.address.map((element) => {
-		console.log('element', element);
+		// console.log('element', element);
 
 		return {
 			name: company.name,
@@ -26,7 +26,7 @@ const CompanyTemplate = ({ data }) => {
             + `\n${element.startdate}${element.enddate ? (` - ${element.enddate}`) : (' - Nutid')}`,
 		};
     });
-    console.log('company pins', pins);
+    // console.log('company pins', pins);
 
 	return (
 		<>
@@ -55,12 +55,19 @@ const CompanyTemplate = ({ data }) => {
 					</div>
 				</div>
 			</div>
-
-            <div id="company-map">
-                <MyMap
-                    address={[company.address[0].latitude, company.address[0].longitude]}
-                    pins={pins}
-                />
+            <div
+                className='columns is-centered'
+            >
+                <div
+                    className='column is-6'
+                >
+                    <div id="company-map">
+                        <MyMap
+                            address={[company.address[0].latitude, company.address[0].longitude]}
+                            pins={pins}
+                        />
+                    </div>
+                </div>
             </div>
 
             <div id="company-content">

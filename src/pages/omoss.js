@@ -7,7 +7,7 @@ import { rhythm, scale } from '../style/typography';
 import ZoneParser from '~components/zoneparser/zoneparser';
 
 const OmossPage = ({ data }) => {
-    console.log(data);
+    // console.log(data);
     const staticContent = data.static;
     return (
         <>

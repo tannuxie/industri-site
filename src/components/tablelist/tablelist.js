@@ -15,57 +15,74 @@ import { rhythm, scale } from '../../style/typography';
 import { compareValues } from '~components/functions';
 
 const Styles = styled.div`
-  table {
-    border-spacing: 0;
+    display: block;
+    max-width: 100%;
 
-    tr {
-      :last-child {
-        td {
-          border-bottom: 0;
-        }
-      }
+    .tableWrap {
+        display: block;
+        max-width: 100%;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        border-bottom: 1px solid black;
     }
 
-    tr:first-of-type {
-        th {
-            padding-bottom: 1rem;
-        }
-    }
+    table {
+        width: 100%;
+        min-width: 100%!important;
+        border-spacing: 0;
 
-    th {
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: column;
-        align-items: center;
-        padding: 0.5rem;
-    }
-
-    th,
-    td {
-      margin: 0;
-    }
-
-    td {
-        padding: 0;
-    }
-
-    tbody {
         tr {
-            margin: 1rem 0;
+            :last-child {
+                td {
+                    border-bottom: 0;
+                }
+            }
+        }
 
-            td {
-                border: 0;
+        tr:first-of-type {
+            th {
+                padding-bottom: 1rem;
+            }
+        }
+
+        th {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+        }
+
+        th,
+        td {
+            margin: 0;
+        }
+
+        td {
+            padding: 0;
+        }
+
+        tbody {
+            tr {
+                margin: 1rem 0;
+
+                td {
+                    border: 0;
+                }
             }
         }
     }
-  }
 `;
 
-const ArrowBase = styled.i`
-    border: solid #4e4e4e;
-    border-width: 0 5px 5px 0;
-    display: inline-block;
-    padding: 15px;
+const ArrowBase = styled.span`
+    display: flex;
+    i {
+        border: solid #4e4e4e;
+        border-width: 0 5px 5px 0;
+        display: inline-block;
+        padding: 15px;
+
+    }
 `;
 
 const ArrowLeftStyles = css`
@@ -132,14 +149,14 @@ function DefaultColumnFilter({
   }) {
     // Calculate the options for filtering
     // using the preFilteredRows
-    const options = React.useMemo(() => {
-      const options = new Set();
-      preFilteredRows.forEach((row) => {
-        options.add(row.values[id]);
-      });
-      return [...options.values()];
-    }, [id, preFilteredRows]);
-    console.log('select id', id);
+    // const options = React.useMemo(() => {
+    //   const options = new Set();
+    //   preFilteredRows.forEach((row) => {
+    //     options.add(row.values[id]);
+    //   });
+    //   return [...options.values()];
+    // }, [id, preFilteredRows]);
+    // console.log('select id', id);
     const someOptions = React.useMemo(() => (
         () => ((id === 'city') ? (
             [
@@ -161,8 +178,8 @@ function DefaultColumnFilter({
             ]
         ) : null
     ))(), [id]);
-    console.log(someOptions);
-    console.log(options);
+    // console.log(someOptions);
+    // console.log(options);
     const defaultAllOption = React.useMemo(() => (
         () => ((id === 'city')
         ? 'En stad'
@@ -212,62 +229,80 @@ function Table({ columns, data }) {
         [],
     );
 
-    console.log(location);
-    console.log('location.search', location.search);
-    const parsed = queryString.parse(location.search);
-    console.log('queryString parsed', parsed);
+    // console.log(location);
+    // console.log('location.search', location.search);
+    const parsed = (typeof window !== 'undefined') ? queryString.parse(location.search) : '';
+    // console.log('queryString parsed', parsed);
 
     const citySearchString = React.useMemo(() => (
         () => {
-            if (!location.pathname.startsWith('/alla')) {
-                return '';
-            }
-
-            switch (parsed.stad) {
-                case 'savsjo':
-                    return 'Sävsjö';
-                case 'vrigstad':
-                    return 'Vrigstad';
-                case 'stockaryd':
-                    return 'Stockaryd';
-                case 'rorvik':
-                    return 'Rörvik';
-                case 'hylletofta':
-                    return 'Hylletofta';
-                default:
+            if (typeof window !== 'undefined') {
+                if (!location.pathname.startsWith('/industri')) {
                     return '';
+                }
+                if (parsed.stad) {
+                    switch (parsed.stad) {
+                        case 'savsjo':
+                            return 'Sävsjö';
+                        case 'vrigstad':
+                            return 'Vrigstad';
+                        case 'stockaryd':
+                            return 'Stockaryd';
+                        case 'rorvik':
+                            return 'Rörvik';
+                        case 'hylletofta':
+                            return 'Hylletofta';
+                        default:
+                            return '';
+                    }
+                } else {
+                    return '';
+                }
+            } else {
+                return null;
             }
         }
-    )(), []);
-    console.log('citySearchString', citySearchString);
+    )(), [parsed]);
+    // console.log('citySearchString', citySearchString);
 
     const typeSearchString = React.useMemo(() => (
         () => {
-            switch (parsed.bransch) {
-                case 'tra':
-                    return 'Trä';
-                case 'metall':
-                    return 'Metall';
-                case 'mobler':
-                    return 'Möbler / Träförädling';
-                case 'livsmedel':
-                    return 'Livsmedel';
-                case 'skor':
-                    return 'Skor & Kläder';
-                case 'plast':
-                    return 'Plast / Gummi';
-                case 'ovrigt':
-                    return 'Övrigt / Diverse';
-                default:
-                    return '';
+            if (parsed.bransch) {
+                switch (parsed.bransch) {
+                    case 'tra':
+                        return 'Trä';
+                    case 'metall':
+                        return 'Metall';
+                    case 'mobler':
+                        return 'Möbler / Träförädling';
+                    case 'livsmedel':
+                        return 'Livsmedel';
+                    case 'skor':
+                        return 'Skor & Kläder';
+                    case 'plast':
+                        return 'Plast / Gummi';
+                    case 'ovrigt':
+                        return 'Övrigt / Diverse';
+                    default:
+                        return '';
+                }
+            } else {
+                return '';
             }
         }
-    )(), []);
-    console.log('typeSearchString', typeSearchString);
+    )(), [parsed]);
+    // console.log('typeSearchString', typeSearchString);
 
     const scrollToTable = (() => {
-            const element = document.getElementsByTagName('h1')[0];
-            if (element) element.scrollIntoView();
+            const element = document.getElementsByClassName('table-headline')[0];
+            if (element) {
+                element.scrollIntoView();
+                const scrolledY = window.scrollY;
+
+                if (scrolledY) {
+                    window.scroll(0, scrolledY - 100);
+                }
+            }
     });
 
 
@@ -328,24 +363,25 @@ function Table({ columns, data }) {
          },
       },
       autoResetFilters,
-      useFlexLayout,
       useFilters, // useFilters!
+      useFlexLayout,
       useGlobalFilter,
       usePagination,
     );
-    console.log('state', state);
+    // console.log('state', state);
 
   // Render the UI for your table
   return (
     <>
+    <div className="tableWrap">
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => {
-                console.log('column', column);
+                // console.log('column', column);
                 return (typeof column.Header === 'string'
-                && (column.id !== 'city' || (column.id === 'city' && location.pathname === '/alla'))) && (
+                && (column.id !== 'city' || (column.id === 'city' && typeof window !== 'undefined' && location.pathname === '/industri'))) && (
                 <th {...column.getHeaderProps()}>
                     {column.render('Header')}
                     {/* Render the columns filter UI */}
@@ -400,7 +436,11 @@ function Table({ columns, data }) {
 
             > a {
                 padding: 10px 5px;
+                @media (max-width: 769px) {
+                    padding: 10px 0px;
+                }
             }
+
         `}
       >
         <a
@@ -424,21 +464,24 @@ function Table({ columns, data }) {
             }}
             disabled={!canPreviousPage}
         >
-            <span>
-                <ArrowBase
+            <ArrowBase>
+                <i
                     className="arrow-left"
                     css={ArrowLeftStyles}
                 />
-                <ArrowBase
+                <i
                     className="arrow-left"
                     css={ArrowLeftStyles}
                 />
-            </span>
+            </ArrowBase>
         </a>
         {' '}
         <a
             css={css`
                 margin: 0 ${rhythm};
+                @media (max-width: 769px) {
+                    margin: 0 calc(${rhythm}/2);
+                }
                 ${canPreviousPage ? ('cursor: pointer;') : ('opacity: 0.3;')};
             `}
             role="button"
@@ -458,14 +501,19 @@ function Table({ columns, data }) {
             }}
             disabled={!canPreviousPage}
         >
-            <span>
-                <ArrowBase
+            <ArrowBase>
+                <i
                     className="arrow-left"
                     css={ArrowLeftStyles}
                 />
-            </span>
+            </ArrowBase>
         </a>
-        <span>
+        <span
+            css={css`
+                text-align: center;
+                min-width: 15%;
+            `}
+        >
             Sida
             {' '}
             <strong>
@@ -479,6 +527,9 @@ function Table({ columns, data }) {
         <a
             css={css`
                 margin: 0 ${rhythm};
+                @media (max-width: 769px) {
+                    margin: 0 calc(${rhythm}/2);
+                }
                 ${canNextPage ? ('cursor: pointer') : ('opacity: 0.3;')};
             `}
             role="button"
@@ -498,12 +549,12 @@ function Table({ columns, data }) {
             }}
             disabled={!canNextPage}
         >
-            <span>
-                <ArrowBase
+            <ArrowBase>
+                <i
                     className="arrow-right"
                     css={ArrowRightStyles}
                 />
-            </span>
+            </ArrowBase>
         </a>
         {' '}
         <a
@@ -527,25 +578,26 @@ function Table({ columns, data }) {
             }}
             disabled={!canNextPage}
         >
-            <span>
-                <ArrowBase
+            <ArrowBase>
+                <i
                     className="arrow-right"
                     css={ArrowRightStyles}
                 />
-                <ArrowBase
+                <i
                     className="arrow-right"
                     css={ArrowRightStyles}
                 />
-            </span>
+            </ArrowBase>
         </a>
       </div>
+    </div>
     </>
   );
 }
 
 const TableList = ({ companyData }) => {
-    console.log('table data', companyData);
-    console.log('typography', rhythm, scale);
+    // console.log('table data', companyData);
+    // console.log('typography', rhythm, scale);
     const fixedNameData = React.useMemo(() => companyData.map((item) => {
         const current = item;
 
@@ -604,7 +656,7 @@ const TableList = ({ companyData }) => {
     }), [companyData]);
 
     const sortedData = React.useMemo(() => fixedNameData.sort(compareValues('name', 'asc')), [fixedNameData]);
-    console.log(sortedData);
+    // console.log(sortedData);
 
     const columns = React.useMemo(
         () => [

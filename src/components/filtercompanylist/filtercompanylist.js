@@ -6,8 +6,8 @@ import Img from 'gatsby-image';
 import TableList from '~components/tablelist/tablelist';
 
 const FilterCompanyList = ({ data, city }) => {
-    console.log('filtercompanylist data', data);
-    console.log('filtercompanylist city', city);
+    // console.log('filtercompanylist data', data);
+    // console.log('filtercompanylist city', city);
 
     const companies = useMemo(() => data.company.edges.filter((item) => {
         switch (item.node.city) {
@@ -34,7 +34,7 @@ const FilterCompanyList = ({ data, city }) => {
         }
     }).map((item) => item.node), [data]);
 
-    console.log('filtercompanylist companies', companies);
+    // console.log('filtercompanylist companies', companies);
 
 	return (
         <TableList companyData={companies} />

@@ -3,13 +3,15 @@ import { Link, graphql } from 'gatsby';
 import { css } from '@emotion/core';
 import Img from 'gatsby-image';
 import ZoneParser from '~components/zoneparser/zoneparser';
+import Helmet from '~components/helmet/helmet';
 
 const IndexPage = ({ data }) => {
-    console.log('data', data);
+    // console.log('data', data);
     const startsidaData = data.strapiStaticContent;
 
     return (
         <>
+            <Helmet />
             <div id="startsidaData-content">
                 <ZoneParser
                     content={startsidaData.content}

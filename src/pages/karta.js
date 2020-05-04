@@ -231,18 +231,18 @@ const KartSida = () => {
     // // console.log('addressData', addressData);
 
     const withMinMaxData = useMemo(() => {
-        console.log('in withMinMaxData');
+        // console.log('in withMinMaxData');
         const thedata = data.company.edges.map((item) => item.node);
         const result = thedata.map((item) => {
             const current = item;
             const now = new Date();
 
             const currStart = current.address.map((addr) => Number(addr.startdate));
-            console.log('currStart', currStart, 'min', Math.min(...currStart));
+            // console.log('currStart', currStart, 'min', Math.min(...currStart));
             current.min = Math.min(...currStart);
 
             const currEnd = current.address.map((addr) => Number(addr.enddate));
-            console.log('currEnd', currEnd, 'max', Math.max(...currEnd));
+            // console.log('currEnd', currEnd, 'max', Math.max(...currEnd));
 
             current.max = (currEnd.includes(0))
             ? now.getFullYear() : Math.max(...currEnd);
@@ -262,20 +262,20 @@ const KartSida = () => {
             current.address = address;
             return current;
         });
-        console.log('withMinMaxData result', result);
+        // console.log('withMinMaxData result', result);
 
         return result;
     }, [data]);
 
     // uppdatera kartans state
     useEffect(() => {
-        console.log('in useEffect: map update');
-        console.log('withMinMaxData', withMinMaxData);
+        // console.log('in useEffect: map update');
+        // console.log('withMinMaxData', withMinMaxData);
 
         const filteredByCityType = withMinMaxData.filter((item) => (
             (currentCity !== 'alla') ? item.city === currentCity : item))
             .filter((item) => ((currentType !== 'alla') ? item.type === currentType : item));
-        console.log('filteredbyCityType', filteredByCityType);
+        // console.log('filteredbyCityType', filteredByCityType);
         setNmbrCompaniesAfterCityType(filteredByCityType.length);
 
         const min = (() => {
@@ -286,7 +286,7 @@ const KartSida = () => {
             const minNmbr = Math.min(...minValues);
             return minNmbr;
         })();
-        console.log('findLowest result', min);
+        // console.log('findLowest result', min);
 
         if (value1 === 0 || value1 < min) {
             setValue1(min);
@@ -296,14 +296,14 @@ const KartSida = () => {
         const max = (() => {
             const now = new Date();
             if (filteredByCityType.length === 0) {
-                console.log('findHighest result', now.getFullYear());
+                // console.log('findHighest result', now.getFullYear());
                 return now.getFullYear();
             }
             const maxValues = filteredByCityType.map((item) => item.max);
             const result = Math.max(...maxValues);
             return result;
         })();
-        console.log('findHighest result', max);
+        // console.log('findHighest result', max);
 
         if (value2 === 0 || value2 > max) {
             setValue2(max);
@@ -318,7 +318,7 @@ const KartSida = () => {
             : item
         ));
 
-        console.log('addresses length', filteredByRange.length, 'content', filteredByRange);
+        // console.log('addresses length', filteredByRange.length, 'content', filteredByRange);
         setNmbrCompaniesAfterRange(filteredByRange.length);
         const pins = filteredByRange.map((item) => {
             const obj = {
@@ -329,25 +329,25 @@ const KartSida = () => {
             return obj;
         });
         setMapPins(pins);
-        console.log('pins:', pins);
+        // console.log('pins:', pins);
 
         if (filteredByRange.length > 0) {
             const coordinates = filteredByRange.map((item) => ({
                 latitude: item.latitude,
                 longitude: item.longitude,
             }));
-            console.log('coordinates', coordinates);
-            console.log('center of coords', getCenterOfBounds(coordinates));
+            // console.log('coordinates', coordinates);
+            // console.log('center of coords', getCenterOfBounds(coordinates));
 
             const coordsByDistance = orderByDistance(getCenterOfBounds(coordinates), coordinates);
-            console.log('coordsByDistance', coordsByDistance);
+            // console.log('coordsByDistance', coordsByDistance);
 
-            coordsByDistance.forEach((element) => {
-                console.log('byDistObj', element);
-                console.log('distToCenter', getDistance(element, getCenterOfBounds(coordinates)));
+            // coordsByDistance.forEach((element) => {
+            //     // console.log('byDistObj', element);
+            //     // console.log('distToCenter', getDistance(element, getCenterOfBounds(coordinates)));
 
 
-            });
+            // });
 
             // sätter minimum-värde på distance som 250 för att det inte
             // ska bli för inzoomat när det bara är 1 träff
@@ -355,18 +355,18 @@ const KartSida = () => {
                 getCenterOfBounds(coordinates),
                 coordsByDistance[coordsByDistance.length - 1],
             ), 250);
-            console.log('distance', distance);
+            // console.log('distance', distance);
 
             const bounds = getBoundsOfDistance(
                 getCenterOfBounds(coordinates),
                 (distance * 1.5 + 1),
             );
-            console.log('bounds', bounds);
+            // console.log('bounds', bounds);
             const boundsArray = [
                 [bounds[0].latitude + 0.000000000001, bounds[0].longitude + 0.000000000001],
                 [bounds[1].latitude, bounds[1].longitude],
             ];
-            console.log('boundsArray', boundsArray);
+            // console.log('boundsArray', boundsArray);
 
             setMapBounds(boundsArray);
             setMapCenter(getCenterOfBounds(coordinates));
@@ -403,7 +403,7 @@ const KartSida = () => {
             } else {
               acc[isElemExist].count += 1;
             }
-            console.log('acc', acc);
+            // console.log('acc', acc);
             return acc;
         }, [])
     ), [mapPins]);
@@ -473,7 +473,7 @@ const KartSida = () => {
 
                                 // })}
                                 onAfterChange={((e) => {
-                                    console.log(e);
+                                    // console.log(e);
                                     setValue1(e[0]);
                                     setValue2(e[1]);
                                     setInfoTabOpen(0);

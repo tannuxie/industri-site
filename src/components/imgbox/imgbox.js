@@ -7,7 +7,6 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { Dialog, DialogOverlay, DialogContent } from '@reach/dialog';
 import { AnimatePresence, motion } from 'framer-motion';
 import { rhythm, scale } from '../../style/typography';
-import CompareValues, { compareValues } from '../functions';
 
 const ArrowBase = styled.i`
     border: solid #4e4e4e;
@@ -16,12 +15,12 @@ const ArrowBase = styled.i`
     padding: 15px;
 `;
 
-const ArrowLeftStyles = css`
+const ArrowLeft = css`
     transform: rotate(135deg);
     webkit-transform: rotate(135deg);
 `;
 
-const ArrowRightStyles = css`
+const ArrowRight = css`
     transform: rotate(-45deg);
     webkit-transform: rotate(-45deg);
 `;
@@ -158,7 +157,7 @@ const ToolsDiv = styled.div`
 	}
 `;
 
-const OverlayImgStyles = css`
+const OverlayImg = css`
     min-width: calc(75vw - 30px);
     max-height: 75vh;
     @media (max-width: 1680px) {
@@ -180,7 +179,7 @@ const OverlayBottomDiv = styled.div`
 	}
 `;
 
-const OverlayBottomHeader = styled.h2`
+const OverlayBottomText = styled.h2`
 	margin-top: 1.25rem;
 	flex-grow: 1;
 	text-align: center;
@@ -242,10 +241,10 @@ const ImgBox = ({ images, undertext }) => {
             current.aspectRatio = item.bildfil.childImageSharp.fluid.aspectRatio;
             return current;
         }));
-        console.log('aspectRatioImages', aspectRatioImages);
+        // console.log('aspectRatioImages', aspectRatioImages);
         // const aspectSortedImages = aspectRatioImages.sort(compareValues('aspectRatio', 'asc'));
         const aspectSortedImages = aspectRatioImages;
-        console.log('aspectSortedImages', aspectSortedImages);
+        // console.log('aspectSortedImages', aspectSortedImages);
 
         const newImagesArray = [];
         if (aspectSortedImages.length === 1) {
@@ -264,13 +263,13 @@ const ImgBox = ({ images, undertext }) => {
                 newImagesArray.push([lastElement]);
             }
         }
-        console.log('newImagesArray', newImagesArray);
+        // console.log('newImagesArray', newImagesArray);
 
         return newImagesArray;
     }, [images]);
 
     function openOverlay(number) {
-        console.log('in openOverlay', number);
+        // console.log('in openOverlay', number);
         setPhotoIndex(number);
         if (number > 0) {
             setCanPrev(true);
@@ -282,14 +281,14 @@ const ImgBox = ({ images, undertext }) => {
     }
 
     function closeOverlay() {
-        console.log('in closeOverlay');
+        // console.log('in closeOverlay');
         setIsOpen(false);
         setCanPrev(false);
         setCanNext(false);
     }
 
     function prevImg() {
-        console.log('in prevImg');
+        // console.log('in prevImg');
         const pIndex = photoIndex;
         setPhotoIndex(pIndex - 1);
 
@@ -300,7 +299,7 @@ const ImgBox = ({ images, undertext }) => {
     }
 
     function nextImg() {
-        console.log('in nextImg');
+        // console.log('in nextImg');
         const pIndex = photoIndex;
         setPhotoIndex(pIndex + 1);
 
@@ -344,10 +343,10 @@ const ImgBox = ({ images, undertext }) => {
                             key={`${id} ${beskrivning}`}
                             tabIndex={0}
                             onClick={() => {
-                                console.log('chunk', (chunkIndex * 2) + imageIndex);
-                                console.log('chunk data', chunk);
-                                console.log('all chunks', chunkedImages);
-                                console.log('test5', chunkedImages[Math.floor(((chunkIndex * 2) + imageIndex) / 2)][((chunkIndex * 2) + imageIndex) % 2].beskrivning);
+                                // console.log('chunk', (chunkIndex * 2) + imageIndex);
+                                // console.log('chunk data', chunk);
+                                // console.log('all chunks', chunkedImages);
+                                // console.log('test5', chunkedImages[Math.floor(((chunkIndex * 2) + imageIndex) / 2)][((chunkIndex * 2) + imageIndex) % 2].beskrivning);
 
                                 openOverlay((chunkIndex * 2) + imageIndex);
                             }}
@@ -363,7 +362,7 @@ const ImgBox = ({ images, undertext }) => {
                             <Img
                                 fluid={bildfil.childImageSharp.fluid}
                                 alt={beskrivning}
-                                imgStyle={{ objectFit: 'cover' }}
+                                imgStyle={(chunk.length === 1) ? { objectFit: 'contain' } : { objectFit: 'cover' }}
                             />
                         </div>
                     );
@@ -456,7 +455,7 @@ const ImgBox = ({ images, undertext }) => {
                                                 <span>
                                                     <ArrowBase
                                                         className="arrow-left"
-                                                        css={ArrowLeftStyles}
+                                                        css={ArrowLeft}
                                                     />
                                                 </span>
                                             </button>
@@ -464,7 +463,7 @@ const ImgBox = ({ images, undertext }) => {
                                                 id='imgOverlay-nextimg'
                                                 aria-label="Visa nästa bild"
                                                 css={css`
-                                                    ${canNext ? ('cursor: pointer') : ('opacity: 0.3;')};
+                                                    ${canNext ? ('cursor: pointer;') : ('opacity: 0.3;')};
                                                 `}
                                                 tabIndex={0}
                                                 onClick={() => {
@@ -482,7 +481,7 @@ const ImgBox = ({ images, undertext }) => {
                                                 <span>
                                                     <ArrowBase
                                                         className="arrow-right"
-                                                        css={ArrowRightStyles}
+                                                        css={ArrowRight}
                                                     />
                                                 </span>
                                             </button>
@@ -532,7 +531,7 @@ const ImgBox = ({ images, undertext }) => {
                                                     .bildfil.childImageSharp.fluid}
                                                 alt={chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
                                                 imgStyle={{ objectFit: 'contain' }}
-                                                css={OverlayImgStyles}
+                                                css={OverlayImg}
                                             />
 
                                         </TransformComponent>
@@ -540,9 +539,9 @@ const ImgBox = ({ images, undertext }) => {
                                 )}
                             </TransformWrapper>
                             <OverlayBottomDiv>
-                                <OverlayBottomHeader>
+                                <OverlayBottomText>
                                     {chunkedImages[Math.floor(photoIndex / 2)][photoIndex % 2].beskrivning}
-                                </OverlayBottomHeader>
+                                </OverlayBottomText>
                                 <OverlayCloseBtn
                                     id="imgOverlay-close"
                                     tabIndex={0}
